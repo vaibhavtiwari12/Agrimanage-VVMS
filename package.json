@@ -1,0 +1,31 @@
+{
+  "name": "react-node-poc",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "install-main": "npm install",
+    "install-frontend": "cd ./frontend && npm install",
+    "build-frontend": "cd ./frontend && npm run build",
+    "start-front-end": "cd ./frontend && npm start",
+    "install-backend": "cd ./backend && npm install",
+    "build:prod": "cd ./frontend && npm run build ",
+    "heroku-postbuild": "npm run install-main && npm run install-frontend && npm run install-backend && npm run build-frontend",
+    "start": "cd backend && nodemon app.js",
+    "devstart": "concurrently -n 'Frontend,Backend' -c 'green,blue' \"npm:start-front-end\" \"npm:start\""
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "dotenv": "^10.0.0",
+    "env-cmd": "^10.1.0",
+    "mongoose": "^5.13.2",
+    "nodemon": "^2.0.15",
+    "redux-thunk": "^2.3.0",
+    "shx": "^0.3.3"
+  },
+  "devDependencies": {
+    "concurrently": "^7.0.0"
+  }
+}
