@@ -26,6 +26,7 @@ const Kisantransactionstable = ({ kisan, updateKisan }) => {
     setTooltipOpen(!tooltipOpen);
   }   */
   const [isLoading, setIsLoading] = useState(true);
+  const [isDeleting, setIsDeleting] = useState(false)
   const [transaction, setTransaction] = useState({});
  
   const componentRef = useRef();
@@ -70,6 +71,7 @@ const Kisantransactionstable = ({ kisan, updateKisan }) => {
   useEffect(()=> {
     if(kisan && kisan.transactions){
       setIsLoading(false);
+      setIsDeleting(false);
     }
   },[kisan])
   useEffect(() => {
@@ -89,6 +91,7 @@ const Kisantransactionstable = ({ kisan, updateKisan }) => {
   });
 
   const deleteTransaction = (txn,kisanId) => {
+    setIsDeleting(true);
     console.log("txn", txn)
     const formData = {
       kisanTxnId:txn._id,
@@ -112,11 +115,13 @@ const Kisantransactionstable = ({ kisan, updateKisan }) => {
       })
       .catch((error) => {
         console.log("is Here", error);
+        setIsDeleting(false);
         throw new error("Somethign Went Wrong", error);
       });
   }
 
   const deleteTransactionAdvanceSettlement = (txn, kisanId) => {
+    setIsDeleting(true);
     const formData = {
       kisanId:kisanId,
       transactionID: txn._id 
@@ -136,10 +141,12 @@ const Kisantransactionstable = ({ kisan, updateKisan }) => {
     })
     .catch((error) => {
       console.log("is Here", error);
+      setIsDeleting(false);
       throw new error("Somethign Went Wrong", error);
     });
   }
   const deleteTransactionDebit = (txn, kisanId) => {
+    setIsDeleting(true);
     console.log("is here")
     const formData = {
       kisanId:kisanId,
@@ -160,6 +167,7 @@ const Kisantransactionstable = ({ kisan, updateKisan }) => {
     })
     .catch((error) => {
       console.log("is Here", error);
+      setIsDeleting(false);
       throw new error("Somethign Went Wrong", error);
     });
   }
@@ -292,14 +300,19 @@ const Kisantransactionstable = ({ kisan, updateKisan }) => {
                             <FontAwesomeIcon icon={solid('print')} className="text-white"/>
                           </Button>
                           { index=== 0 && 
-                            transaction.type === "DEBIT" && <Button color="danger" className="ms-2" onClick={e => deleteTransactionDebit(transaction,kisan._id)}><FontAwesomeIcon icon={solid('trash')} className="text-white"/></Button>
+                            transaction.type === "DEBIT" && <div>
+                              {isDeleting ? 
+                                <Button color="danger" className="ms-2 "><Spinner className="spinner-size-1"/></Button> :
+                                <Button color="danger" className="ms-2" onClick={e => deleteTransactionDebit(transaction,kisan._id)}><FontAwesomeIcon icon={solid('trash')} className="text-white"/></Button>
+                              }
+                            </div>
                           }
                         </div>
                       ) : transaction.type === "ADVANCESETTLEMENT" ? (
                         <div className="d-flex">
                           <Button color="success" id="edit">
                             <Link
-                            className="ms-2 link-no-decoration font-10"
+                            className="link-no-decoration font-10"
                               to={`/kisanAdvanceSettlement/${kisan._id}/edit/${transaction._id}`}
 
                             >
@@ -321,11 +334,15 @@ const Kisantransactionstable = ({ kisan, updateKisan }) => {
                              <Tooltip placement="top" isOpen={printToolTip} target="printAdvance" toggle={e => setPrintToolTip(!printToolTip)}>
                               Print
                             </Tooltip>
-                            {/* <FormattedMessage id="printButtonText" /> */}
                              <FontAwesomeIcon icon={solid('print')} className="text-white"/>
                           </Button>
                           { index===0 && 
-                            transaction.type === "ADVANCESETTLEMENT" && <Button color="danger" className="ms-2" onClick={e => deleteTransactionAdvanceSettlement(transaction,kisan._id)}><FontAwesomeIcon icon={solid('trash')} className="text-white"/></Button>
+                            transaction.type === "ADVANCESETTLEMENT" && <div>
+                          {   isDeleting ? 
+                                <Button color="danger" className="ms-2"><Spinner className="spinner-size-1"/></Button> : 
+                                <Button color="danger" className="ms-2" onClick={e => deleteTransactionAdvanceSettlement(transaction,kisan._id)}><FontAwesomeIcon icon={solid('trash')} className="text-white"/></Button> 
+                              }
+                              </div>
                           }
                         </div>
                       ) : (
@@ -334,9 +351,7 @@ const Kisantransactionstable = ({ kisan, updateKisan }) => {
                             <Link
                               className="link-no-decoration"
                               to={`/kisanCreditForm/${kisan._id}/edit/${transaction._id}`}
-                            >
-                               {/* <FormattedMessage id="viewButtonText" /> */}
-                               <FontAwesomeIcon  icon={solid('list-ul')} className="text-white"/>
+                            > <FontAwesomeIcon  icon={solid('list-ul')} className="text-white"/>
                             </Link>
                           </Button>
                           <Tooltip hideArrow={false} placement="left" isOpen={detailsTooltip} target="details" toggle={e => setDetailsTooltip(!detailsTooltip)}>
@@ -354,9 +369,17 @@ const Kisantransactionstable = ({ kisan, updateKisan }) => {
                               Print
                             </Tooltip>
                           </Button>
-                          { index===0 && 
-                            transaction.type === "CREDIT" && <Button color="danger" className="ms-2" onClick={e => deleteTransaction(transaction,kisan._id)}><FontAwesomeIcon icon={solid('trash')} className="text-white"/></Button>
-                          }
+                          
+                          { index===0 && transaction.type === "CREDIT" && <div>
+                            {isDeleting? <Button color="danger" className="ms-2" >
+                              <Spinner className="spinner-size-1"/>
+                            </Button>:
+                            <Button color="danger" className="ms-2" onClick={e => deleteTransaction(transaction,kisan._id)}>
+                              <FontAwesomeIcon icon={solid('trash')} className="text-white"/>
+                            </Button>
+                            }
+                          </div> 
+                           }
                         </div>
                       )}
                     </td>

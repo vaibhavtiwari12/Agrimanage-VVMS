@@ -10,7 +10,7 @@ import Purchasertransactiontable from "./PurchaserTransactionTable";
 const Purchaserdetails = () => {
   const { id } = useParams();
   const [purchaser, setPurchaser] = useState({});
-  const [customPurchaserTransaction, setCustomPurchaserTransaction] = useState([])
+  const [customPurchaserTransaction, setCustomPurchaserTransaction] = useState(null)
   const history = useHistory();
   useEffect(() => {
     console.log(id);

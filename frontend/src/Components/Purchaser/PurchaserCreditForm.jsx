@@ -11,6 +11,7 @@ import {
   Alert,
   BreadcrumbItem,
   Breadcrumb,
+  Spinner,
 } from "reactstrap";
 
 import { useState } from "react";
@@ -84,9 +85,11 @@ const Purchasercreditform = () => {
     setIsCommentValid("PRISTINE");
     setIsAmountValid("PRISTINE");
   };
+  const [isSubmitting, setIsSubmitting] = useState(false)
   const submit = (e) => {
     e.preventDefault();
     if (isFormValid()) {
+      setIsSubmitting(true)
       const formData = {
         transaction: {
           transactionAmount: parseInt(amount),
@@ -107,9 +110,11 @@ const Purchasercreditform = () => {
           console.log("Res", res);
           handleAlert();
           clear();
+          setIsSubmitting(false)
         })
         .catch((error) => {
           console.log("is Here", error);
+          setIsSubmitting(false)
           throw new error("Somethign Went Wrong", error);
         });
     } else {
@@ -127,6 +132,7 @@ const Purchasercreditform = () => {
 
   const handleEdit = () => {
     if (isFormValid()) {
+      setIsSubmitting(true)
       const formData = {
         transactionNumber,
         comment,
@@ -144,8 +150,10 @@ const Purchasercreditform = () => {
           console.log("Res", res);
           handleAlert();
           clear();
+          setIsSubmitting(false)
         })
         .catch((error) => {
+          setIsSubmitting(false)
           throw new error("Somethign Went Wrong", error);
         });
     } else {
@@ -230,8 +238,8 @@ const Purchasercreditform = () => {
         </FormGroup>
         {type === "add" ? (
           <React.Fragment>
-            <Button type="submit" color="primary" className="mt-3 font-10">
-              <FormattedMessage id="createEntryButtonText" />
+            <Button type="submit" color="primary" className="mt-3 font-10" disabled={isSubmitting}>
+            {isSubmitting &&( <span><Spinner className="spinner-size-1"/> &nbsp;</span> )}<FormattedMessage id="createEntryButtonText" />
             </Button>
             <Button
               type="reset"
@@ -248,8 +256,9 @@ const Purchasercreditform = () => {
             color="primary"
             className="mt-3 font-10"
             onClick={handleEdit}
+            disabled={isSubmitting}
           >
-            <FormattedMessage id="editButtonText" />
+            {isSubmitting &&( <span><Spinner className="spinner-size-1"/> &nbsp;</span> )}<FormattedMessage id="editButtonText" />
           </Button>
         )}
         {showAlert ? (

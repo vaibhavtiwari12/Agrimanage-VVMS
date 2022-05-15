@@ -9,6 +9,7 @@ import {
   Alert,
   BreadcrumbItem,
   Breadcrumb,
+  Spinner,
 } from "reactstrap";
 
 import { useState } from "react";
@@ -84,9 +85,11 @@ const Advancesettlementform = () => {
     setIsCommentValid("PRISTINE");
     setIsAmountValid("PRISTINE");
   };
+  const [isSubmitting, setIsSubmitting] = useState(false)
   const submit = (e) => {
     e.preventDefault();
     if (isFormValid()) {
+      setIsSubmitting(true)
       const formData = {
         transaction: {
           balanceAfterThisTransaction:
@@ -109,9 +112,11 @@ const Advancesettlementform = () => {
           console.log("Res", res);
           handleAlert();
           clear();
+          setIsSubmitting(false)
         })
         .catch((error) => {
           console.log("is Here", error);
+          setIsSubmitting(false)
           throw new error("Somethign Went Wrong", error);
         });
     } else {
@@ -129,6 +134,7 @@ const Advancesettlementform = () => {
 
   const handleEdit = () => {
     if (isFormValid()) {
+      setIsSubmitting(true)
       const formData = {
         transactionNumber,
         comment,
@@ -146,8 +152,10 @@ const Advancesettlementform = () => {
           console.log("Res", res);
           handleAlert();
           clear();
+          setIsSubmitting(false)
         })
         .catch((error) => {
+          setIsSubmitting(false)
           throw new error("Somethign Went Wrong", error);
         });
     } else {
@@ -245,8 +253,8 @@ const Advancesettlementform = () => {
         </FormGroup>
         {type === "add" ? (
           <React.Fragment>
-            <Button type="submit" color="primary" className="mt-3">
-              <FormattedMessage id="createEntryButtonText" />
+            <Button type="submit" color="primary" className="mt-3" disabled={isSubmitting}>
+            {isSubmitting &&( <span><Spinner className="spinner-size-1"/> &nbsp;</span> )}<FormattedMessage id="createEntryButtonText" />
             </Button>
             <Button
               type="reset"
@@ -263,8 +271,9 @@ const Advancesettlementform = () => {
             color="primary"
             className="mt-3"
             onClick={handleEdit}
+            disabled={isSubmitting}
           >
-            <FormattedMessage id="editButtonText" />
+            {isSubmitting &&( <span><Spinner className="spinner-size-1"/> &nbsp;</span> )}<FormattedMessage id="editButtonText" />
           </Button>
         )}
         {showAlert ? (

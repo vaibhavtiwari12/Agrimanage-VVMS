@@ -88,7 +88,7 @@ const controller = async (type, data) => {
       let deleteKisanTxn = await Kisan.findById(data.id);
       let deleteInventoryTxn = await Inventory.findById(data.inventoryItemId);
       let deletePurchaserTxn = await Purchaser.findById(data.purchaseId);
-
+      console.log("DeLETE PURCHASER TXN",deletePurchaserTxn )
       //console.log("PURCHASES", deletePurchaserTxn);
       //Delete PurchaserRecord
       const updatedTransactionsForPurchase = []; 
@@ -103,8 +103,8 @@ const controller = async (type, data) => {
         })
         deletePurchaserTxn.transactions = updatedTransactionsForPurchase;
         console.log("delete PurchaserTxn",updatedTransactionsForPurchase)
+        await deletePurchaserTxn.save();
       }
-      await deletePurchaserTxn.save();
 
       //Delete Inventory Transaction
       const updatedInventoryTransactions = []
@@ -115,14 +115,19 @@ const controller = async (type, data) => {
           }
         })
         deleteInventoryTxn.transactions = updatedInventoryTransactions;
+        await deleteInventoryTxn.save();
       }
-      await deleteInventoryTxn.save();
 
       //deleteKisanTransaction
       const updatedKisanTransaction = [];
       deleteKisanTxn.transactions.map(txn => {
         if(txn._id == data.kisanTxnId){
           deleteKisanTxn.balance -= txn.advanceSettlement; 
+          if(txn.netTotal===0 && txn.grossTotal===0){
+            deleteKisanTxn.carryForwardAmount += txn.paidToKisan;
+          }else {
+            deleteKisanTxn.carryForwardAmount -= txn.carryForwardFromThisEntry;
+          }
         }else {
           updatedKisanTransaction.push(txn);
         }

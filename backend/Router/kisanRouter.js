@@ -56,9 +56,10 @@ KisanRouter.post("/AddTransaction/:id", async (req, res) => {
       transaction: { ...req.body.transaction, date: new Date(), _id: id },
     });
   }else {
+    const purchaseTxnId = purchaserDataGenerated._id ? purchaserDataGenerated._id.toString() : ""
     addedTransaction = await controller("AddTransaction", {
       id: req.params.id,
-      transaction: { ...req.body.transaction, date: new Date(), _id: id, purchaserTxnId: purchaserDataGenerated._id.toString() },
+      transaction: { ...req.body.transaction, date: new Date(), _id: id, purchaserTxnId: purchaseTxnId},
     });
   }
   res.json(addedTransaction);

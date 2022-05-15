@@ -105,6 +105,10 @@
    margin-top: 0.3rem !important;
    padding-left: 0.5rem !important;
 }
+.spinner-size-1 {
+   height: 1rem!important;
+   width: 1rem!important;
+}
 /* .greeting-container {
 } */
 /* switch BUTTON CSS */
