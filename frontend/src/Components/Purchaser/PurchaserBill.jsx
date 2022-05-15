@@ -23,7 +23,7 @@ const PurchaserBill = React.forwardRef((props, ref) => {
       </h5>
       <hr />
       <h6 className="text-center text-danger">
-        <b>दु. न. 35 कृषि उपज मंडी, जबलपुर (म. प्र.)</b>
+        <b>दु. न. 35 कृषि उपज मंडी, जबलपुर (म. प्र.)  |  मो. 9300933117</b>
       </h6>
       <hr />
       <div className="ps-1">
@@ -97,15 +97,15 @@ const PurchaserBill = React.forwardRef((props, ref) => {
       <div>
         <Table>
           <tbody>
-          <tr>
+           {/*  <tr>
               <td className="fill-row">
                 <b>पुराना बचा बैलेंस</b>
               </td>
               <td className="text-end">
                 <b>{props.data.oldBalance}</b>
               </td>
-            </tr>
-            <tr>
+            </tr> */}
+            {/* <tr>
               <td className="fill-row">
                 <b>खरीदारी का कुल योग + पुराना बचा बैलेंस (कुल देनदारी)</b>
               </td>
@@ -114,7 +114,7 @@ const PurchaserBill = React.forwardRef((props, ref) => {
                  {props.data.debitSum-(props.data.debitSum*2) + props.data.oldBalance}
                 </b>
               </td>
-            </tr>
+            </tr> */}
             <tr>
               <td className="fill-row">
                 <b>कैश जमा किया गया </b>
@@ -126,7 +126,7 @@ const PurchaserBill = React.forwardRef((props, ref) => {
                 <b>आज का कुल बकाया</b>
               </td>
               <td className="text-end">
-                <b>{props.data.debitSum-(props.data.debitSum*2) + props.data.oldBalance + props.data.creditSum}</b>
+                <b>{props.data.debitSum-(props.data.debitSum*2) + props.data.creditSum}</b>
               </td>
             </tr>
           </tbody>

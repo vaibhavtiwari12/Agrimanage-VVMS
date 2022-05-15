@@ -14,7 +14,7 @@ const Kisancreditreceipt = React.forwardRef((props, ref) => {
             धनिया, टमाटर, मटर एवं सब्जी के आढ़ती{" "}
          </h6>
          <h6 className="text-center text-danger border-bottom pb-2">
-            <b>दु. न. 35 कृषि उपज मंडी, जबलपुर (म. प्र.)</b>
+            <b>दु. न. 35 कृषि उपज मंडी, जबलपुर (म. प्र.)  |  मो. 9300933117</b>
          </h6>
          
          <div className="ps-1 border-bottom">
