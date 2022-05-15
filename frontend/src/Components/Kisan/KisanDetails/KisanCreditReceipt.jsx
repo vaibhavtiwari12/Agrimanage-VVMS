@@ -54,7 +54,7 @@ const Kisancreditreceipt = React.forwardRef((props, ref) => {
                      </td>
                   </tr>
 
-                  <tr>
+                  {props.data.txn_grossTotal>0 && <tr>
                      <td colSpan={2}>
                         <b className="mt-2">खरीदारी का बेयौरा</b>
                         <Table bordered className="mt-2">
@@ -87,6 +87,8 @@ const Kisancreditreceipt = React.forwardRef((props, ref) => {
                         </Table>
                      </td>
                   </tr>
+                  }
+                  {props.data.txn_grossTotal>0 && 
                   <tr>
                      <td colSpan={2}>
                         <b className="mt-2">कटौती</b>
@@ -120,7 +122,8 @@ const Kisancreditreceipt = React.forwardRef((props, ref) => {
                         </Table>
                      </td>
                   </tr>
-                  <tr>
+                  }
+                   {props.data.txn_grossTotal>0 && <tr>
                      <td className="fill-row">
                         <b>पुराने बिल से बची राशि + कटौती के बाद कुल योग </b>
                      </td>
@@ -130,7 +133,7 @@ const Kisancreditreceipt = React.forwardRef((props, ref) => {
                               props.data.txn_previousBillSettlementAmount}
                         </b>
                      </td>
-                  </tr>
+                  </tr>}
 
                   <tr>
                      <td className="fill-row">

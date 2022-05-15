@@ -88,7 +88,6 @@ const controller = async (type, data) => {
       let deleteKisanTxn = await Kisan.findById(data.id);
       let deleteInventoryTxn = await Inventory.findById(data.inventoryItemId);
       let deletePurchaserTxn = await Purchaser.findById(data.purchaseId);
-      console.log("DeLETE PURCHASER TXN",deletePurchaserTxn )
       //console.log("PURCHASES", deletePurchaserTxn);
       //Delete PurchaserRecord
       const updatedTransactionsForPurchase = []; 
