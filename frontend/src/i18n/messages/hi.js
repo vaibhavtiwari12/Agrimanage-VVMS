@@ -8,6 +8,8 @@ const hi = {
     address: "पता",
     currency: "₹",
     companyName: "कंपनी (फ़र्म) का नाम",
+    editKisan: "किसान का ब्यौरा सुधारें",
+    editPurchaser:"ख़रीदार का ब्यौरा सुधारें",
 
     /*login Page */
     login: "लॉगइन",
@@ -36,9 +38,10 @@ const hi = {
     searchValue: "खोज का विवरण",
     searchButtonText: "खोजें",
     resetButtonText: "रीसेट",
+    printButtonText: "प्रिंट",
 
     /*Add Kisan Page*/
-    newKisanDeatils: "नये किसान का विवरण",
+    newKisanDeatils: "नये किसान का ब्यौरा",
     nameIsRequired: "नाम देना अनिवार्य है।",
     fatherNameIsRequired: "पिता का नाम देना अनिवार्य है।",
     phoneIsRequired: "फ़ोन नंबर देना अनिवार्य है।",
@@ -48,9 +51,9 @@ const hi = {
     /*Kisan Detail Page*/
     kisanDetailsTitle: "किसान का विवरण",
     carryForwardAmount: "पिछले बिलों का कोई बक़ाया भुगतान (₹)",
-    giveAdvanceKisanButtonText: "एडवांस एंट्री",
+    giveAdvanceKisanButtonText: "एडवांस दें",
     createBillKisanButtonText: "बिल बनायें",
-    depositAdvanceKisanButtonText: "डिपॉज़िट एंट्री",
+    depositAdvanceKisanButtonText: "एडवांस वापसी की एंट्री करें",
     transactionDetailsTitle: "लेन-देन का विवरण",
 
     /*Table columns Kisan Detail Page*/
@@ -75,7 +78,7 @@ const hi = {
     amountSBGTZ: "एडवांस की राशि 0 से अधिक होनी चाहिये। ",
 
     /*Advance Deposit Form*/
-    advanceDepositDetails: "डिपॉज़िट (जमा की जाने वाली राशि) का विवरण",
+    advanceDepositDetails: "एडवांस वापसी हेतु किसान द्वारा जमा की जाने वाली राशि का विवरण",
     advanceDepositAmount: "डिपॉज़िट राशि",
     balanceTextTillThisWithoutCurrency: "इस एंट्री के पहले कुल बक़ाया एडवांस",
 
@@ -142,6 +145,7 @@ const hi = {
     /* Purchaser */
     purchaserLandingTitle: "ख़रीदार विवरणिका",
     addPurchaserButtonText: "ख़रीदार जोड़ें",
+    newPurchaserDeatils: "नये ख़रीदार का ब्यौरा",
 
     /*Add Purchaser Form*/
     companyNameIsRequired: "कंपनी (फ़र्म) का नाम देना अनिवार्य है।",
@@ -162,6 +166,13 @@ const hi = {
     tt_payment: "पेमेंट",
     purchaserPaymentFormTitle: "पेमेंट विवरण",
     paymentAmount: "पेमेंट की राशि",
+
+    /*Dashboard Page*/
+    totalAdvacePendingWithKisan:"किसानो का कुल बक़ाया एडवांस (₹)",
+    totalPurchaserOutstanding:"ख़रीददारों की कुल बक़ाया पेमेंट्स (₹)",
+    totalItemweight:"कुल वजन (कि.ग्रा.में)",
+    totalBagsSoldToday:"आज बेचे गए कुल बोरों की संख्या (नग)",
+
   },
 };
 export default hi;

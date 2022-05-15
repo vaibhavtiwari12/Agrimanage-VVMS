@@ -45,7 +45,7 @@ const Landing = () => {
                      <CardBody>
                         <CardTitle className="text-gray">
                            {" "}
-                           <h5 className="font-11"> Total kisan Advance Pending</h5>
+                           <h5 className="font-11"> <FormattedMessage id="totalAdvacePendingWithKisan" /></h5>
                         </CardTitle>
                         <div>
                            <h4 className="text-danger font-14">
@@ -58,7 +58,7 @@ const Landing = () => {
                      <CardBody>
                         <CardTitle className="text-gray">
                            {" "}
-                           <h5 className="font-11"> Total Purchaser Outstanding</h5>
+                           <h5 className="font-11"> <FormattedMessage id="totalPurchaserOutstanding" /></h5>
                         </CardTitle>
                         <div>
                            <h4 className="text-danger font-14">{dashBoardData.totalPurchaserPending}</h4>
@@ -69,7 +69,7 @@ const Landing = () => {
                      <CardBody className="text-gray">
                         <CardTitle>
                            {" "}
-                           <h5 className="font-11"> Total Item weight (in KGs)</h5>
+                           <h5 className="font-11"> <FormattedMessage id="totalItemweight" /></h5>
                         </CardTitle>
                         <div>
                            <h4 className="text-primary font-14">
@@ -82,7 +82,7 @@ const Landing = () => {
                      <CardBody className="text-gray">
                         <CardTitle>
                            {" "}
-                           <h5 className="font-11"> Total bags sold today (in KGs)</h5>
+                           <h5 className="font-11"><FormattedMessage id="totalBagsSoldToday" /></h5>
                         </CardTitle>
                         <div>
                            <h4 className="text-primary font-14">

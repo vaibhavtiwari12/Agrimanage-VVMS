@@ -148,7 +148,7 @@ const Purchasertransactiontable = ({ purchaser, purchaserDetails }) => {
                                                          printCreditEntry(purchaser)
                                                       }
                                                    >
-                                                      Print
+                                                   <FormattedMessage id="printButtonText" />
                                                    </Button>
                                                 </div>
                                              </div>
@@ -204,7 +204,7 @@ const Purchasertransactiontable = ({ purchaser, purchaserDetails }) => {
                                                       "CREDIT" ? (
                                                          <td>
                                                             <b>
-                                                               <FormattedMessage id="tt_payment" />
+                                                                  <FormattedMessage id="tt_payment" />
                                                             </b>
                                                          </td>
                                                       ) : (
@@ -214,20 +214,23 @@ const Purchasertransactiontable = ({ purchaser, purchaserDetails }) => {
                                                       )}
 
                                                       {/*  <td>{balances[index] <0 ? <span className="text-danger">{balances[index]}</span> : <span className="text-success">{balances[index]}</span> }</td> */}
-                                                      <td>
-                                                         <span
-                                                            className={
-                                                               transaction.balanceAfterThisTransaction <
-                                                               0
-                                                                  ? "text-danger"
-                                                                  : "text-primary"
-                                                            }
-                                                         >
-                                                            {
-                                                               transaction.balanceAfterThisTransaction
-                                                            }
-                                                         </span>
-                                                      </td>
+                                                      {transaction.type !== "CREDIT" && 
+                                                         <td>
+                                                            <span
+                                                               className={
+                                                                  transaction.balanceAfterThisTransaction <
+                                                                  0
+                                                                     ? "text-danger"
+                                                                     : "text-primary"
+                                                               }
+                                                            >
+                                                               {
+                                                                  transaction.balanceAfterThisTransaction
+                                                               }
+                                                            </span>
+                                                         </td>   
+                                                      }
+                                                      
                                                    </tr>
                                                 );
                                              })}

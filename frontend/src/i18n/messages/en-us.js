@@ -8,7 +8,8 @@ const en = {
     address: "Address",
     currency: "₹",
     companyName: "Name of the Firm",
-
+    editKisan: "Edit Kisan",
+    editPurchaser:"Edit Purchaser",
 
     /*login Page */
     login: "LOGIN",
@@ -37,9 +38,10 @@ const en = {
     searchValue: "Search Value",
     searchButtonText: "Search",
     resetButtonText: "Reset",
+    printButtonText: "Print",
 
     /*Add Kisan Page*/
-    newKisanDeatils: "Details of new kisan",
+    newKisanDeatils: "Details Of New Kisan",
     nameIsRequired: "Name is required.",
     fatherNameIsRequired: "Father's name is required.",
     phoneIsRequired: "Phone number is required.",
@@ -143,6 +145,7 @@ const en = {
     /* Purchaser Landing Page */
     purchaserLandingTitle: "Purchaser Landing Page",
     addPurchaserButtonText: "Add Purchaser",
+    newPurchaserDeatils: "Details Of New Purchaser",
 
     /*Add Purchaser Form*/
     companyNameIsRequired: "Firm name is required.",
@@ -164,8 +167,11 @@ const en = {
     purchaserPaymentFormTitle: "Payment Details",
     paymentAmount: "Payment Amount",
 
-
-
+    /*Dashboard Page*/
+    totalAdvacePendingWithKisan:"Total kisan Advance Pending (₹)",
+    totalPurchaserOutstanding:"Total Purchaser Outstanding (₹)",
+    totalItemweight:"Total Item weight (in KGs)",
+    totalBagsSoldToday:"Total bags sold today (in Packs)",
 
   },
 };

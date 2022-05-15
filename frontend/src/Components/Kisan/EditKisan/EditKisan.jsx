@@ -139,7 +139,7 @@ import { getKisanByID } from "../../../Utility/utility";
         {/*  {hasError && <Alert color="danger"> FORM HAS AN ERROR </Alert>}{" "} */}
         <h3 className="flex-fill d-flex justify-content-center">
           {/* <FormattedMessage id="newKisanDeatils"/> */}
-          Edit Kisan
+          <FormattedMessage id="editKisan"/>
         </h3>
         <FormGroup className="mt-2">
           <Label for="name"><FormattedMessage id="name"/>:</Label>{" "}

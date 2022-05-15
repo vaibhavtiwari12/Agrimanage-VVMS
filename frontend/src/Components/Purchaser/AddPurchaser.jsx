@@ -132,7 +132,7 @@ const AddPurchaser = () => {
     <Form onSubmit={(e) => submit(e)} className="p-3">
       {/*  {hasError && <Alert color="danger"> FORM HAS AN ERROR </Alert>}{" "} */}
       <h3 className="flex-fill d-flex justify-content-center">
-        <FormattedMessage id="newKisanDeatils" />
+        <FormattedMessage id="newPurchaserDeatils" />
       </h3>
       <FormGroup className="mt-2">
         <Label for="name">

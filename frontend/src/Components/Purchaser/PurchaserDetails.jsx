@@ -52,7 +52,7 @@ const Purchaserdetails = () => {
         <FormattedMessage id="purchaserDetailsPageTitle" />
       </h2>
       <div className="text-center">
-        <Button color="primary" onClick={e=> handleButtonclick(`/editPurchaser/${id}`)}>Edit Purchaser</Button>
+        <Button color="primary" onClick={e=> handleButtonclick(`/editPurchaser/${id}`)}><FormattedMessage id="editPurchaser" /></Button>
       </div>
       <div>
         <div>

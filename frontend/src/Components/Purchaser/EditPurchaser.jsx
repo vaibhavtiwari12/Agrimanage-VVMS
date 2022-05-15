@@ -153,7 +153,7 @@ const EditPurchaser = () => {
       {/*  {hasError && <Alert color="danger"> FORM HAS AN ERROR </Alert>}{" "} */}
       <h3 className="flex-fill d-flex justify-content-center">
         {/* <FormattedMessage id="newKisanDeatils" /> */}
-        Edit Purchaser
+        <FormattedMessage id="editPurchaser" />
       </h3>
       <FormGroup className="mt-2">
         <Label for="name">
@@ -217,7 +217,7 @@ const EditPurchaser = () => {
       </FormGroup>{" "}
       <Button type="submit" color="primary" className="mt-3">
         {/* <FormattedMessage id="addPurchaserButtonText" /> */}
-        Update Purchaser Details
+        <FormattedMessage id="editButtonText" />
       </Button>
       <Button type="reset" color="danger" className="ms-1 mt-3" onClick={clear}>
         <FormattedMessage id="resetButtonText" />

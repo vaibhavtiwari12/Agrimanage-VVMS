@@ -61,7 +61,7 @@ const Kisandetails = () => {
         <FormattedMessage id="kisanDetailsTitle" />
       </h2>
       <div className="text-center">
-        <Button color="primary" onClick={e => handleButtonclick(`/editKisan/${id}`)}>Edit Kisan</Button>
+        <Button color="primary" onClick={e => handleButtonclick(`/editKisan/${id}`)}><FormattedMessage id="editKisan"/></Button>
       </div>
       <div>
         <div>
