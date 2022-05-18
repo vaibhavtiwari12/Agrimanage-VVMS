@@ -11,6 +11,7 @@ import {
     Alert,
     Breadcrumb,
     BreadcrumbItem,
+    Spinner
   } from "reactstrap";
 import { getPurchaserById } from "../../Utility/utility";
 const EditPurchaser = () => {
@@ -25,6 +26,8 @@ const EditPurchaser = () => {
   const [isAddressValid, setIsAddressValid] = useState("PRISTINE");
   const [hasError, setHasError] = useState(false);
   const [showAlert, setShowAlert] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   useEffect(() => {
     console.log(id);
     try {
@@ -35,11 +38,12 @@ const EditPurchaser = () => {
             setcompanyName(details.companyName);
             setPhone(details.phone);
             setAddress(details.address)
-
+            setIsLoading(false)
         }
       };
       fetchData();
     } catch (e) {
+      setIsLoading(false)
       throw new Error("Something Went Wrong ", e);
     }
   }, []);
@@ -97,6 +101,7 @@ const EditPurchaser = () => {
   const submit = (e) => {
     e.preventDefault();
     if (isFormValid()) {
+      setIsSubmitting(true)
       const formData = {
         name,
         companyName,
@@ -117,9 +122,11 @@ const EditPurchaser = () => {
           console.log("Res", res);
           handleAlert();
           clear();
+          setIsSubmitting(false)
         })
         .catch((error) => {
           console.log("is Here", error);
+          setIsSubmitting(false)
           throw new error("Somethign Went Wrong", error);
         });
     } else {
@@ -135,99 +142,110 @@ const EditPurchaser = () => {
     }, 4000);
   };
   return (
-    <div className="mt-3">
-      <Breadcrumb className="ps-3 mt-2">
-        <BreadcrumbItem>
-          <Link className="link-no-decoration-black text-primary" to="/">
-            Home
-          </Link>
-        </BreadcrumbItem>
-        <BreadcrumbItem>
-          <Link className="link-no-decoration-black text-primary" to="/purchaser">
-            Purchaser
-          </Link>
-        </BreadcrumbItem>
-        <BreadcrumbItem active>Edit Purchser</BreadcrumbItem>
-      </Breadcrumb>
-    <Form onSubmit={(e) => submit(e)} className="p-3">
-      {/*  {hasError && <Alert color="danger"> FORM HAS AN ERROR </Alert>}{" "} */}
-      <h3 className="flex-fill d-flex justify-content-center">
-        {/* <FormattedMessage id="newKisanDeatils" /> */}
-        <FormattedMessage id="editPurchaser" />
-      </h3>
-      <FormGroup className="mt-2">
-        <Label for="name">
-          <FormattedMessage id="name" />:
-        </Label>{" "}
-        <Input
-          invalid={name.length <= 0 && isnameValid === ""}
-          name="name"
-          type="text"
-          value={name}
-          onChange={(e) => nameChange(e)}
-        />{" "}
-        <FormFeedback>
-          <FormattedMessage id="nameIsRequired" />
-        </FormFeedback>{" "}
-      </FormGroup>{" "}
-      <FormGroup className="mt-2">
-        <Label for="companyName">
-          <FormattedMessage id="companyName" /> :
-        </Label>{" "}
-        <Input
-          invalid={companyName.length <= 0 && iscompanyNameValid === ""}
-          name="companyName"
-          type="text"
-          value={companyName}
-          onChange={(e) => companyNameChange(e)}
-        />{" "}
-        <FormFeedback>
-            <FormattedMessage id="companyNameIsRequired" />
-        </FormFeedback>{" "}
-      </FormGroup>{" "}
-      <FormGroup className="mt-2">
-        <Label for="phone">
-          <FormattedMessage id="phone" />:
-        </Label>{" "}
-        <Input
-          invalid={phone.length <= 0 && isPhonePristine === ""}
-          name="phone"
-          type="number"
-          value={phone}
-          onChange={(e) => phoneChange(e)}
-        />{" "}
-        <FormFeedback>
-          <FormattedMessage id="phoneIsRequired" />
-        </FormFeedback>{" "}
-      </FormGroup>{" "}
-      <FormGroup className="mt-2">
-        <Label for="address">
-          <FormattedMessage id="address" />:
-        </Label>{" "}
-        <Input
-          invalid={address.length <= 0 && isAddressValid === ""}
-          name="address"
-          type="text"
-          value={address}
-          onChange={(e) => addressChange(e)}
-        />{" "}
-        <FormFeedback>
-          <FormattedMessage id="addressIsRequired" />
-        </FormFeedback>{" "}
-      </FormGroup>{" "}
-      <Button type="submit" color="primary" className="mt-3">
-        {/* <FormattedMessage id="addPurchaserButtonText" /> */}
-        <FormattedMessage id="editButtonText" />
-      </Button>
-      <Button type="reset" color="danger" className="ms-1 mt-3" onClick={clear}>
-        <FormattedMessage id="resetButtonText" />
-      </Button>{" "}
-      {showAlert ? (
-        <Alert className="mt-4"><FormattedMessage id="purchaser_editSuccessful" /></Alert>
+    <div>
+      {isLoading ? (
+        <div className="text-center text-primary pt-5">
+        <Spinner />
+        </div>
       ) : (
-        ""
+        <div className="mt-3">
+          <Breadcrumb className="ps-3 mt-2">
+            <BreadcrumbItem>
+              <Link className="link-no-decoration-black text-primary" to="/">
+                Home
+              </Link>
+            </BreadcrumbItem>
+            <BreadcrumbItem>
+              <Link className="link-no-decoration-black text-primary" to="/purchaser">
+                Purchaser
+              </Link>
+            </BreadcrumbItem>
+            <BreadcrumbItem active>Edit Purchser</BreadcrumbItem>
+          </Breadcrumb>
+        <Form onSubmit={(e) => submit(e)} className="p-3">
+          {/*  {hasError && <Alert color="danger"> FORM HAS AN ERROR </Alert>}{" "} */}
+          <h3 className="flex-fill d-flex justify-content-center">
+            {/* <FormattedMessage id="newKisanDeatils" /> */}
+            <FormattedMessage id="editPurchaser" />
+          </h3>
+          <FormGroup className="mt-2">
+            <Label for="name">
+              <FormattedMessage id="name" />:
+            </Label>{" "}
+            <Input
+              invalid={name.length <= 0 && isnameValid === ""}
+              name="name"
+              type="text"
+              value={name}
+              onChange={(e) => nameChange(e)}
+            />{" "}
+            <FormFeedback>
+              <FormattedMessage id="nameIsRequired" />
+            </FormFeedback>{" "}
+          </FormGroup>{" "}
+          <FormGroup className="mt-2">
+            <Label for="companyName">
+              <FormattedMessage id="companyName" /> :
+            </Label>{" "}
+            <Input
+              invalid={companyName.length <= 0 && iscompanyNameValid === ""}
+              name="companyName"
+              type="text"
+              value={companyName}
+              onChange={(e) => companyNameChange(e)}
+            />{" "}
+            <FormFeedback>
+                <FormattedMessage id="companyNameIsRequired" />
+            </FormFeedback>{" "}
+          </FormGroup>{" "}
+          <FormGroup className="mt-2">
+            <Label for="phone">
+              <FormattedMessage id="phone" />:
+            </Label>{" "}
+            <Input
+              invalid={phone.length <= 0 && isPhonePristine === ""}
+              name="phone"
+              type="number"
+              value={phone}
+              onChange={(e) => phoneChange(e)}
+            />{" "}
+            <FormFeedback>
+              <FormattedMessage id="phoneIsRequired" />
+            </FormFeedback>{" "}
+          </FormGroup>{" "}
+          <FormGroup className="mt-2">
+            <Label for="address">
+              <FormattedMessage id="address" />:
+            </Label>{" "}
+            <Input
+              invalid={address.length <= 0 && isAddressValid === ""}
+              name="address"
+              type="text"
+              value={address}
+              onChange={(e) => addressChange(e)}
+            />{" "}
+            <FormFeedback>
+              <FormattedMessage id="addressIsRequired" />
+            </FormFeedback>{" "}
+          </FormGroup>{" "}
+          <Button type="submit" color="primary" className="mt-3" disabled={isSubmitting}>
+            {/* <FormattedMessage id="addPurchaserButtonText" /> */}
+            {isSubmitting &&( <span><Spinner className="spinner-size-1"/> &nbsp;</span> )}
+            <FormattedMessage id="editButtonText" />
+          </Button>
+          <Button type="reset" color="danger" className="ms-1 mt-3" onClick={clear}>
+            <FormattedMessage id="resetButtonText" />
+          </Button>{" "}
+          {showAlert ? (
+            <Alert className="mt-4"><FormattedMessage id="purchaser_editSuccessful" /></Alert>
+          ) : (
+            ""
+          )}
+        </Form>
+        </div>
+        
       )}
-    </Form>
+
     </div>
   );
 };
