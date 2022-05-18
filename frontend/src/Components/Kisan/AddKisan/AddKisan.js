@@ -6,6 +6,7 @@ import {
   Button,
   FormFeedback,
   Alert,
+  Spinner
 } from "reactstrap";
 import { useState } from "react";
 import { useHistory } from "react-router-dom";
@@ -22,6 +23,7 @@ const AddKisan = () => {
   const [isAddressValid, setIsAddressValid] = useState("PRISTINE");
   const [hasError, setHasError] = useState(false);
   const [showAlert, setShowAlert] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const isFormValid = () => {
     let isInvalid = false;
@@ -77,6 +79,7 @@ const AddKisan = () => {
   const submit = (e) => {
     e.preventDefault();
     if (isFormValid()) {
+      setIsSubmitting(true)
       const formData = {
         name,
         fatherName,
@@ -96,9 +99,11 @@ const AddKisan = () => {
           console.log("Res", res);
           handleAlert();
           clear();
+          setIsSubmitting(false)
         })
         .catch((error) => {
           console.log("is Here", error);
+          setIsSubmitting(false)
           throw new error("Somethign Went Wrong", error);
         });
     } else {
@@ -163,8 +168,8 @@ const AddKisan = () => {
         />{" "}
         <FormFeedback><FormattedMessage id="addressIsRequired"/></FormFeedback>{" "}
       </FormGroup>{" "}
-      <Button type="submit" color="primary" className="mt-3">
-        {" "}
+      <Button type="submit" color="primary" className="mt-3" disabled={isSubmitting}>
+        {isSubmitting &&( <span><Spinner className="spinner-size-1"/> &nbsp;</span> )}
         <FormattedMessage id="addNewKisanButtonText"/>{" "}
       </Button>{" "}
       <Button type="reset" color="danger" className="ms-1 mt-3" onClick={clear}>

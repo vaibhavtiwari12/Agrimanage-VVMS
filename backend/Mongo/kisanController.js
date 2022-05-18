@@ -122,11 +122,8 @@ const controller = async (type, data) => {
       deleteKisanTxn.transactions.map(txn => {
         if(txn._id == data.kisanTxnId){
           deleteKisanTxn.balance -= txn.advanceSettlement; 
-          if(txn.netTotal===0 && txn.grossTotal===0){
-            deleteKisanTxn.carryForwardAmount += txn.paidToKisan;
-          }else {
-            deleteKisanTxn.carryForwardAmount -= txn.carryForwardFromThisEntry;
-          }
+          const carryOfPrevTransaction = txn.carryForwardFromThisEntry + txn.paidToKisan + txn.advanceSettlement - txn.netTotal;
+          deleteKisanTxn.carryForwardAmount = carryOfPrevTransaction;
         }else {
           updatedKisanTransaction.push(txn);
         }

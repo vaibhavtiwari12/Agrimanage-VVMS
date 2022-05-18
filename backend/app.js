@@ -17,7 +17,7 @@ const  { generateDashboard} = require("./Utilities/utility");
 var MongoDBStore = require("connect-mongodb-session")(session);
 
 //Conifiguring the dotenv to read the env file variables.
-dotenv.config({ path: path.resolve(__dirname, "../.env") });
+dotenv.config({ path: path.resolve(__dirname, "./.env") });
 
 const app = express();
 
