@@ -91,12 +91,25 @@ const controller = async (type, data) => {
       //console.log("PURCHASES", deletePurchaserTxn);
       //Delete PurchaserRecord
       const updatedTransactionsForPurchase = []; 
+      let purTxnIndexToDelete = null;
+      let deletedtransactionAmount = 0;
       if(deletePurchaserTxn) {
-        deletePurchaserTxn.transactions.map(txn => {
+        deletePurchaserTxn.transactions.map((txn,index) => {
           if(txn._id == data.purchaserTxnId){
             console.log("Is Coming here?")
+            purTxnIndexToDelete = index
+            deletedtransactionAmount = txn.transactionAmount;
             deletePurchaserTxn.balance += txn.transactionAmount;
           }else {
+            // update the balance of all the transactions after the deleted 
+            // transaction with the transaction amount of the deleted transaction.
+            if(purTxnIndexToDelete!==null && index>purTxnIndexToDelete){
+                console.log("updating Index ================= ", index)
+                console.log("Value of the Delete Transaction ========", deletedtransactionAmount);
+                console.log("Updated Value BEFORE the transaction ====== ", txn.balanceAfterThisTransaction)
+                txn.balanceAfterThisTransaction +=  deletedtransactionAmount;
+                console.log("Updated Value AFTER the transaction ====== ", txn.balanceAfterThisTransaction)
+            }
             updatedTransactionsForPurchase.push(txn);
           }
         })

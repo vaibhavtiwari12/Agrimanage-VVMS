@@ -16,7 +16,7 @@ const Purchasertransactiontable = ({ purchaser, purchaserDetails }) => {
 
    const creditPrintRef = useRef();
    const printCreditEntry = (currentTransaction) => {
-      console.log("Current Transaction", currentTransaction);
+      console.log("Current Transaction ===============================================", currentTransaction);
       const transaction = {
          name: purchaserDetails.name,
          balance: purchaserDetails.balance,
@@ -128,11 +128,11 @@ const Purchasertransactiontable = ({ purchaser, purchaserDetails }) => {
                         {purchaser.length > 0 &&
                            purchaser
                            .sort(function (a, b) {
-                              b = b.toString().split('/');
-                              a = a.toString().split('/');
-                              return b[2] - a[2] || b[1] - a[1] || b[0] - a[0];
+                              
+                              b = b.date.toString().split('/');
+                              a = a.date.toString().split('/');
+                              return b[2] - a[2]  || b[1] - a[1] || b[0]- a[0];
                         })
-                        .reverse()
                               .map((purchaser, index) => {
                                  return (
                                     <Fragment key={index}>
