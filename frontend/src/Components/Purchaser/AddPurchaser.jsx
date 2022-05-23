@@ -200,7 +200,7 @@ const AddPurchaser = () => {
         </FormFeedback>{" "}
       </FormGroup>{" "}
       <Button type="submit" color="primary" className="mt-3" disabled={isSubmitting}>
-      {isSubmitting &&( <span><Spinner className="spinner-size-1"/> &nbsp;</span> )}FormattedMessage id="addPurchaserButtonText" />
+      {isSubmitting &&( <span><Spinner className="spinner-size-1"/> &nbsp;</span> )}<FormattedMessage id="addPurchaserButtonText" />
       </Button>
       <Button type="reset" color="danger" className="ms-1 mt-3" onClick={clear}>
         <FormattedMessage id="resetButtonText" />

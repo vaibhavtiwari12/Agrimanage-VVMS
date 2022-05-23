@@ -68,7 +68,6 @@ const hi = {
     carryForward: "बिल का बक़ाया भुगतान (₹)",
     actions: "कार्यवाही",
     editButtonText: "सुधारें",
-    printButtonText: "प्रिंट",
     viewButtonText: "देखें",
 
     /*Debit Entry Form*/
@@ -76,6 +75,7 @@ const hi = {
     amount: "एडवांस की राशि",
     createEntryButtonText: "एंट्री करें",
     amountSBGTZ: "एडवांस की राशि 0 से अधिक होनी चाहिये। ",
+    advanceSCNBMTO: "यह राशि, कुल बक़ाया एडवांस से ज्यादा नहीं हो सकती है। अधिकतम मान्य राशि = ₹ ",
 
     /*Advance Deposit Form*/
     advanceDepositDetails: "एडवांस वापसी हेतु किसान द्वारा जमा की जाने वाली राशि का विवरण",

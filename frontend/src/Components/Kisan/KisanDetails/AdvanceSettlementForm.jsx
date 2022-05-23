@@ -273,7 +273,7 @@ const Advancesettlementform = () => {
                      />
                      <FormFeedback>
                         {isAmountValid === "AMOUNTEXCEEDBALANCE" ? (
-                           "Amount cannot be more than outstanding balance"
+                            <span><FormattedMessage id="advanceSCNBMTO" /> {Math.abs(kisan.balance)} </span>
                         ) : (
                            <FormattedMessage id="amountSBGTZ" />
                         )}

@@ -68,7 +68,6 @@ const en = {
     carryForward: "Carry Forward From Bill (₹)",
     actions: "Actions",
     editButtonText: "Edit",
-    printButtonText: "Print",
     viewButtonText: "View",
 
     /*Debit Entry Form*/
@@ -76,6 +75,7 @@ const en = {
     amount: "Advance Amount",
     createEntryButtonText: "Create Entry",
     amountSBGTZ: "The amount should be greater than 0.",
+    advanceSCNBMTO: "Amount cannot be more than outstanding balance. Max allowed amount =  ₹ ",
 
     /*Advance Deposit Form*/
     advanceDepositDetails: "Deposit Details",
