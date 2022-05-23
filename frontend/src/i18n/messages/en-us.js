@@ -47,6 +47,9 @@ const en = {
     phoneIsRequired: "Phone number is required.",
     addressIsRequired: "Phone number is required.",
     addNewKisanButtonText: "Add New kisan",
+    addKisanSuccessful: "Kisan has been added successfully",
+    editKisanSuccessful: "Kisan has been Edited successfully",
+    updateKisanBtnText: "Update Kisan Details",
 
     /*Kisan Detail Page*/
     kisanDetailsTitle: "Kisan Details",
@@ -129,6 +132,8 @@ const en = {
     commentIsRequired: "Comment is required.",
     selectTradingAndPurchaserIsRequired: "If you are selecting any Commodity, It is essential to select a Purchaser.",
     selectingPurchaserIsRequired: "Selecting a Purchaser is required.",
+    advanceSettlementAddedSuccessfully:"Advance Settlement Entry been added successfully.",
+    advanceSettlementUpdatedSuccessfully:"Advance Settlement Entry has been Edited successfully.",
 
     /* Inventory Langing */
     inventoryLandingTitle: "Inventory",

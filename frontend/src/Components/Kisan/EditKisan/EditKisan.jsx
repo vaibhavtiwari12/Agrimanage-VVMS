@@ -227,7 +227,7 @@ const EditKisan = () => {
                         <Spinner className="spinner-size-1" /> &nbsp;
                      </span>
                   )}
-                  Update Kisan Details
+                  <FormattedMessage id="editButtonText" />
                </Button>{" "}
                <Button
                   type="reset"
@@ -240,7 +240,7 @@ const EditKisan = () => {
                </Button>{" "}
                {showAlert ? (
                   <Alert className="mt-4">
-                     Kisan has been Edited successfully
+                     <FormattedMessage id="editKisanSuccessful" />
                   </Alert>
                ) : (
                   ""

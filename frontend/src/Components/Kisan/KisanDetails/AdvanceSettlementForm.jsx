@@ -340,11 +340,11 @@ const Advancesettlementform = () => {
                   {showAlert ? (
                      type === "add" ? (
                         <Alert className="mt-4">
-                           Advance Settlement Entry been added successfully
+                           <FormattedMessage id="advanceSettlementAddedSuccessfully" />
                         </Alert>
                      ) : (
                         <Alert className="mt-4">
-                           Advance Settlement Entry has been Edited successfully
+                           <FormattedMessage id="advanceSettlementUpdatedSuccessfully" />
                         </Alert>
                      )
                   ) : (

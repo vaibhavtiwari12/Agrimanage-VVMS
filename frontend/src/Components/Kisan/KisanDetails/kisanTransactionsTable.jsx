@@ -40,7 +40,7 @@ const Kisantransactionstable = ({ kisan, updateKisan }) => {
       phone: kisan.phone,
       date: dateConverter(currentTransaction.date),
       transactionAmount: currentTransaction.transactionAmount,
-      type: "DEBIT",
+      type: currentTransaction.type,
     });
   };
   const printCreditEntry = (currentTransaction) => {

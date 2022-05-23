@@ -47,6 +47,9 @@ const hi = {
     phoneIsRequired: "फ़ोन नंबर देना अनिवार्य है।",
     addressIsRequired: "पता देना अनिवार्य है।",
     addNewKisanButtonText: "नया किसान जोड़ें",
+    addKisanSuccessful: "नया किसान सफलतापूर्वक जोड़ा गया।",
+    editKisanSuccessful: "किसान का ब्यौरा सफलतापूर्वक सुधारा गया।",
+    updateKisanBtnText: "किसान का ब्यौरा सुधारें",
 
     /*Kisan Detail Page*/
     kisanDetailsTitle: "किसान का विवरण",
@@ -129,6 +132,8 @@ const hi = {
     commentIsRequired: "एंट्री का विवरण देना अनिवार्य है। ",
     selectTradingAndPurchaserIsRequired: "यदि आप किसी कमोडिटी का चयन कर रहे हैं, तो ख़रीददार का चयन करना भी अनिवार्य है। ",
     selectingPurchaserIsRequired: "ख़रीददार का चयन करना अनिवार्य है। ",
+    advanceSettlementAddedSuccessfully:"एडवांस वापसी की एंटी सफलतापूर्वक जोड़ी गयी।",
+    advanceSettlementUpdatedSuccessfully:"एडवांस वापसी की एंटी सफलतापूर्वक सुधारी गयी।",
 
     /* Inventory Langing */
     inventoryLandingTitle: "इनवेंटरी विवरणिका",

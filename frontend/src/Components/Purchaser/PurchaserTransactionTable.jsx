@@ -139,7 +139,7 @@ const Purchasertransactiontable = ({ purchaser, purchaserDetails }) => {
                                        <tr className="border  m-2">
                                           <td colSpan="9">
                                              <div className="d-flex align-items-center">
-                                                <b>Date : {purchaser.date} </b>
+                                                <b><FormattedMessage id="date" /> : {purchaser.date} </b>
                                                 <div className="flex-fill d-flex justify-content-end">
                                                    <Button
                                                       className=""

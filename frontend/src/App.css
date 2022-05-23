@@ -1,7 +1,10 @@
 .AppContent {
    margin: 5px;
 }
-
+.receipt-paragraph {
+   font-size: 1.2rem;
+   line-height: 2rem;
+}
 .flex-even {
    flex: 1;
 }
@@ -47,6 +50,7 @@
       rgba(255, 224, 230, 1) 100%
    );
 }
+
 
 @media print {
    html, body {

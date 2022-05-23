@@ -177,7 +177,7 @@ const AddKisan = () => {
          <FormattedMessage id="resetButtonText"/>{" "}{" "}
       </Button>{" "}
       {showAlert ? (
-        <Alert className="mt-4">Kisan has been added successfully</Alert>
+        <Alert className="mt-4"> <FormattedMessage id="addKisanSuccessful"/></Alert>
       ) : (
         ""
       )}

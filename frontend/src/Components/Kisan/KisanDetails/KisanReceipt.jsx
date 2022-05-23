@@ -5,7 +5,8 @@ const Kisanreceipt = React.forwardRef((props, ref) => {
   /* console.log("Props", props); */
   return (
     <div ref={ref} className="m-4">
-        <h1 className="text-center mb-5 pt-4">|| महाराज वेजिटेबल कंपनी ||</h1> 
+        <h1 className="text-center mb-5 pt-4">|| महाराज वेजिटेबल कंपनी ||</h1>
+        {props.data.type}
       <div className="receipt-font-size pt-5">
         मैं <b className="capitalize">{props.data.name}</b> वल्द श्री <b className="capitalize">{props.data.fatherName}</b>{" "}
         महाराज वेजिटेबल कंपनी श्री इंद्रेश दुबे जी से मटर के बीज के लिए{" "}
