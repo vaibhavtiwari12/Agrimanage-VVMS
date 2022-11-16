@@ -18,31 +18,31 @@ const Kisancreditreceipt = React.forwardRef((props, ref) => {
          </h6>
 
           {props.data.type != "ADVANCESETTLEMENT" &&
-             <div className="ps-1 border-bottom">
-                <Table size="sm" borderless>
-                   <tbody>
-                      <tr>
-                         <th>नाम</th>
-                         <td>{props.data.name}</td>
-                         <th>बिल क्रमांक </th>
-                         <td>{props.data.txn_id}</td>
-                      </tr>
-                      <tr>
-                         <th>पिता का नाम </th>
-                         <td>{props.data.fatherName}</td>
-                         <th>दिनांक </th>
-                         <td>{props.data.txn_date}</td>
-                      </tr>
-                      <tr>
-                         <th>पता</th>
-                         <td>{props.data.address}</td>
-                         <th>फ़ोन </th>
-                         <td>{props.data.phone}</td>
-                      </tr>
-                   </tbody>
-                </Table>
-             </div> &&
              <div className="">
+               <div className="ps-1 border-bottom">
+                  <Table size="sm" borderless>
+                     <tbody>
+                        <tr>
+                           <th>नाम</th>
+                           <td>{props.data.name}</td>
+                           <th>बिल क्रमांक </th>
+                           <td>{props.data.txn_id}</td>
+                        </tr>
+                        <tr>
+                           <th>पिता का नाम </th>
+                           <td>{props.data.fatherName}</td>
+                           <th>दिनांक </th>
+                           <td>{props.data.txn_date}</td>
+                        </tr>
+                        <tr>
+                           <th>पता</th>
+                           <td>{props.data.address}</td>
+                           <th>फ़ोन </th>
+                           <td>{props.data.phone}</td>
+                        </tr>
+                     </tbody>
+                  </Table>
+               </div>
                 <Table>
                    <tbody>
                       <tr>
