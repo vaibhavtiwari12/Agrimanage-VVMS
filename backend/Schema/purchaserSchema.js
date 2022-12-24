@@ -11,6 +11,7 @@ const transactions = new Schema({
   kisanName: String,
   transactionAmount: Number,
   date: Date,
+  comment: String,
   balanceAfterThisTransaction: Number
 });
 //This schema is for the one Row or document
@@ -22,6 +23,7 @@ const purchaserSchema = new Schema({
   address: String,
   date: Date,
   balance: Number,
+  comment: String,
   transactions: [transactions],
 });
 

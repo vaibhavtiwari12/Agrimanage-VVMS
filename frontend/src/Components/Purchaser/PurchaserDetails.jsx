@@ -24,6 +24,18 @@ const Purchaserdetails = () => {
       throw new Error("Something Went Wrong ", e);
     }
   }, []);
+
+  const updatePurchaser = () => {
+    try {
+      const fetchData = async () => {
+        setPurchaser(await getPurchaserById(id));
+        setCustomPurchaserTransaction(await fetchCustomTransactionsForPurchaser(id))
+      };
+      fetchData();
+    } catch (e) {
+      throw new Error("Something Went Wrong ", e);
+    }
+  }
   useEffect(() => {
     console.log("KISAN ", purchaser);
     if (purchaser.name) {
@@ -69,7 +81,7 @@ const Purchaserdetails = () => {
         <FormattedMessage id="transactionDetailsTitle" />
       </h3>
       <div className="p-3 font-10">
-        <Purchasertransactiontable purchaser={customPurchaserTransaction} purchaserDetails={purchaser}/>
+        <Purchasertransactiontable purchaser={customPurchaserTransaction} purchaserDetails={purchaser} updatePurchaser = {updatePurchaser}/>
       </div>
     </div>
   );

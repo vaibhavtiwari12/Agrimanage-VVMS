@@ -51,6 +51,18 @@ const controller = async (type, data) => {
       const editedPurchaser = await purchaser.save();
       return editedPurchaser
     }
+    case "DeleteTransaction": {
+      //Deleting data
+      const purchaser = await Purchaser.findById(data.purchaserId);
+      if(purchaser) {
+        if(purchaser.transactions[purchaser.transactions.length-1]._id.toString() === data.purchaserTxnId.toString()) {
+          purchaser.balance -= purchaser.transactions[purchaser.transactions.length-1].transactionAmount;
+          purchaser.transactions.pop();
+        }
+       }
+       await purchaser.save();
+       return {message:"Purchaser Credit/Payment Transaction Deleted Successfully"}
+    }
     case "FindByID": {
       console.log("IS Here", data);
       const purchasers = await Purchaser.findById(data);
@@ -89,13 +101,14 @@ const controller = async (type, data) => {
       console.log("Add credit transaction to Purchaser----- ",data)
       let fetchedPurchaser = await Purchaser.findById(data.id);
         fetchedPurchaser.balance += data.transaction.transactionAmount;
-        fetchedPurchaser.transactions.push({
+        const transactionToPush = {
           transactionAmount: data.transaction.transactionAmount,
+          comment: data.transaction.comment,
           date: new Date(),
           balanceAfterThisTransaction: fetchedPurchaser.balance,
           type: data.transaction.type
-        });
-      console.log("PURCHASER CREDIT ENTRY ------- ", fetchedPurchaser)
+        }
+        fetchedPurchaser.transactions.push(transactionToPush);
       const finalKisan = await fetchedPurchaser.save();
       return finalKisan;
     }

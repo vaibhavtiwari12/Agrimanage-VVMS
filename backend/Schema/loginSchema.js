@@ -5,8 +5,7 @@ const Schema = mongoose.Schema;
 //This schema is for the one Row or document
 const loginSchema = new Schema({
   userName: String,
-  password: String,
-  date: Date,
+  password: String
 });
 
 module.exports = mongoose.model("login", loginSchema);

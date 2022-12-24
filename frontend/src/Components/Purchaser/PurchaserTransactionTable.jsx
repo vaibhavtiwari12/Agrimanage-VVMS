@@ -7,13 +7,15 @@ import { useReactToPrint } from "react-to-print";
 import { FormattedMessage } from "react-intl";
 import { dateConverter } from "../../Utility/utility";
 import PurchaserBill from "./PurchaserBill";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { solid, regular, brands } from '@fortawesome/fontawesome-svg-core/import.macro';
 
-const Purchasertransactiontable = ({ purchaser, purchaserDetails }) => {
+const Purchasertransactiontable = ({ purchaser, purchaserDetails, updatePurchaser }) => {
    console.log("purchaserDetails", purchaserDetails);
    console.log("purchaser", purchaser);
    const [transaction, setTransaction] = useState({});
    const [isLoading, setIsLoading] = useState(true);
-
+   const [isDeleting, setIsDeleting] = useState(false)
    const creditPrintRef = useRef();
    const printCreditEntry = (currentTransaction) => {
       console.log("Current Transaction ===============================================", currentTransaction);
@@ -70,6 +72,32 @@ const Purchasertransactiontable = ({ purchaser, purchaserDetails }) => {
       }
       return oldBalance;
    };
+
+   const deletePurchaserPaymentTransaction = (txn) => {
+      setIsDeleting(true);
+      const formData = {
+        purchaserId:purchaserDetails._id,
+        purchaserTxnId:txn._id,
+      };
+      fetch(`/purchaser/DeleteTransacton`, {
+        method: "POST",
+        body: JSON.stringify(formData),
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+      })
+        .then((res) => res.json())
+        .then((res) => {
+          console.log("Res", res);
+          updatePurchaser();
+        })
+        .catch((error) => {
+          console.log("is Here", error);
+          setIsDeleting(false);
+          throw new error("Somethign Went Wrong", error);
+        }); 
+    }
    useEffect(() => {
       if (Object.keys(transaction).length > 0) {
          console.log("Transaction ", transaction);
@@ -82,6 +110,7 @@ const Purchasertransactiontable = ({ purchaser, purchaserDetails }) => {
    useEffect(() => {
       if (purchaser) {
          setIsLoading(false);
+         setIsDeleting(false);
       }
    }, [purchaser]);
 
@@ -100,6 +129,9 @@ const Purchasertransactiontable = ({ purchaser, purchaserDetails }) => {
                            <th>#</th>
                            <th>
                               <FormattedMessage id="date" />
+                           </th>
+                           <th>
+                              <FormattedMessage id="Comments" />
                            </th>
                            <th>
                               <FormattedMessage id="kisanDetailsTitle" />
@@ -122,6 +154,9 @@ const Purchasertransactiontable = ({ purchaser, purchaserDetails }) => {
                            <th>
                               <FormattedMessage id="outstandingPaymentADT" />
                            </th>
+                           <th>
+                              <FormattedMessage id="actions" />
+                           </th>
                         </tr>
                      </thead>
                      <tbody>
@@ -137,7 +172,7 @@ const Purchasertransactiontable = ({ purchaser, purchaserDetails }) => {
                                  return (
                                     <Fragment key={index}>
                                        <tr className="border  m-2">
-                                          <td colSpan="9">
+                                          <td colSpan="11">
                                              <div className="d-flex align-items-center">
                                                 <b><FormattedMessage id="date" /> : {purchaser.date} </b>
                                                 <div className="flex-fill d-flex justify-content-end">
@@ -178,6 +213,9 @@ const Purchasertransactiontable = ({ purchaser, purchaserDetails }) => {
                                                          )}
                                                       </td>
                                                       <td>
+                                                         {transaction.comment? transaction.comment: ""}
+                                                      </td>
+                                                      <td>
                                                          <Link
                                                             to={
                                                                "/kisanDetails/" +
@@ -214,7 +252,7 @@ const Purchasertransactiontable = ({ purchaser, purchaserDetails }) => {
                                                       )}
 
                                                       {/*  <td>{balances[index] <0 ? <span className="text-danger">{balances[index]}</span> : <span className="text-success">{balances[index]}</span> }</td> */}
-                                                      {transaction.type !== "CREDIT" && 
+                                                      
                                                          <td>
                                                             <span
                                                                className={
@@ -229,6 +267,13 @@ const Purchasertransactiontable = ({ purchaser, purchaserDetails }) => {
                                                                }
                                                             </span>
                                                          </td>   
+                                                      
+                                                      {transaction.type === "CREDIT" && index == 0 ?  
+                                                        (<td>{
+                                                         isDeleting?<Button color="danger" className="ms-2"><Spinner className="spinner-size-1"/></Button> :
+                                                            <Button color="danger" className="ms-2" onClick={e => deletePurchaserPaymentTransaction(transaction, purchaser)}><FontAwesomeIcon icon={solid('trash')} className="text-white"/></Button>
+                                                         }
+                                                         </td>) : <td></td>  
                                                       }
                                                       
                                                    </tr>

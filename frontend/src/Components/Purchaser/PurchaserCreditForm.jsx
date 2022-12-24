@@ -95,8 +95,9 @@ const Purchasercreditform = () => {
           transactionAmount: parseInt(amount),
           type: "CREDIT",
           comment,
-        },
+        }
       };
+      console.log("FORM DATA", formData)
       fetch(`/purchaser/AddCreditTransaction/${id}`, {
         method: "POST",
         body: JSON.stringify(formData),
@@ -204,7 +205,7 @@ const Purchasercreditform = () => {
           </Label>
           <Input
             disabled={type === "edit" ? true : false}
-            invalid={amount <= 0 && isAmountValid === ""}
+            invalid={isAmountValid === ""}
             name="amount"
             type="number"
             className="font-10"
@@ -214,7 +215,7 @@ const Purchasercreditform = () => {
           />
           <FormFeedback>
             {" "}
-            <FormattedMessage id="amountSBGTZ" />
+            {/* <FormattedMessage id="amountSBGTZ" /> */}
           </FormFeedback>
         </FormGroup>
         <FormGroup className="mt-2">

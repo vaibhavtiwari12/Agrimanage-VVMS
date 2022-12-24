@@ -20,6 +20,12 @@ purchaserRouter.post("/add", async (req, res) => {
   res.json(addedPurchaser);
 });
 
+purchaserRouter.post("/DeleteTransacton", async (req, res) => {
+  console.log("Purchaser Delete Transaction", req.body);
+  const deletedPurchaser = await controller("DeleteTransaction", req.body);
+  res.json(deletedPurchaser);
+});
+
 purchaserRouter.post("/edit", async (req, res) => {
   console.log("Purchaser Edit", req.body);
   const editedPurchaser = await controller("Edit", req.body);
