@@ -17,6 +17,7 @@ import {
 import { useState } from "react";
 import { Link, useHistory, useParams } from "react-router-dom";
 import { FormattedMessage } from "react-intl";
+import NewModal from "../../Utility/Modal";
 
 
 
@@ -29,6 +30,7 @@ const Purchasercreditform = () => {
   const [purchaser, setPurchaser] = useState({});
   const [hasError, setHasError] = useState(false);
   const [showAlert, setShowAlert] = useState(false);
+  const [isNegativeAmountEntry, setIsNegativeAmountEntry] = useState(false);
 
   useEffect(() => {
     try {
@@ -64,9 +66,13 @@ const Purchasercreditform = () => {
       setIsAmountValid("");
       isInvalid = true;
     }
-
+    if (parseInt(amount)===0) {
+      setIsAmountValid("");
+      isInvalid = true;
+    }
     return isInvalid ? false : true;
   };
+
   const history = useHistory();
   const commentChange = (e) => {
     setComment(e.target.value);
@@ -80,15 +86,35 @@ const Purchasercreditform = () => {
   const clear = () => {
     setAmount("");
     setComment("");
-
     setHasError(false);
     setIsCommentValid("PRISTINE");
     setIsAmountValid("PRISTINE");
   };
+
+  const setIsNegativeAmountState = () => {
+    setIsNegativeAmountEntry(false);
+  }
+
+  const agree = () => {
+    submit();
+  }
   const [isSubmitting, setIsSubmitting] = useState(false)
-  const submit = (e) => {
+
+  const checkAmountValidity = (e) => {
     e.preventDefault();
     if (isFormValid()) {
+      if(parseInt(amount)<0){
+        setIsNegativeAmountEntry(true);
+      }else{
+        submit();
+      }
+    }else{
+      setHasError(true); 
+    }
+  }
+  const submit = () => {
+    if (isFormValid()) {
+      
       setIsSubmitting(true)
       const formData = {
         transaction: {
@@ -194,7 +220,8 @@ const Purchasercreditform = () => {
         </div>
         <div></div>
       </div>
-      <Form onSubmit={(e) => submit(e)} className="p-3 font-10">
+      
+      <Form onSubmit={(e) => checkAmountValidity(e)} className="p-3 font-10">
         {/*  {hasError && <Alert color="danger"> FORM HAS AN ERROR </Alert>} */}
         <h2 className="text-center text-secondary mt-3 font-13">
           <FormattedMessage id="purchaserPaymentFormTitle" />
@@ -205,7 +232,7 @@ const Purchasercreditform = () => {
           </Label>
           <Input
             disabled={type === "edit" ? true : false}
-            invalid={isAmountValid === ""}
+            invalid={amount ==0 && isAmountValid === ""}
             name="amount"
             type="number"
             className="font-10"
@@ -215,9 +242,10 @@ const Purchasercreditform = () => {
           />
           <FormFeedback>
             {" "}
-            {/* <FormattedMessage id="amountSBGTZ" /> */}
+            {<FormattedMessage id="amountCNBZ" />}
           </FormFeedback>
         </FormGroup>
+
         <FormGroup className="mt-2">
           <Label for="comment">
             {" "}
@@ -264,16 +292,17 @@ const Purchasercreditform = () => {
         )}
         {showAlert ? (
           type === "add" ? (
-            <Alert className="mt-4 font-10">Credit Entry been added successfully</Alert>
+            <Alert className="mt-4 font-10"><FormattedMessage id="entryAddSuccessMsg" /></Alert>
           ) : (
-            <Alert className="mt-4 font-10">
-              Credit Entry has been Edited successfully
-            </Alert>
+            <Alert className="mt-4 font-10"><FormattedMessage id="entryEditSuccessMsg" /></Alert>
           )
         ) : (
           ""
         )}
       </Form>
+      { isNegativeAmountEntry && <NewModal heading={<FormattedMessage id="negativePaymentPopupHeading" />} toggle ={setIsNegativeAmountState} agree={agree}>
+        <div><FormattedMessage id="negativePaymentPopupContent" /> <span className="text-danger"><b> {amount}</b></span>?</div></NewModal> 
+      }
     </div>
   );
 

@@ -244,15 +244,17 @@ const Debitform = () => {
           </Button>
         )}
         {showAlert ? (
-          type === "add" ? (
-            <Alert className="mt-4">Debit Entry been added successfully</Alert>
-          ) : (
-            <Alert className="mt-4">
-              Debit Entry has been Edited successfully
-            </Alert>
-          )
+            type === "add" ? (
+              <Alert className="mt-4">
+                  <FormattedMessage id="entryAddSuccessMsg" />
+              </Alert>
+            ) : (
+              <Alert className="mt-4">
+                  <FormattedMessage id="entryEditSuccessMsg" />
+              </Alert>
+            )
         ) : (
-          ""
+            ""
         )}
       </Form>
     </div>

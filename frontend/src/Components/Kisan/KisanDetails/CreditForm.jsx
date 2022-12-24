@@ -1005,11 +1005,11 @@ const CreditForm = () => {
                   {showAlert ? (
                      type === "add" ? (
                         <Alert className="mt-4">
-                           Credit Entry been added successfully
+                           <FormattedMessage id="entryAddSuccessMsg" />
                         </Alert>
                      ) : (
                         <Alert className="mt-4">
-                           Credit Entry has been Edited successfully
+                           <FormattedMessage id="entryEditSuccessMsg" />
                         </Alert>
                      )
                   ) : (

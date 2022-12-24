@@ -72,12 +72,17 @@ const en = {
     actions: "Actions",
     editButtonText: "Edit",
     viewButtonText: "View",
+    yesButton: "Yes",
+    noButton: "No",
+    entryAddSuccessMsg:"Entry Added Successfully...!",
+    entryEditSuccessMsg:"Entry Edited Successfully...!",
 
     /*Debit Entry Form*/
     advanceDetails: "Advance Details",
     amount: "Advance Amount",
     createEntryButtonText: "Create Entry",
     amountSBGTZ: "The amount should be greater than 0.",
+    amountCNBZ: "The amount is required, 0 not allowed, +ve amd -ve both amounts are allowed.",
     advanceSCNBMTO: "Amount cannot be more than outstanding balance. Max allowed amount =  ₹ ",
 
     /*Advance Deposit Form*/
@@ -171,6 +176,8 @@ const en = {
     tt_payment: "Payment",
     purchaserPaymentFormTitle: "Payment Details",
     paymentAmount: "Payment Amount",
+    negativePaymentPopupHeading: "Negative Amount Alert !",
+    negativePaymentPopupContent: "Please confirm if you want to enter amount (₹) = ",
 
     /*Dashboard Page*/
     totalAdvacePendingWithKisan:"Total kisan Advance Pending (₹)",

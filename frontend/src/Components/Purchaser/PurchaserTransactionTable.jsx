@@ -113,7 +113,12 @@ const Purchasertransactiontable = ({ purchaser, purchaserDetails, updatePurchase
          setIsDeleting(false);
       }
    }, [purchaser]);
-
+   const showDeleteButton = (index, mainIndex) => {
+      if(mainIndex === 0 && index === 0) {
+         return true;
+      }
+      return false;
+   }
    return (
       <div>
          {isLoading ? (
@@ -131,7 +136,7 @@ const Purchasertransactiontable = ({ purchaser, purchaserDetails, updatePurchase
                               <FormattedMessage id="date" />
                            </th>
                            <th>
-                              <FormattedMessage id="Comments" />
+                              <FormattedMessage id="comment" />
                            </th>
                            <th>
                               <FormattedMessage id="kisanDetailsTitle" />
@@ -168,9 +173,9 @@ const Purchasertransactiontable = ({ purchaser, purchaserDetails, updatePurchase
                               a = a.date.toString().split('/');
                               return b[2] - a[2]  || b[1] - a[1] || b[0]- a[0];
                         })
-                              .map((purchaser, index) => {
+                              .map((purchaser, mainIndex) => {
                                  return (
-                                    <Fragment key={index}>
+                                    <Fragment key={mainIndex}>
                                        <tr className="border  m-2">
                                           <td colSpan="11">
                                              <div className="d-flex align-items-center">
@@ -268,9 +273,9 @@ const Purchasertransactiontable = ({ purchaser, purchaserDetails, updatePurchase
                                                             </span>
                                                          </td>   
                                                       
-                                                      {transaction.type === "CREDIT" && index == 0 ?  
-                                                        (<td>{
-                                                         isDeleting?<Button color="danger" className="ms-2"><Spinner className="spinner-size-1"/></Button> :
+                                                      {transaction.type === "CREDIT" &&  showDeleteButton(index, mainIndex) ?  
+                                                        (<td>{ 
+                                                         isDeleting?<Button color="danger" className="ms-2"><Spinner className="spinner-size-1"/></Button>:
                                                             <Button color="danger" className="ms-2" onClick={e => deletePurchaserPaymentTransaction(transaction, purchaser)}><FontAwesomeIcon icon={solid('trash')} className="text-white"/></Button>
                                                          }
                                                          </td>) : <td></td>  

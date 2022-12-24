@@ -72,12 +72,18 @@ const hi = {
     actions: "कार्यवाही",
     editButtonText: "सुधारें",
     viewButtonText: "देखें",
+    yesButton: "हाँ",
+    noButton: "नहीं",
+    entryAddSuccessMsg:"एंटी सफलतापूर्वक जोड़ी गयी...!",
+    entryEditSuccessMsg:"एंटी सफलतापूर्वक सुधारी गयी...!",
+
 
     /*Debit Entry Form*/
     advanceDetails: "एडवांस का विवरण",
     amount: "एडवांस की राशि",
     createEntryButtonText: "एंट्री करें",
     amountSBGTZ: "एडवांस की राशि 0 से अधिक होनी चाहिये। ",
+    amountCNBZ: "राशि दर्ज़ करना अनिवार्य है! राशि + या - में दर्ज़ कर सकते हैं। 0 अमान्य है ।",
     advanceSCNBMTO: "यह राशि, कुल बक़ाया एडवांस से ज्यादा नहीं हो सकती है। अधिकतम मान्य राशि = ₹ ",
 
     /*Advance Deposit Form*/
@@ -171,6 +177,8 @@ const hi = {
     tt_payment: "पेमेंट",
     purchaserPaymentFormTitle: "पेमेंट विवरण",
     paymentAmount: "पेमेंट की राशि",
+    negativePaymentPopupHeading: "निगेटिव राशि हेतु चेतावनी !",
+    negativePaymentPopupContent: "कृपया पुष्टि करें कि क्या आप यह राशि दर्ज करना चाहते हैं (₹) = ",
 
     /*Dashboard Page*/
     totalAdvacePendingWithKisan:"किसानो का कुल बक़ाया एडवांस (₹)",
