@@ -16,6 +16,7 @@ import { useState } from "react";
 import { Link, useHistory, useParams } from "react-router-dom";
 import { getKisanByID } from "../../../Utility/utility";
 import Kisanmoneysummary from "./KisanMoneySummary";
+import "../../../Utility/creditFormSwitch.css"
 import axios from "axios";
 
 const CreditForm = () => {
@@ -36,13 +37,13 @@ const CreditForm = () => {
    const [paidToKisan, setPaidToKisan] = useState(0);
    const [advanceSettlement, setAdvanceSettlement] = useState(0);
    const [carryForwardFromThisEntry, setCarryForwardFromThisEntry] =
-      useState(0);
+   useState(0);
    const [balanceAfterThisTransaction, setBalanceAfterThisTransaction] =
-      useState(0);
+   useState(0);
    const [itemType, setItemType] = useState("");
    const [purchaser, setPurchaser] = useState("");
    const [selectedPurchaser, setSelectedPurchaser] = useState({});
-
+   
    // Validity States
    const [isCommentValid, setIsCommentValid] = useState("PRISTINE");
    const [
@@ -57,13 +58,17 @@ const CreditForm = () => {
    const [isBhadaValid, setIsBhadaValid] = useState("PRISTINE");
    const [isPaidToKisanValid, setIsPaidToKisanValid] = useState("PRISTINE");
    const [isAdvanceSettlementValid, setIsAdvanceSettlementValid] =
-      useState("PRISTINE");
+   useState("PRISTINE");
    const [
       isCarryForwardFromThisEntryValid,
       setIsCarryForwardFromThisEntryValid,
    ] = useState("PRISTINE");
    const [ispurchaserInvalid, setIsPurchaserinvalid] = useState("PRISTINE");
    const [isItemTypeInvalid, setIsItemTypeInvalid] = useState("PRISTINE");
+   const [billDate, setBillDate] = useState(formatDate(new Date()));
+   const [isDateEditable, setIsDateEditable] = useState(false);
+   const [isBillDateValid, setIsBillDateValid] = useState("PRISTINE");
+   
 
    //Misclaeneous
    const [kisan, setKisan] = useState({});
@@ -153,11 +158,13 @@ const CreditForm = () => {
          setPreviousBillSettlementAmount(kisan.carryForwardAmount);
       }
    }, [kisan]);
-   /* useEffect(() => {
+   useEffect(() => {
     if(purchaserData.length>0){
-      setPurchaser(purchaserData[0])
+      if(billDate !== getTodaysFormattedDate()){
+         billDateChange({target: {value: billDate}})
+      }
     }
-  }, [purchaserData]); */
+  }, [purchaser]);
    /*  useEffect(() => {
     if(inventory.length>0){
       console.log("INVENTORY ", inventory)
@@ -205,6 +212,7 @@ const CreditForm = () => {
             transactionToedit.balanceAfterThisTransaction
          );
          setItemType(transactionToedit.itemType);
+         setBillDate(formatDate(transactionToedit.date))
          setIsItemTypeInvalid("PRISTINE");
          setIsPurchaserinvalid("PRISTINE");
       }
@@ -268,6 +276,10 @@ const CreditForm = () => {
          setIsItemTypeInvalid("TRUE");
          isInvalid = true;
       }
+      if(isBillDateValid !== "" && isBillDateValid !== "PRISTINE"){
+         console.log("transaction is invalid becaise isBillDate --- ", isBillDateValid);
+         isInvalid = true;
+      }
       return isInvalid ? false : true;
    };
 
@@ -302,7 +314,103 @@ const CreditForm = () => {
       setComment(e.target.value);
       setIsCommentValid("");
    };
+   const getLatestPurchaserTransactionDate = () => {
+      let lastTransactionIndex = purchaserData[purchaser].transactions.length - 1
+      let lastTransaction = purchaserData[purchaser].transactions[lastTransactionIndex]
+      let lastTransactionDate = lastTransaction.date;
+      let jsdateString = new Date(lastTransactionDate)
+      let purchaserLatestTransactionDate = jsdateString.toISOString().split('T')[0]
+      return purchaserLatestTransactionDate;
+   }
+   const getLatestKisanTransactionDate = () => {
+      let lastTransactionIndex = kisan.transactions.length - 1
+      let lastTransaction = kisan.transactions[lastTransactionIndex]
+      let lastTransactionDate = lastTransaction.date;
+      let jsdateString = new Date(lastTransactionDate)
+      let kisanLatestTransactionDate = jsdateString.toISOString().split('T')[0]
+      return kisanLatestTransactionDate;
+   }
 
+   const getTodaysFormattedDate = () => {
+      let todaysDate = new Date()
+      let todaysDateFormatted = todaysDate.toISOString().split('T')[0]
+      return todaysDateFormatted;
+   }
+   const billDateChange = (e) => {
+      console.log(e.target.value)
+      if(type === "edit"){
+         setBillDate(e.target.value);
+         setIsBillDateValid("");
+      }else {
+         if(e.target.value !== getTodaysFormattedDate()){
+            let hasError = false;
+            //check the kisan transaction post selected date.
+            if(purchaserData[purchaser] && purchaserData[purchaser].name){
+               console.log(purchaserData[purchaser]);
+               if(purchaserData[purchaser].transactions && purchaserData[purchaser].transactions.length>0){
+                  console.log("yahan AAya?????")
+                  const latestPurchaserTransactionDate = getLatestPurchaserTransactionDate();
+                  console.log("Latest Transction Date of Purchaser  ", latestPurchaserTransactionDate)
+                  if(new Date(latestPurchaserTransactionDate) > new Date(e.target.value)){
+                     setBillDate(e.target.value);
+                     setIsBillDateValid("HASPURCHASERTRANSACTIONPOSTTHISDATE");
+                     console.log("Throw Error")
+                     hasError = true;
+                  }else {
+                     console.log("1");
+                     setBillDate(e.target.value);
+                     setIsBillDateValid("");
+                  }
+               }else {
+                  console.log("2");
+                  setBillDate(e.target.value);
+                  setIsBillDateValid("");
+               }
+            }else {
+               console.log("3");
+               setBillDate(e.target.value);
+               setIsBillDateValid("");
+            }
+   
+            //Check if Kisan has transactions after this date.
+            if(hasError === false){
+               if(kisan.transactions && kisan.transactions.length>0){
+                  const latestKisanTransactionDate = getLatestKisanTransactionDate();
+                  console.log("Latest Transction Date of Kisan  ", latestKisanTransactionDate)
+                  if(new Date(latestKisanTransactionDate) > new Date(e.target.value)) {
+                     setIsBillDateValid("HASKISANTRANSACTIONPOSTTHISDATE");
+                     setBillDate(e.target.value);
+                  }
+               }else {
+                     setBillDate(e.target.value);
+                     setIsBillDateValid("");
+               }
+            }
+         }
+
+      }
+   };
+   function formatDate(date) {
+      var d = new Date(date),
+          month = '' + (d.getMonth() + 1),
+          day = '' + d.getDate(),
+          year = d.getFullYear();
+  
+      if (month.length < 2) 
+          month = '0' + month;
+      if (day.length < 2) 
+          day = '0' + day;
+  
+      return [year, month, day].join('-');
+  }
+   const handleEditDateEnabler = () => {
+      setIsDateEditable((isDateEditable) => !isDateEditable);
+   };
+   useEffect(() => {
+      if(!isDateEditable){
+         billDateChange({target:{value:getTodaysFormattedDate()}})
+      }
+   }, [isDateEditable]);
    const previousBillSettlementAmountChange = (e) => {
       setPreviousBillSettlementAmount(parseInt(e.target.value));
       setIsPreviousBillSettlementAmountValid("");
@@ -383,6 +491,7 @@ const CreditForm = () => {
       setIsCarryForwardFromThisEntryValid("PRISTINE");
       setIsPurchaserinvalid("PRISTINE");
       setIsItemTypeInvalid("PRISTINE");
+      setIsBillDateValid("PRISTINE")
    };
    const [isSubmitting, setIsSubmitting] = useState(false)
    const submit = (e) => {
@@ -414,6 +523,9 @@ const CreditForm = () => {
                purchaserkisanName: kisan.name,
             },
          };
+         if((isBillDateValid === "" || isBillDateValid === "PRISTINE") && billDate !== getTodaysFormattedDate()){
+            formData.transaction["backDate"] = billDate;
+         }
          console.log("FORM DATA", formData);
          fetch(`/kisan/AddTransaction/${id}`, {
             method: "POST",
@@ -838,7 +950,52 @@ const CreditForm = () => {
                         </div>
                      </FormGroup>
                   </div>
-
+                  <div className="shadow p-3 m-3">
+                     <div>
+                        <h3 className="text-dark font-15">
+                           <FormattedMessage id="billDate" />
+                        </h3>
+                        {type !== "edit" && <div className="switch-container d-flex">
+                              <div className="text-danger">Do you want to change the Bill Date?</div>
+                              <div className="flex-fill d-flex justify-content-end">
+                                 <label className="toggle-switch">
+                                 <input
+                                    type="checkbox"
+                                    name="toggleSwitch"
+                                    className="toggle-switch__checkbox"
+                                    id="myToggleSwitch"
+                                    onChange={handleEditDateEnabler}
+                                    checked={isDateEditable}
+                                 />
+                                 <span className="toggle-switch__label">
+                                    <span className="toggle-switch__inner"></span>
+                                 </span>
+                                 </label>
+                              </div>
+                           </div>
+                        }
+                     </div>
+                     <FormGroup className="mt-2">
+                        <Label for="billDate">
+                           {" "}
+                           <FormattedMessage id="billDate" /> {isBillDateValid}
+                        </Label>{" "}
+                        <Input
+                           invalid={ isBillDateValid !== "PRISTINE" && isBillDateValid !== ""  ? true: false }
+                           name="billDate"
+                           type="date"
+                           value={billDate}
+                           max={formatDate(new Date())}
+                           disabled= {!isDateEditable}
+                           onChange={(e) => billDateChange(e)}
+                        />{" "}
+                        <FormFeedback>
+                           {isBillDateValid === "HASPURCHASERTRANSACTIONPOSTTHISDATE" ? "Purchaser has Transaction after this Date": 
+                              isBillDateValid === "HASKISANTRANSACTIONPOSTTHISDATE" ? "Kisan has transaction after this Date" : "invalid"
+                           }
+                        </FormFeedback>
+                     </FormGroup>
+                  </div>
                   {/* ------------------ Settlement Section ------------------ */}
                   <div className="shadow p-3 m-3">
                      <div>
@@ -956,7 +1113,7 @@ const CreditForm = () => {
                      </FormGroup>
                   </div>
 
-                  <div className="shadow p-3 m-3">
+                  <div className="shadow p-3 m-3">               
                      <FormGroup className="mt-2">
                         <Label for="comment">
                            {" "}

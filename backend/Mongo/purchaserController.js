@@ -88,8 +88,9 @@ const controller = async (type, data) => {
           kisan: data.transaction.purchaserkisanId,
           kisanName: data.transaction.purchaserkisanName,
           transactionAmount: data.transaction.grossTotal,
-          date: new Date(),
-          balanceAfterThisTransaction: fetchedPurchaser.balance  
+          date: data.transaction.date,
+          creationDate: data.transaction.creationDate,
+          balanceAfterThisTransaction: fetchedPurchaser.balance
         });
       }
       console.log("PURCHASER Data to be update ------- ", fetchedPurchaser)

@@ -12,7 +12,8 @@ const transactions = new Schema({
   transactionAmount: Number,
   date: Date,
   comment: String,
-  balanceAfterThisTransaction: Number
+  balanceAfterThisTransaction: Number,
+  creationDate: Date
 });
 //This schema is for the one Row or document
 const purchaserSchema = new Schema({

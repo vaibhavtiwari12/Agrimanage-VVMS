@@ -38,7 +38,7 @@ const controller = async (type, data) => {
         purchaserId : data.purchaserId,
         purchaserName: data.purchaserName,
         rate: data.rate,
-        date: new Date(),
+        date: data.date,
       });
       fetchedInventory.totalWeight += data.totalweight;
       fetchedInventory.totalBags += data.numberofBags;

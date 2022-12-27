@@ -42,10 +42,15 @@ KisanRouter.post("/AddTransaction/:id", async (req, res) => {
   let purchaserDataGenerated = "";
   if(req.body.transaction && req.body.transaction.purchaserId && req.body.transaction.purchaserId !== "") {
     var id = mongoose.Types.ObjectId();
-    console.log("req.body.purchaserId",req.body.transaction.purchaserId)
+    console.log("req.body",req.body.transaction)
+    let date = new Date();
+    if(req.body.transaction && req.body.transaction.backDate && req.body.transaction.backDate.length>0) {
+      date = new Date(req.body.transaction.backDate)
+      date.setHours(23,59,59,999)
+    }
     purchaserDataGenerated =  await purchaserController.controller("AddTransaction", {
       id: req.body.transaction.purchaserId,
-      transaction: { ...req.body.transaction, date: new Date(), _id: id },
+      transaction: { ...req.body.transaction, date: date, _id: id, creationDate: new Date()},
     });
     console.log(" PURCAHSER DATA GENERATED ----> ", purchaserDataGenerated)
   }
@@ -57,9 +62,14 @@ KisanRouter.post("/AddTransaction/:id", async (req, res) => {
     });
   }else {
     const purchaseTxnId = purchaserDataGenerated._id ? purchaserDataGenerated._id.toString() : ""
+    let date = new Date();
+    if(req.body.transaction && req.body.transaction.backDate && req.body.transaction.backDate.length>0) {
+      date = new Date(req.body.transaction.backDate)
+      date.setHours(23,59,59,999)
+    }
     addedTransaction = await controller("AddTransaction", {
       id: req.params.id,
-      transaction: { ...req.body.transaction, date: new Date(), _id: id, purchaserTxnId: purchaseTxnId},
+      transaction: { ...req.body.transaction, date: date, _id: id, purchaserTxnId: purchaseTxnId, creationDate: new Date()},
     });
   }
   res.json(addedTransaction);

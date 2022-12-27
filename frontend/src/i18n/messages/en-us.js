@@ -118,6 +118,7 @@ const en = {
     Tamatar: "Tamatar",
     Dhaniya: "Dhaniya",
     editCreditEntryButtonTitle: "Update Entry",
+    billDate: "Bill Date",
 
     /*Credit Entry Form Errors*/
     numberOfBagsCNBLTZ: "Number of Bags cannot be less than 0.",

@@ -119,6 +119,7 @@ const hi = {
     Tamatar: "टमाटर",
     Dhaniya: "धनिया",
     editCreditEntryButtonTitle: "एंट्री अपडेट करें",
+    billDate:"Bill Date",
 
     /*Credit Entry Form Errors*/
     numberOfBagsCNBLTZ: "बोरों की संख्या (नग) 0 से काम नहीं हो सकती है। ",

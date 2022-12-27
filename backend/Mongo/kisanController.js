@@ -69,7 +69,8 @@ const controller = async (type, data) => {
             rate: data.transaction.rate,
             purchaserId : data.transaction.purchaserId,
             purchaserName: data.transaction.purchaserName,
-            purchaserTxnId: data.transaction.purchaserTxnId
+            purchaserTxnId: data.transaction.purchaserTxnId, 
+            date: data.transaction.date
           });
           data.transaction["inventoryTxnId"] = transactionAdded.transaction._id.toString();
           data.transaction["inventoryItemId"] = transactionAdded.inventoryItemId.toString();
