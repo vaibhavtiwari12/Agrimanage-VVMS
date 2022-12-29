@@ -978,7 +978,7 @@ const CreditForm = () => {
                      <FormGroup className="mt-2">
                         <Label for="billDate">
                            {" "}
-                           <FormattedMessage id="billDate" /> {isBillDateValid}
+                           <FormattedMessage id="billDate" /> :  {/* {isBillDateValid} */}
                         </Label>{" "}
                         <Input
                            invalid={ isBillDateValid !== "PRISTINE" && isBillDateValid !== ""  ? true: false }

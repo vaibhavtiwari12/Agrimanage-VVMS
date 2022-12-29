@@ -54,6 +54,7 @@ const Kisantransactionstable = ({ kisan, updateKisan }) => {
       txn_date: dateConverter(currentTransaction.date),
       txn_previousBillSettlementAmount:
         currentTransaction.previousBillSettlementAmount,
+      txn_itemType: currentTransaction.itemType,  
       txn_numberofBags: currentTransaction.numberofBags,
       txn_totalWeight: currentTransaction.totalweight,
       txn_rate: currentTransaction.rate,
@@ -354,9 +355,9 @@ const Kisantransactionstable = ({ kisan, updateKisan }) => {
                             > <FontAwesomeIcon  icon={solid('list-ul')} className="text-white"/>
                             </Link>
                           </Button>
-                          <Tooltip hideArrow={false} placement="left" isOpen={detailsTooltip} target="details" toggle={e => setDetailsTooltip(!detailsTooltip)}>
+                          {/* <Tooltip hideArrow={false} placement="left" isOpen={detailsTooltip} target="details" toggle={e => setDetailsTooltip(!detailsTooltip)}>
                               Details
-                            </Tooltip>
+                            </Tooltip> */}
                           <Button
                             className="ms-2 font-10"
                             color="primary"
