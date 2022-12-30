@@ -46,7 +46,7 @@ KisanRouter.post("/AddTransaction/:id", async (req, res) => {
     let date = new Date();
     if(req.body.transaction && req.body.transaction.backDate && req.body.transaction.backDate.length>0) {
       date = new Date(req.body.transaction.backDate)
-      date.setHours(23,59,59,999)
+      date.setHours( req.body.transaction.backDateHours, req.body.transaction.backDateMinutes, req.body.transaction.backDateSeconds,999)
     }
     purchaserDataGenerated =  await purchaserController.controller("AddTransaction", {
       id: req.body.transaction.purchaserId,
@@ -65,7 +65,7 @@ KisanRouter.post("/AddTransaction/:id", async (req, res) => {
     let date = new Date();
     if(req.body.transaction && req.body.transaction.backDate && req.body.transaction.backDate.length>0) {
       date = new Date(req.body.transaction.backDate)
-      date.setHours(23,59,59,999)
+      date.setHours( req.body.transaction.backDateHours, req.body.transaction.backDateMinutes, req.body.transaction.backDateSeconds,999)
     }
     addedTransaction = await controller("AddTransaction", {
       id: req.params.id,

@@ -333,7 +333,7 @@ const CreditForm = () => {
 
    const getTodaysFormattedDate = () => {
       let todaysDate = new Date()
-      let todaysDateFormatted = todaysDate.toISOString().split('T')[0]
+      let todaysDateFormatted = new Date(todaysDate.getTime() - (todaysDate.getTimezoneOffset() * 60000)).toISOString().split('T')[0]
       return todaysDateFormatted;
    }
    const billDateChange = (e) => {
@@ -524,6 +524,12 @@ const CreditForm = () => {
             },
          };
          if((isBillDateValid === "" || isBillDateValid === "PRISTINE") && billDate !== getTodaysFormattedDate()){
+            const backDateHours = new Date().getHours()
+            const backDateMinutes = new Date().getMinutes()
+            const backDateSeconds = new Date().getSeconds()
+            formData.transaction["backDateHours"] = backDateHours;
+            formData.transaction["backDateMinutes"] = backDateMinutes;
+            formData.transaction["backDateSeconds"] = backDateSeconds;
             formData.transaction["backDate"] = billDate;
          }
          console.log("FORM DATA", formData);
