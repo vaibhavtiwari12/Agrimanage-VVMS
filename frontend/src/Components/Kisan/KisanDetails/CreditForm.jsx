@@ -43,6 +43,7 @@ const CreditForm = () => {
    const [itemType, setItemType] = useState("");
    const [purchaser, setPurchaser] = useState("");
    const [selectedPurchaser, setSelectedPurchaser] = useState({});
+   const [creationDate, setCreationDate] = useState("");
    
    // Validity States
    const [isCommentValid, setIsCommentValid] = useState("PRISTINE");
@@ -211,6 +212,7 @@ const CreditForm = () => {
          setBalanceAfterThisTransaction(
             transactionToedit.balanceAfterThisTransaction
          );
+         setCreationDate(transactionToedit.creationDate)
          setItemType(transactionToedit.itemType);
          setBillDate(formatDate(transactionToedit.date))
          setIsItemTypeInvalid("PRISTINE");
@@ -334,6 +336,7 @@ const CreditForm = () => {
    const getTodaysFormattedDate = () => {
       let todaysDate = new Date()
       let todaysDateFormatted = new Date(todaysDate.getTime() - (todaysDate.getTimezoneOffset() * 60000)).toISOString().split('T')[0]
+      console.log("Today's Date Formatted ", todaysDateFormatted)
       return todaysDateFormatted;
    }
    const billDateChange = (e) => {
@@ -387,7 +390,10 @@ const CreditForm = () => {
                }
             }
          }
-
+         if(e.target.value === getTodaysFormattedDate()){
+            setBillDate(e.target.value);
+            setIsBillDateValid("");
+         }
       }
    };
    function formatDate(date) {
@@ -523,7 +529,7 @@ const CreditForm = () => {
                purchaserkisanName: kisan.name,
             },
          };
-         if((isBillDateValid === "" || isBillDateValid === "PRISTINE") && billDate !== getTodaysFormattedDate()){
+         if((isBillDateValid === "" || isBillDateValid === "PRISTINE") && billDate !== getTodaysFormattedDate() && isDateEditable){
             const backDateHours = new Date().getHours()
             const backDateMinutes = new Date().getMinutes()
             const backDateSeconds = new Date().getSeconds()
@@ -984,7 +990,7 @@ const CreditForm = () => {
                      <FormGroup className="mt-2">
                         <Label for="billDate">
                            {" "}
-                           <FormattedMessage id="billDate" /> :  {/* {isBillDateValid} */}
+                           <FormattedMessage id="billDate" />:  {/* {isBillDateValid} */} 
                         </Label>{" "}
                         <Input
                            invalid={ isBillDateValid !== "PRISTINE" && isBillDateValid !== ""  ? true: false }
@@ -994,12 +1000,14 @@ const CreditForm = () => {
                            max={formatDate(new Date())}
                            disabled= {!isDateEditable}
                            onChange={(e) => billDateChange(e)}
-                        />{" "}
+                           />{" "}
                         <FormFeedback>
-                           {isBillDateValid === "HASPURCHASERTRANSACTIONPOSTTHISDATE" ? "Purchaser has Transaction after this Date": 
+                           {
+                              isBillDateValid === "HASPURCHASERTRANSACTIONPOSTTHISDATE" ? "Purchaser has Transaction after this Date" : 
                               isBillDateValid === "HASKISANTRANSACTIONPOSTTHISDATE" ? "Kisan has transaction after this Date" : "invalid"
                            }
                         </FormFeedback>
+                        {type==="edit" && creationDate!=="" && <div className="text-primary pt-2">Actual Creation date of transaction: <b>{formatDate(creationDate).split("-").reverse().join("-")}</b></div>}
                      </FormGroup>
                   </div>
                   {/* ------------------ Settlement Section ------------------ */}
