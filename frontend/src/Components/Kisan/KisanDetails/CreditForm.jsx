@@ -698,7 +698,7 @@ const CreditForm = () => {
                            for="previousBillSettlementAmount"
                            className="mt-2"
                         >
-                           <FormattedMessage id="carryForwardAmount" />
+                           <FormattedMessage id="carryForwardAmount" />{" "}<FormattedMessage id="currencyWithBracket" />
                         </Label>{" "}
                         <Input
                            disabled
@@ -738,7 +738,7 @@ const CreditForm = () => {
                               <h3 className="text-dark font-15"><FormattedMessage id="billDateSectionTitle" /></h3>
                            </div>}
                         {type !== "edit" && <div className="switch-container d-flex">
-                           <h3 className="text"><FormattedMessage id="backDatedBillMsg" />?{"  "}</h3>
+                           <h3 className="text-dark font-15"><FormattedMessage id="backDatedBillMsg" />?{"  "}</h3>
                            <div className="flex-fill d-flex justify-content-end">
                               <label className="toggle-switch">
                                  {"  "}<input
@@ -1000,288 +1000,296 @@ const CreditForm = () => {
                         </div>
                         <div className="text-end mt-3">
                            {type === "add" && <span>
-                              <FormattedMessage id="netTotal" />
-                              <b>{netTotal}</b> +{" "}
-                              <FormattedMessage id="carryForwardAmountWithoutCurrency" />{" "}
-                              : <FormattedMessage id="currency" />{" "}
-                              <b>{previousBillSettlementAmount}</b> ={" "}
-                              <b>
-                                 <span className="text-primary">
-                                    {" "}
-                                    <FormattedMessage id="currency" />{" "}
-                                    {netTotal + previousBillSettlementAmount}
-                                 </span>
-                              </b>
+                              <FormattedMessage id="billTotal" />{" "}
+                              {" + "}
+                              <FormattedMessage id="carryForwardAmount" />{" "}
+                              <span className="text-primary">
+                                 {" = "}<b><FormattedMessage id="currency" />{" "}
+                                    {netTotal + previousBillSettlementAmount}</b>
+                              </span>
                            </span>}
                         </div>
                      </FormGroup>
                   </div>}
-         {/* ------------------ Bill Settlement Section ------------------ */}
-         {type === "edit" && netTotal > 0 && <div className="shadow p-3 m-3">
-            <div>
-               <h3 className="text-dark font-15">
-                  <FormattedMessage id="billettlementSummarySectionTitle" />
-               </h3>
-               <h5 className="mt-3">
-                  <span className="text-secondary">
-                     <FormattedMessage id="netTotal" />
-                  </span>
-                  <span className="text-primary">
-                     {netTotal}
-                  </span>
-               </h5>
-            </div>
-            <FormGroup className="mt-2">
-               <Label for="advanceSettlement1" className="mt-2">
-                  {" "}
-                  <FormattedMessage id="advanceCredited" />
-               </Label>{" "}
-               <Input type="number" name="advanceSettlement1" value={advanceSettlement} disabled />
-            </FormGroup>
-            <FormGroup className="mt-2">
-               <Label for="paidToKisan1">
-                  {" "}
-                  <FormattedMessage id="cashPaid" />
-               </Label>{" "}
-               <Input type="number" name="paidToKisan1" value={paidToKisan} disabled />
-            </FormGroup>
-            <FormGroup className="mt-2">
-               <Label for="carryForwardFromThisEntry1">
-                  <FormattedMessage id="carryForward" />
-               </Label>{" "}
-               <Input type="number" name="carryForwardFromThisEntry1" value={carryForwardFromThisEntry - previousBillSettlementAmount} disabled />
-            </FormGroup>
-         </div>}
-         {/* ------------------ Trader Settlement Section ------------------ */}
-         <div className="shadow p-3 m-3">
-            <div>
-               <h3 className="text-dark font-15">
-                  <FormattedMessage id="traderSettlementSectionTitle" />
-               </h3>
-               {/* -------Advance to Settle---------*/}
-               <div className="pt-2">
-                  <h5 className="mt-3">
-                     <span className="text">
-                        <FormattedMessage id="balanceTextWithoutCurrency" />{" = "}
-                     </span>
-                     <span className="text-primary">
-                        <FormattedMessage id="currency" />{" "}
-                        {type === "add"
-                           ? kisan.balance
-                           :  Math.abs(balanceAfterThisTransaction - advanceSettlement)}
-                     </span>
-                  </h5>
-                  <FormGroup className="mt-2">
-                     <Label for="advanceSettlement" className="mt-2">
-                        {" "}
-                        <FormattedMessage id="advanceCredited" />
-                     </Label>{" "}
-                     <Input
-                        disabled={
-                           type === "edit" || kisan.balance === 0
-                              ? true
-                              : false
-                        }
-                        invalid={
-                           isAdvanceSettlementValid ===
-                           "OUTSTANDINGEXCEEDED" ||
-                           isAdvanceSettlementValid === "TOTALEXCEEDED" ||
-                           isAdvanceSettlementValid === ""
-                        }
-                        onWheel={(e) => e.target.blur()}
-                        name="advanceSettlement"
-                        type="number"
-                        value={advanceSettlement}
-                        onChange={(e) => advanceSettlementChange(e)}
-                     />
-                     <FormFeedback>
-                        {isAdvanceSettlementValid === "" ? (
-                           <span>
-                              <FormattedMessage id="balanceCNBLTZ" />
+                  {/* ------------------ Bill Settlement Section ------------------ */}
+                  {type === "edit" && netTotal > 0 && <div className="shadow p-3 m-3">
+                     <div>
+                        <h3 className="text-dark font-15">
+                           <FormattedMessage id="billettlementSummarySectionTitle" />
+                        </h3>
+                        <h5 className="mt-3">
+                           <span className="text-secondary">
+                              <FormattedMessage id="netTotal" />
                            </span>
-                        ) : isAdvanceSettlementValid ===
-                           "OUTSTANDINGEXCEEDED" ? (
-                           <span>
-                              <FormattedMessage id="balanceCBMTOA" />{" "}
-                              {Math.abs(kisan.balance)}
+                           <span className="text-primary">
+                              {netTotal}
                            </span>
-                        ) : (
-                           <span>
-                              <FormattedMessage id="balanceCBMTCB" />{" "}
-                              {netTotal + previousBillSettlementAmount}
-                           </span>
-                        )}{" "}
-                     </FormFeedback>{" "}
-                  </FormGroup>
-                  {type === "edit" &&
+                        </h5>
+                     </div>
                      <FormGroup className="mt-2">
-                        <Label for="carryForwardAdvance">
-                           <FormattedMessage id="balanceAfterBillTextWithoutCurrency" />
+                        <Label for="advanceSettlement1" className="mt-2">
+                           {" "}
+                           <FormattedMessage id="advanceCredited" />{" "}<FormattedMessage id="currencyWithBracket" />
+                        </Label>{" "}
+                        <Input type="number" name="advanceSettlement1" value={advanceSettlement} disabled />
+                     </FormGroup>
+                     <FormGroup className="mt-2">
+                        <Label for="paidToKisan1">
+                           {" "}
+                           <FormattedMessage id="cashPaid" />{" "}<FormattedMessage id="currencyWithBracket" />
+                        </Label>{" "}
+                        <Input type="number" name="paidToKisan1" value={paidToKisan} disabled />
+                     </FormGroup>
+                     <FormGroup className="mt-2">
+                        <Label for="carryForwardFromThisEntry1">
+                           <FormattedMessage id="carryForward" />{" "}<FormattedMessage id="currencyWithBracket" />
+                        </Label>{" "}
+                        <Input type="number" name="carryForwardFromThisEntry1" value={carryForwardFromThisEntry - previousBillSettlementAmount} disabled />
+                     </FormGroup>
+                  </div>}
+
+
+                  {/* ------------------ Advance Settlement Section ------------------ */}
+                  <div className="shadow p-3 m-3">
+                     <div>
+                        <h3 className="text-dark font-15">
+                           <FormattedMessage id="advanceSettlementSectionTitle" />
+                        </h3>
+                        {/* -------Advance to Settle---------*/}
+                        <div className="pt-2">
+                           <h6 className="mt-3 text-dark font-12">
+                              <span className="text">
+                                 <FormattedMessage id="balance" />{" = "}
+                              </span>
+                              <span className="text-primary">
+                                 <FormattedMessage id="currency" />{" "}
+                                 {type === "add"
+                                    ? Math.abs(kisan.balance)
+                                    : Math.abs(balanceAfterThisTransaction - advanceSettlement)}
+                              </span>
+                           </h6>
+                           <FormGroup className="mt-2">
+                              <Label for="advanceSettlement" className="mt-2">
+                                 {" "}
+                                 <FormattedMessage id="advanceCredited" />{" "}<FormattedMessage id="currencyWithBracket" />
+                              </Label>{" "}
+                              <Input
+                                 disabled={
+                                    type === "edit" || kisan.balance === 0
+                                       ? true
+                                       : false
+                                 }
+                                 invalid={
+                                    isAdvanceSettlementValid ===
+                                    "OUTSTANDINGEXCEEDED" ||
+                                    isAdvanceSettlementValid === "TOTALEXCEEDED" ||
+                                    isAdvanceSettlementValid === ""
+                                 }
+                                 onWheel={(e) => e.target.blur()}
+                                 name="advanceSettlement"
+                                 type="number"
+                                 value={advanceSettlement}
+                                 onChange={(e) => advanceSettlementChange(e)}
+                              />
+                              <FormFeedback>
+                                 {isAdvanceSettlementValid === "" ? (
+                                    <span>
+                                       <FormattedMessage id="balanceCNBLTZ" />
+                                    </span>
+                                 ) : isAdvanceSettlementValid ===
+                                    "OUTSTANDINGEXCEEDED" ? (
+                                    <span>
+                                       <FormattedMessage id="balanceCBMTOA" />{" "}
+                                       {Math.abs(kisan.balance)}
+                                    </span>
+                                 ) : (
+                                    <span>
+                                       <FormattedMessage id="balanceCBMTCB" />{" "}
+                                       {netTotal + previousBillSettlementAmount}
+                                    </span>
+                                 )}{" "}
+                              </FormFeedback>{" "}
+                           </FormGroup>
+                              <FormGroup className="mt-2">
+                                 <Label for="carryForwardAdvance">
+                                    <FormattedMessage id="balanceAfterBillTextWithoutCurrency" />
+                                 </Label>{" "}
+                                 <Input
+                                    disabled
+                                    name="carryForwardAdvance"
+                                    type="number"
+                                    onWheel={(e) => e.target.blur()}
+                                    value={Math.abs(balanceAfterThisTransaction)}
+                                 />
+                              </FormGroup>
+                        </div>
+                     </div>
+                  </div>
+                  <div className="shadow p-3 m-3">
+                     <div>
+                        <h3 className="text-dark font-15">
+                           <FormattedMessage id="paymentSettlementSectionTitle" />
+                        </h3>
+                        {/* -------Amount to Settle---------*/}
+                        <div className="pt-2">
+                           <h6 className="mt-3 text-dark font-12">
+                              <span>
+                                 <FormattedMessage id="paymentToSettle" />{" = "}
+                              </span>{"  "}
+                              <span>
+                                 {netTotal >0 && <span><FormattedMessage id="billTotal" />{" "}
+                                 {" + "}</span>}
+                                 <FormattedMessage id="carryForwardAmount" />{" "}
+                                 <span className="text-primary">
+                                    {" = "}<FormattedMessage id="currency" />{" "}
+                                       {netTotal + previousBillSettlementAmount}
+                                 </span>
+                              </span>
+                           </h6>
+                           <FormGroup className="mt-2">
+                              <Label for="paidToKisan" className="mt-2">
+                                 {" "}
+                                 <FormattedMessage id="cashPaid" />{" "}<FormattedMessage id="currencyWithBracket" />
+                              </Label>{" "}
+                              <Input
+                                 disabled={type === "edit" ? true : false}
+                                 invalid={
+                                    isPaidToKisanValid === "" ||
+                                    isPaidToKisanValid === "TOTALEXCEEDED"
+                                 }
+                                 name="paidToKisan"
+                                 type="number"
+                                 onWheel={(e) => e.target.blur()}
+                                 value={paidToKisan}
+                                 onChange={(e) => paidToKisanChange(e)}
+                              />
+                              <FormFeedback>
+                                 {isPaidToKisanValid === "TOTALEXCEEDED" ? (
+                                    <span>
+                                       <FormattedMessage id="cashPaidCBMTCB" />{" "}
+                                       {netTotal + previousBillSettlementAmount}
+                                    </span>
+                                 ) : (
+                                    <span>
+                                       <FormattedMessage id="cashPaidCNBLTZ" />
+                                    </span>
+                                 )}
+                              </FormFeedback>{" "}
+                           </FormGroup>
+                           <FormGroup className="mt-2">
+                              <Label for="carryForwardFromThisEntry">
+                                 <FormattedMessage id="carryForward" />{" "}<FormattedMessage id="currencyWithBracket" />
+                              </Label>{" "}
+                              <Input
+                                 disabled
+                                 name="carryForwardFromThisEntry"
+                                 type="number"
+                                 onWheel={(e) => e.target.blur()}
+                                 value={carryForwardFromThisEntry}
+                                 onChange={(e) => carryForwardFromThisEntryChange(e)}
+                              />
+                              <FormFeedback>
+                                 {" "}
+                                 Paid To Kisan is required.{" "}
+                              </FormFeedback>{" "}
+                           </FormGroup>
+                        </div>
+                     </div>
+                  </div>
+                  {/* ------------------ Payment Summary Section ------------------ */}
+                  {type === "edit" && netTotal < 1 && <div className="shadow p-3 m-3">
+                     <h3 className="text-dark font-15">
+                        <FormattedMessage id="settlementSectionTitleForPaymentOnly" />
+                     </h3>
+                     <div className="pt-2">
+                        <h5 className="mt-3">
+                           <span className="text-secondary">
+                              <FormattedMessage id="advanceCredited" />{" "}<FormattedMessage id="currencyWithBracket" />
+                           </span>{" "}
+                           <span className="text">
+                              {advanceSettlement}
+                           </span>
+                        </h5>
+                        <h5 className="mt-3">
+                           <span className="text-secondary">
+                              <FormattedMessage id="cashPaid" />{" "}<FormattedMessage id="currencyWithBracket" />
+                           </span>{" "}
+                           <span className="text">
+                              {paidToKisan}
+                           </span>
+                        </h5>
+                        <h5 className="mt-3">
+                           <span className="text-danger">
+                              <FormattedMessage id="totalPaymentOfThisBill" />{" "}<FormattedMessage id="currencyWithBracket" />
+                           </span>{" "}
+                           <span className="text-danger">
+                              {paidToKisan + advanceSettlement}
+                           </span>
+                        </h5>
+                     </div>
+                  </div>
+                  }
+                  {/* ------------------ Comment Section ------------------ */}
+                  <div className="shadow p-3 m-3">
+                     <FormGroup className="mt-2">
+                        <Label for="comment">
+                           {" "}
+                           <FormattedMessage id="comment" />
                         </Label>{" "}
                         <Input
-                           disabled
-                           name="carryForwardAdvance"
-                           type="number"
-                           onWheel={(e) => e.target.blur()}
-                           value={Math.abs(balanceAfterThisTransaction)}
-                        />
-                     </FormGroup>}
-               </div>
-               {/* -------Amount to Settle---------*/}
-               <div className="pt-2">
-                  <h5 className="mt-4">
-                     <span className="text">
-                        <FormattedMessage id="amountToSettle" />{" = "}
-                     </span>{"  "}
-                     <span className="text-primary">
-                        <FormattedMessage id="currency" />{" "}
-                        {netTotal + previousBillSettlementAmount}
-                     </span>
-                  </h5>
-                  <FormGroup className="mt-2">
-                     <Label for="paidToKisan">
-                        {" "}
-                        <FormattedMessage id="cashPaid" />
-                     </Label>{" "}
-                     <Input
-                        disabled={type === "edit" ? true : false}
-                        invalid={
-                           isPaidToKisanValid === "" ||
-                           isPaidToKisanValid === "TOTALEXCEEDED"
-                        }
-                        name="paidToKisan"
-                        type="number"
-                        onWheel={(e) => e.target.blur()}
-                        value={paidToKisan}
-                        onChange={(e) => paidToKisanChange(e)}
-                     />
-                     <FormFeedback>
-                        {isPaidToKisanValid === "TOTALEXCEEDED" ? (
-                           <span>
-                              <FormattedMessage id="cashPaidCBMTCB" />{" "}
-                              {netTotal + previousBillSettlementAmount}
-                           </span>
-                        ) : (
-                           <span>
-                              <FormattedMessage id="cashPaidCNBLTZ" />
-                           </span>
-                        )}
-                     </FormFeedback>{" "}
-                  </FormGroup>
-                  <FormGroup className="mt-2">
-                     <Label for="carryForwardFromThisEntry">
-                        <FormattedMessage id="carryForward" />
-                     </Label>{" "}
-                     <Input
-                        disabled
-                        name="carryForwardFromThisEntry"
-                        type="number"
-                        onWheel={(e) => e.target.blur()}
-                        value={carryForwardFromThisEntry}
-                        onChange={(e) => carryForwardFromThisEntryChange(e)}
-                     />
-                     <FormFeedback>
-                        {" "}
-                        Paid To Kisan is required.{" "}
-                     </FormFeedback>{" "}
-                  </FormGroup>
-               </div>
-            </div>
-         </div>
-         {/* ------------------ Payment Summary Section ------------------ */}
-         {type === "edit" && netTotal < 1 && <div className="shadow p-3 m-3">
-            <h3 className="text-dark font-15">
-               <FormattedMessage id="settlementSectionTitleForPaymentOnly" />
-            </h3>
-            <div className="pt-2">
-               <h5 className="mt-3">
-                  <span className="text-secondary">
-                     <FormattedMessage id="advanceCredited" />
-                  </span>{" "}
-                  <span className="text">
-                     {advanceSettlement}
-                  </span>
-               </h5>
-               <h5 className="mt-3">
-                  <span className="text-secondary">
-                     <FormattedMessage id="cashPaid" />
-                  </span>{" "}
-                  <span className="text">
-                     {paidToKisan}
-                  </span>
-               </h5>
-               <h5 className="mt-3">
-                  <span className="text">
-                     <FormattedMessage id="totalPaymentOfThisBill" />
-                  </span>{" "}
-                  <span className="text-primary">
-                     {paidToKisan + advanceSettlement}
-                  </span>
-               </h5>
-            </div>
-         </div>
-         }
-         {/* ------------------ Comment Section ------------------ */}
-         <div className="shadow p-3 m-3">
-            <FormGroup className="mt-2">
-               <Label for="comment">
-                  {" "}
-                  <FormattedMessage id="comment" />
-               </Label>{" "}
-               <Input
-                  invalid={
-                     comment.length <= 0 && isCommentValid === ""
-                  }
-                  name="comment"
-                  type="text"
-                  value={comment}
-                  onChange={(e) => commentChange(e)}
-               />{" "}
-               <FormFeedback>
-                  {" "}
-                  <FormattedMessage id="commentIsRequired" />
-               </FormFeedback>{" "}
-            </FormGroup>{" "}
-         </div>
-         {type === "add" ? (
-            <React.Fragment>
-               <Button type="submit" color="primary" className="mt-3" disabled={isSubmitting}>
-                  {isSubmitting && (<span><Spinner className="spinner-size-1" /> &nbsp;</span>)} Create a Credit Entry
-               </Button>
-               <Button
-                  type="reset"
-                  color="danger"
-                  className="ms-1 mt-3"
-                  onClick={clear}
-               >
-                  Reset
-               </Button>
-            </React.Fragment>
-         ) : (
-            <Button
-               type="button"
-               color="primary"
-               className="mt-3"
-               onClick={handleEdit}
-               disabled={isSubmitting}
-            >
-               {isSubmitting && (<span><Spinner className="spinner-size-1" /> &nbsp;</span>)}<FormattedMessage id="editCreditEntryButtonTitle" />
-            </Button>
-         )}
-         {showAlert ? (
-            type === "add" ? (
-               <Alert className="mt-4">
-                  <FormattedMessage id="entryAddSuccessMsg" />
-               </Alert>
-            ) : (
-               <Alert className="mt-4">
-                  <FormattedMessage id="entryEditSuccessMsg" />
-               </Alert>
-            )
-         ) : (
-            ""
-         )}
-      </Form>
+                           invalid={
+                              comment.length <= 0 && isCommentValid === ""
+                           }
+                           name="comment"
+                           type="text"
+                           value={comment}
+                           onChange={(e) => commentChange(e)}
+                        />{" "}
+                        <FormFeedback>
+                           {" "}
+                           <FormattedMessage id="commentIsRequired" />
+                        </FormFeedback>{" "}
+                     </FormGroup>{" "}
+                  </div>
+                  {type === "add" ? (
+                     <React.Fragment>
+                        <Button type="submit" color="primary" className="mt-3" disabled={isSubmitting}>
+                           {isSubmitting && (<span><Spinner className="spinner-size-1" /> &nbsp;</span>)} Create a Credit Entry
+                        </Button>
+                        <Button
+                           type="reset"
+                           color="danger"
+                           className="ms-1 mt-3"
+                           onClick={clear}
+                        >
+                           Reset
+                        </Button>
+                     </React.Fragment>
+                  ) : (
+                     <Button
+                        type="button"
+                        color="primary"
+                        className="mt-3"
+                        onClick={handleEdit}
+                        disabled={isSubmitting}
+                     >
+                        {isSubmitting && (<span><Spinner className="spinner-size-1" /> &nbsp;</span>)}<FormattedMessage id="editCreditEntryButtonTitle" />
+                     </Button>
+                  )}
+                  {showAlert ? (
+                     type === "add" ? (
+                        <Alert className="mt-4">
+                           <FormattedMessage id="entryAddSuccessMsg" />
+                        </Alert>
+                     ) : (
+                        <Alert className="mt-4">
+                           <FormattedMessage id="entryEditSuccessMsg" />
+                        </Alert>
+                     )
+                  ) : (
+                     ""
+                  )}
+               </Form>
             </div >
          )}
       </div >

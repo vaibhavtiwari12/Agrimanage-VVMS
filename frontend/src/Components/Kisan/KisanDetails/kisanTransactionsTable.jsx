@@ -28,7 +28,7 @@ const Kisantransactionstable = ({ kisan, updateKisan }) => {
   const [isLoading, setIsLoading] = useState(true);
   const [isDeleting, setIsDeleting] = useState(false)
   const [transaction, setTransaction] = useState({});
- 
+
   const componentRef = useRef();
   const creditPrintRef = useRef();
   const print = (currentTransaction) => {
@@ -54,7 +54,7 @@ const Kisantransactionstable = ({ kisan, updateKisan }) => {
       txn_date: dateConverter(currentTransaction.date),
       txn_previousBillSettlementAmount:
         currentTransaction.previousBillSettlementAmount,
-      txn_itemType: currentTransaction.itemType,  
+      txn_itemType: currentTransaction.itemType,
       txn_numberofBags: currentTransaction.numberofBags,
       txn_totalWeight: currentTransaction.totalweight,
       txn_rate: currentTransaction.rate,
@@ -69,12 +69,12 @@ const Kisantransactionstable = ({ kisan, updateKisan }) => {
       txn_paidToKisan: currentTransaction.paidToKisan,
     });
   };
-  useEffect(()=> {
-    if(kisan && kisan.transactions){
+  useEffect(() => {
+    if (kisan && kisan.transactions) {
       setIsLoading(false);
       setIsDeleting(false);
     }
-  },[kisan])
+  }, [kisan])
   useEffect(() => {
     if (Object.keys(transaction).length > 0) {
       if (transaction && transaction.type === "DEBIT") {
@@ -91,15 +91,15 @@ const Kisantransactionstable = ({ kisan, updateKisan }) => {
     content: () => creditPrintRef.current,
   });
 
-  const deleteTransaction = (txn,kisanId) => {
+  const deleteTransaction = (txn, kisanId) => {
     setIsDeleting(true);
     console.log("txn", txn)
     const formData = {
-      kisanTxnId:txn._id,
-      purchaserId:txn.purchaserId,
-      purchaserTxnId:txn.purchaserTxnId,
+      kisanTxnId: txn._id,
+      purchaserId: txn.purchaserId,
+      purchaserTxnId: txn.purchaserTxnId,
       inventoryItemId: txn.inventoryItemId,
-      inventoryTxnId:txn.inventoryTxnId,
+      inventoryTxnId: txn.inventoryTxnId,
     };
     fetch(`/kisan/DeleteTransacton/${kisanId}`, {
       method: "POST",
@@ -124,8 +124,8 @@ const Kisantransactionstable = ({ kisan, updateKisan }) => {
   const deleteTransactionAdvanceSettlement = (txn, kisanId) => {
     setIsDeleting(true);
     const formData = {
-      kisanId:kisanId,
-      transactionID: txn._id 
+      kisanId: kisanId,
+      transactionID: txn._id
     };
     fetch(`/kisan/DeleteAdvanceSettlementTransaction`, {
       method: "POST",
@@ -135,23 +135,23 @@ const Kisantransactionstable = ({ kisan, updateKisan }) => {
         "Content-Type": "application/json",
       },
     })
-    .then((res) => res.json())
-    .then((res) => {
-      console.log("Res", res);
-      updateKisan();
-    })
-    .catch((error) => {
-      console.log("is Here", error);
-      setIsDeleting(false);
-      throw new error("Somethign Went Wrong", error);
-    });
+      .then((res) => res.json())
+      .then((res) => {
+        console.log("Res", res);
+        updateKisan();
+      })
+      .catch((error) => {
+        console.log("is Here", error);
+        setIsDeleting(false);
+        throw new error("Somethign Went Wrong", error);
+      });
   }
   const deleteTransactionDebit = (txn, kisanId) => {
     setIsDeleting(true);
     console.log("is here")
     const formData = {
-      kisanId:kisanId,
-      transactionID: txn._id 
+      kisanId: kisanId,
+      transactionID: txn._id
     };
     fetch(`/kisan/DeleteDebitTransaction`, {
       method: "POST",
@@ -161,16 +161,16 @@ const Kisantransactionstable = ({ kisan, updateKisan }) => {
         "Content-Type": "application/json",
       },
     })
-    .then((res) => res.json())
-    .then((res) => {
-      console.log("Res", res);
-      updateKisan();
-    })
-    .catch((error) => {
-      console.log("is Here", error);
-      setIsDeleting(false);
-      throw new error("Somethign Went Wrong", error);
-    });
+      .then((res) => res.json())
+      .then((res) => {
+        console.log("Res", res);
+        updateKisan();
+      })
+      .catch((error) => {
+        console.log("is Here", error);
+        setIsDeleting(false);
+        throw new error("Somethign Went Wrong", error);
+      });
   }
   /*  useEffect(() => {
     let sum = 0;
@@ -188,216 +188,220 @@ const Kisantransactionstable = ({ kisan, updateKisan }) => {
   }, [kisan]); */
   return (
     <div>
-      {isLoading ? 
-      <div className="text-center text-primary ">
-        <Spinner />
-      </div>
-            
-      :
-      
-      
-      <Table striped bordered responsive size="sm" className="shadow font-10">
-        <thead>
-          <tr>
-            <th>#</th>
-            <th>
-              <FormattedMessage id="date" />
-            </th>
-            <th>
-              <FormattedMessage id="comment" />
-            </th>
-            <th>
-              <FormattedMessage id="advanceDebited" />
-            </th>
-            <th>
-              <FormattedMessage id="grossTotalWithCurrency" />
-            </th>
-            <th>
-              <FormattedMessage id="billTotal" />
-            </th>
-            <th>
-              <FormattedMessage id="advanceCredited" />
-            </th>
-            <th>
-              <FormattedMessage id="cashPaid" />
-            </th>
-            <th>
-              <FormattedMessage id="carryForwardFromThisBill" />
-            </th>
-            <th>
-              <FormattedMessage id="carryForward" />
-            </th>
-            <th>
-              <FormattedMessage id="balance" />
-            </th>
-            <th>
-              <FormattedMessage id="actions" />
-            </th>
-          </tr>
-        </thead>
-        <tbody>
-          {kisan &&
-            kisan.transactions &&
-            kisan.transactions
-              .sort((a, b) => new Date(b.date) - new Date(a.date))
-              .map((transaction, index) => {
-                return (
-                  <tr key={index}>
-                    <th scope="row">{index + 1}</th>
-                    <td>{dateConverter(transaction.date)}</td>
-                    <td>{transaction.comment}</td>
-                    <td>
-                      {transaction.type === "DEBIT"
-                        ? transaction.transactionAmount
-                        : ""}
-                    </td>
-                    <td>{transaction.grossTotal}</td>
-                    <td>{transaction.netTotal}</td>
+      {isLoading ?
+        <div className="text-center text-primary ">
+          <Spinner />
+        </div>
+        :
+        <Table striped bordered responsive size="sm" className="shadow font-10">
+          <thead>
+            <tr className="text-center">
+              <th colSpan={3} className="bg-light">{" "}</th>
+              <th colSpan={1} className="bg-primary text-white"><FormattedMessage id="currencyWithBracket"/></th>
+              <th colSpan={5} className="bg-success text-white"><FormattedMessage id="currentBillTableRowSectionText"/></th>
+              <th colSpan={2} className="bg-danger text-white"><FormattedMessage id="overAllOutstandingTableRowSectionText"/></th>
+              <th colSpan={1} className="bg-light"></th>
+            </tr>
+            <tr className="text-center text-secondary">
+              <th>{" "}#{" "}</th>
+              <th>
+                <FormattedMessage id="date" />
+              </th>
+              <th>
+                <FormattedMessage id="comment" />
+              </th>
+              <th>
+                <FormattedMessage id="advanceDebited" />
+              </th>
+              <th>
+                <FormattedMessage id="grossTotalWithCurrency" />
+              </th>
+              <th>
+                <FormattedMessage id="billTotal" />
+              </th>
+              <th>
+                <FormattedMessage id="advanceCredited" />
+              </th>
+              <th>
+                <FormattedMessage id="cashPaid" />
+              </th>
+              <th>
+                <FormattedMessage id="carryForwardFromThisBill" />
+              </th>
+              <th>
+                <FormattedMessage id="carryForward" />
+              </th>
+              <th>
+                <FormattedMessage id="balance" />
+              </th>
+              <th>
+                <FormattedMessage id="actions" />
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            {kisan &&
+              kisan.transactions &&
+              kisan.transactions
+                .sort((a, b) => new Date(b.date) - new Date(a.date))
+                .map((transaction, index) => {
+                  return (
+                    <tr className="text-center" key={index}>
+                      <th scope="row">{index + 1}</th>
+                      <td>{dateConverter(transaction.date)}</td>
+                      <td>{transaction.comment}</td>
+                      <td>
+                        {transaction.type === "DEBIT"
+                          ? transaction.transactionAmount
+                          : ""}
+                      </td>
+                      <td>{transaction.grossTotal}</td>
+                      <td>{transaction.netTotal}</td>
 
-                    <td>
-                      {transaction.type === "CREDIT"
-                        ? transaction.advanceSettlement
-                        : transaction.type === "ADVANCESETTLEMENT"
-                        ? transaction.transactionAmount
-                        : ""}
-                    </td>
+                      <td>
+                        {transaction.type === "CREDIT"
+                          ? transaction.advanceSettlement
+                          : transaction.type === "ADVANCESETTLEMENT"
+                            ? transaction.transactionAmount
+                            : ""}
+                      </td>
 
-                    <td>{transaction.paidToKisan}</td>
-                    {transaction.type==="CREDIT" && transaction.netTotal > 0 ? 
-                      <td>{transaction.netTotal - transaction.advanceSettlement - transaction.paidToKisan }</td> : 
-                      <td>0</td>
-                    }
-                    <td>{transaction.carryForwardFromThisEntry}</td>
-                    {/*  <td>{balances[index] <0 ? <span className="text-danger">{balances[index]}</span> : <span className="text-success">{balances[index]}</span> }</td> */}
-                    <td>
-                      <span
-                        className={
-                          transaction.balanceAfterThisTransaction < 0
-                            ? "text-danger"
-                            : "text-primary"
-                        }
-                      >
-                        {transaction.balanceAfterThisTransaction}
-                      </span>
-                    </td>
-                    <td>
-                      {transaction.type === "DEBIT" ? (
-                        <div className="d-flex">
-                          <Button color="success" id="advanceEntryEdit" className="font-10">
-                            <Link
-                              className="link-no-decoration"
-                              to={`/kisanDebitForm/${kisan._id}/edit/${transaction._id}`}
-                            >
-                              {/* <FormattedMessage id="editButtonText" /> */}
-                              <FontAwesomeIcon  icon={solid('pen-to-square')} className="text-white"/>
-                            </Link>
-                            <Tooltip placement="left" isOpen={editAdvance} target="advanceEntryEdit" toggle={e => setEditAdvance(!editAdvance)}>
-                              Edit
-                            </Tooltip>
-                          </Button>
-                          <Button
-                            className="ms-2 font-10"
-                            color="primary"
-                            id="advanceEntryPrint"
-                            onClick={(e) => print(transaction)}
-                          >
-                            <Tooltip placement="top" isOpen={advanceEntryPrint} target="advanceEntryPrint" toggle={e => setAdvanceEntryPrint(!advanceEntryPrint)}>
-                              Print
-                            </Tooltip>
-                            {/* <FormattedMessage id="printButtonText" /> */}
-                            <FontAwesomeIcon icon={solid('print')} className="text-white"/>
-                          </Button>
-                          { index=== 0 && 
-                            transaction.type === "DEBIT" && <div>
-                              {isDeleting ? 
-                                <Button color="danger" className="ms-2 "><Spinner className="spinner-size-1"/></Button> :
-                                <Button color="danger" className="ms-2" onClick={e => deleteTransactionDebit(transaction,kisan._id)}><FontAwesomeIcon icon={solid('trash')} className="text-white"/></Button>
-                              }
-                            </div>
+                      <td>{transaction.paidToKisan}</td>
+                      {transaction.type === "CREDIT" && transaction.netTotal > 0 ?
+                        <td>{transaction.netTotal - transaction.advanceSettlement - transaction.paidToKisan}</td> :
+                        <td>0</td>
+                      }
+                      <td>{transaction.carryForwardFromThisEntry}</td>
+                      {/*  <td>{balances[index] <0 ? <span className="text-danger">{balances[index]}</span> : <span className="text-success">{balances[index]}</span> }</td> */}
+                      <td>
+                        <span
+                          className={
+                            transaction.balanceAfterThisTransaction < 0
+                              ? "text-danger"
+                              : "text-primary"
                           }
-                        </div>
-                      ) : transaction.type === "ADVANCESETTLEMENT" ? (
-                        <div className="d-flex">
-                          <Button color="success" id="edit">
-                            <Link
-                            className="link-no-decoration font-10"
-                              to={`/kisanAdvanceSettlement/${kisan._id}/edit/${transaction._id}`}
-
+                        >
+                          {transaction.balanceAfterThisTransaction}
+                        </span>
+                      </td>
+                      <td>
+                        {transaction.type === "DEBIT" ? (
+                          <div className="d-flex">
+                            <Button color="success" id="advanceEntryEdit" className="font-10">
+                              <Link
+                                className="link-no-decoration"
+                                to={`/kisanDebitForm/${kisan._id}/edit/${transaction._id}`}
+                              >
+                                {/* <FormattedMessage id="editButtonText" /> */}
+                                <FontAwesomeIcon icon={solid('pen-to-square')} className="text-white" />
+                              </Link>
+                              <Tooltip placement="left" isOpen={editAdvance} target="advanceEntryEdit" toggle={e => setEditAdvance(!editAdvance)}>
+                                Edit
+                              </Tooltip>
+                            </Button>
+                            <Button
+                              className="ms-2 font-10"
+                              color="primary"
+                              id="advanceEntryPrint"
+                              onClick={(e) => print(transaction)}
                             >
-
-                              {/* <FormattedMessage id="editButtonText" /> */}
-                              <FontAwesomeIcon  icon={solid('pen-to-square')} className="text-white"/>
-                            </Link>
-                            <Tooltip  placement="left" isOpen={editToolTip} target="edit" toggle={e => setEditTooltip(!editToolTip)}>
-                              Edit
-                            </Tooltip>
-                          </Button>
-
-                          <Button
-                            className="ms-2 font-10"
-                            color="primary"
-                            id="printAdvance"
-                            onClick={(e) => print(transaction)}
-                          >
-                             <Tooltip placement="top" isOpen={printToolTip} target="printAdvance" toggle={e => setPrintToolTip(!printToolTip)}>
-                              Print
-                            </Tooltip>
-                             <FontAwesomeIcon icon={solid('print')} className="text-white"/>
-                          </Button>
-                          { index===0 && 
-                            transaction.type === "ADVANCESETTLEMENT" && <div>
-                          {   isDeleting ? 
-                                <Button color="danger" className="ms-2"><Spinner className="spinner-size-1"/></Button> : 
-                                <Button color="danger" className="ms-2" onClick={e => deleteTransactionAdvanceSettlement(transaction,kisan._id)}><FontAwesomeIcon icon={solid('trash')} className="text-white"/></Button> 
-                              }
+                              <Tooltip placement="top" isOpen={advanceEntryPrint} target="advanceEntryPrint" toggle={e => setAdvanceEntryPrint(!advanceEntryPrint)}>
+                                Print
+                              </Tooltip>
+                              {/* <FormattedMessage id="printButtonText" /> */}
+                              <FontAwesomeIcon icon={solid('print')} className="text-white" />
+                            </Button>
+                            {index === 0 &&
+                              transaction.type === "DEBIT" && <div>
+                                {isDeleting ?
+                                  <Button color="danger" className="ms-2 "><Spinner className="spinner-size-1" /></Button> :
+                                  <Button color="danger" className="ms-2" onClick={e => deleteTransactionDebit(transaction, kisan._id)}><FontAwesomeIcon icon={solid('trash')} className="text-white" /></Button>
+                                }
                               </div>
-                          }
-                        </div>
-                      ) : (
-                        <div className="d-flex">
-                          <Button color="secondary" id="details" className="font-10">
-                            <Link
-                              className="link-no-decoration"
-                              to={`/kisanCreditForm/${kisan._id}/edit/${transaction._id}`}
-                            > <FontAwesomeIcon  icon={solid('list-ul')} className="text-white"/>
-                            </Link>
-                          </Button>
-                          {/* <Tooltip hideArrow={false} placement="left" isOpen={detailsTooltip} target="details" toggle={e => setDetailsTooltip(!detailsTooltip)}>
+                            }
+                          </div>
+                        ) : transaction.type === "ADVANCESETTLEMENT" ? (
+                          <div className="d-flex">
+                            <Button color="success" id="edit">
+                              <Link
+                                className="link-no-decoration font-10"
+                                to={`/kisanAdvanceSettlement/${kisan._id}/edit/${transaction._id}`}
+
+                              >
+
+                                {/* <FormattedMessage id="editButtonText" /> */}
+                                <FontAwesomeIcon icon={solid('pen-to-square')} className="text-white" />
+                              </Link>
+                              <Tooltip placement="left" isOpen={editToolTip} target="edit" toggle={e => setEditTooltip(!editToolTip)}>
+                                Edit
+                              </Tooltip>
+                            </Button>
+
+                            <Button
+                              className="ms-2 font-10"
+                              color="primary"
+                              id="printAdvance"
+                              onClick={(e) => print(transaction)}
+                            >
+                              <Tooltip placement="top" isOpen={printToolTip} target="printAdvance" toggle={e => setPrintToolTip(!printToolTip)}>
+                                Print
+                              </Tooltip>
+                              <FontAwesomeIcon icon={solid('print')} className="text-white" />
+                            </Button>
+                            {index === 0 &&
+                              transaction.type === "ADVANCESETTLEMENT" && <div>
+                                {isDeleting ?
+                                  <Button color="danger" className="ms-2"><Spinner className="spinner-size-1" /></Button> :
+                                  <Button color="danger" className="ms-2" onClick={e => deleteTransactionAdvanceSettlement(transaction, kisan._id)}><FontAwesomeIcon icon={solid('trash')} className="text-white" /></Button>
+                                }
+                              </div>
+                            }
+                          </div>
+                        ) : (
+                          <div className="d-flex">
+                            <Button color="secondary" id="details" className="font-10">
+                              <Link
+                                className="link-no-decoration"
+                                to={`/kisanCreditForm/${kisan._id}/edit/${transaction._id}`}
+                              > <FontAwesomeIcon icon={solid('list-ul')} className="text-white" />
+                              </Link>
+                            </Button>
+                            {/* <Tooltip hideArrow={false} placement="left" isOpen={detailsTooltip} target="details" toggle={e => setDetailsTooltip(!detailsTooltip)}>
                               Details
                             </Tooltip> */}
-                          <Button
-                            className="ms-2 font-10"
-                            color="primary"
-                            id="printCredit"
-                            onClick={(e) => printCreditEntry(transaction)}
-                          >
-                            {/* <FormattedMessage id="printButtonText" /> */}
-                            <FontAwesomeIcon icon={solid('print')} className="text-white"/>
-                            <Tooltip hideArrow={false} placement="top" isOpen={printCredit} target="printCredit" toggle={e => setPrintCredit(!printCredit)}>
-                              Print
-                            </Tooltip>
-                          </Button>
-                          
-                          { index===0 && transaction.type === "CREDIT" && <div>
-                            {isDeleting? <Button color="danger" className="ms-2" >
-                              <Spinner className="spinner-size-1"/>
-                            </Button>:
-                            <Button color="danger" className="ms-2" onClick={e => deleteTransaction(transaction,kisan._id)}>
-                              <FontAwesomeIcon icon={solid('trash')} className="text-white"/>
+                            <Button
+                              className="ms-2 font-10"
+                              color="primary"
+                              id="printCredit"
+                              onClick={(e) => printCreditEntry(transaction)}
+                            >
+                              {/* <FormattedMessage id="printButtonText" /> */}
+                              <FontAwesomeIcon icon={solid('print')} className="text-white" />
+                              <Tooltip hideArrow={false} placement="top" isOpen={printCredit} target="printCredit" toggle={e => setPrintCredit(!printCredit)}>
+                                Print
+                              </Tooltip>
                             </Button>
+
+                            {index === 0 && transaction.type === "CREDIT" && <div>
+                              {isDeleting ? <Button color="danger" className="ms-2" >
+                                <Spinner className="spinner-size-1" />
+                              </Button> :
+                                <Button color="danger" className="ms-2" onClick={e => deleteTransaction(transaction, kisan._id)}>
+                                  <FontAwesomeIcon icon={solid('trash')} className="text-white" />
+                                </Button>
+                              }
+                            </div>
                             }
-                          </div> 
-                           }
-                        </div>
-                      )}
-                    </td>
-                  </tr>
-                );
-              })}
-        </tbody>
-      </Table>
+                          </div>
+                        )}
+                      </td>
+                    </tr>
+                  );
+                })}
+          </tbody>
+        </Table>
       }
-      
+
       <div className="hide-till-print">
         <Kisanreceipt data={transaction} ref={componentRef} />
       </div>

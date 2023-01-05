@@ -23,11 +23,11 @@ const Kisanmoneysummary = ({ kisan }) => {
             <td className="capitalize">{kisan.address}</td>
           </tr>
           <tr>
-            <th><FormattedMessage id="balance"/></th>
+            <th><FormattedMessage id="balance"/>{" "}<FormattedMessage id="currencyWithBracket"/></th>
             <td>{kisan.balance}</td>
           </tr>
           <tr>
-            <th><FormattedMessage id="carryForwardAmount"/></th>
+            <th><FormattedMessage id="carryForwardAmount"/>{" "}<FormattedMessage id="currencyWithBracket" /></th>
             <td>{kisan.carryForwardAmount}</td>
           </tr>
         </tbody>

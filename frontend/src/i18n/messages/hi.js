@@ -39,6 +39,7 @@ const hi = {
     searchButtonText: "खोजें",
     resetButtonText: "रीसेट",
     printButtonText: "प्रिंट",
+    currencyWithBracket:"(₹)",
 
     /*Add Kisan Page*/
     newKisanDeatils: "नये किसान का ब्यौरा",
@@ -53,23 +54,25 @@ const hi = {
 
     /*Kisan Detail Page*/
     kisanDetailsTitle: "किसान का विवरण",
-    carryForwardAmount: "पिछले बिल तक का बकाया  भुगतान (₹)",
+    carryForwardAmount: "पिछले बिल तक टोटल बकाया भुगतान",
     giveAdvanceKisanButtonText: "एडवांस दें",
     createBillKisanButtonText: "बिल बनायें",
     depositAdvanceKisanButtonText: "एडवांस वापसी की एंट्री करें",
     transactionDetailsTitle: "लेन-देन का विवरण",
 
     /*Table columns Kisan Detail Page*/
-    balance: "कुल बकाया  एडवांस (₹)",
+    currentBillTableRowSectionText:"बिल में दर्ज राशियां (₹)",
+    overAllOutstandingTableRowSectionText:"बिल के बाद टोटल बकाया (₹)",
+    balance: "टोटल बकाया एडवांस",
     date: "दिनांक",
     comment: "एंट्री का विवरण",
-    advanceDebited: "एडवांस लिया (₹)",
-    grossTotalWithCurrency: "ट्रेडिंग टोटल (₹)",
-    billTotal: "बिल टोटल (₹)",
-    advanceCredited: "एडवांस चुकाया (₹)",
-    cashPaid: "नगद भुगतान किया (₹)",
-    carryForwardFromThisBill : "Carry Forward From This Bill (₹)",
-    carryForward: "अगले बिल के लिए बकाया  भुगतान (₹)",
+    advanceDebited: "एडवांस दिया",
+    grossTotalWithCurrency: "ट्रेडिंग टोटल",
+    billTotal: "बिल टोटल",
+    advanceCredited: "एडवांस वसूला",
+    cashPaid: "नगद भुगतान",
+    carryForwardFromThisBill : "बकाया भुगतान",
+    carryForward: "टोटल बकाया भुगतान",
     totalPaymentOfThisBill : "इस बिल की कुल पेमेंट (₹)",
     actions: "कार्यवाही",
     editButtonText: "सुधारें",
@@ -81,7 +84,6 @@ const hi = {
 
     /*Debit Entry Form*/
     advanceDetails: "एडवांस का विवरण",
-    amount: "एडवांस की राशि",
     createEntryButtonText: "एंट्री करें",
     amountSBGTZ: "एडवांस की राशि 0 से अधिक होनी चाहिये। ",
     amountCNBZ: "राशि दर्ज़ करना अनिवार्य है! राशि + या - में दर्ज़ कर सकते हैं। 0 अमान्य है ।",
@@ -89,7 +91,6 @@ const hi = {
 
     /*Advance Deposit Form*/
     advanceDepositDetails: "एडवांस वापसी हेतु किसान द्वारा जमा की जाने वाली राशि का विवरण",
-    advanceDepositAmount: "डिपॉज़िट राशि",
     balanceTextTillThisWithoutCurrency: "इस एंट्री के पहले कुल बकाया  एडवांस",
 
     /*Credit Entry Form*/
@@ -112,12 +113,11 @@ const hi = {
     bhada: "भाड़ा (₹) :",
     netTotal: "बिल टोटल (कटौती के बाद) : ₹ ",
     amountToSettle: "बकाया  भुगतान",
-    traderSettlementSectionTitle: "ट्रेडर का हिसाब",
+    paymentSettlementSectionTitle: "पेमेंट समायोजन",
+    advanceSettlementSectionTitle: "एडवांस समायोजन",
     settlementSectionTitleForPaymentOnly: "पेमेंट का ब्यौरा",
     billettlementSummarySectionTitle: "बिल का हिसाब",
-    balanceTextWithoutCurrency: "बकाया  एडवांस",
-    balanceAfterBillTextWithoutCurrency: "अगले बिल के लिए बकाया  एडवांस (₹)",
-    carryForwardAmountWithoutCurrency: "पिछले बिल तक का बकाया  भुगतान",
+    balanceAfterBillTextWithoutCurrency: "बिल के बाद टोटल बकाया एडवांस (₹)",
     whatAreYouBuyingText: "कमोडिटी (सामग्री) का नाम :",
     Matar: "मटर",
     Tamatar: "टमाटर",
@@ -139,7 +139,7 @@ const hi = {
     balanceCBMTCB:
       'एडवांस चुकाने की राशि, "समायोजित की जाने वाली राशि" से अधिक नहीं हो सकती है। अधिकतम मान्य राशि = ₹ ',
     balanceCBMTOA:
-      'एडवांस चुकाने की राशि, "कुल बकाया  एडवांस" से अधिक नहीं हो सकती है। अधिकतम मान्य राशि = ₹',
+      'एडवांस चुकाने की राशि, "कुल बकाया एडवांस" से अधिक नहीं हो सकती है। अधिकतम मान्य राशि = ₹',
     cashPaidCBMTCB:
       'नगद भुगतान की राशि "समायोजित की जाने वाली राशि" से अधिक नहीं हो सकती है। अधिकतम मान्य राशि = ₹ ',
     commentIsRequired: "एंट्री का विवरण देना अनिवार्य है। ",

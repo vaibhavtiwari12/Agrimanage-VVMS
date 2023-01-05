@@ -39,6 +39,7 @@ const en = {
     searchButtonText: "Search",
     resetButtonText: "Reset",
     printButtonText: "Print",
+    currencyWithBracket:"(₹)",
 
     /*Add Kisan Page*/
     newKisanDeatils: "Details Of New Kisan",
@@ -53,24 +54,26 @@ const en = {
 
     /*Kisan Detail Page*/
     kisanDetailsTitle: "Kisan Details",
-    carryForwardAmount: "Pending Payments Upto Last Bill (₹)",
+    carryForwardAmount: "Total Carry Forward Upto Last Bill",
     giveAdvanceKisanButtonText: "Give Advance",
     createBillKisanButtonText: "Create Bill",
     depositAdvanceKisanButtonText: "Advance Settlement",
     transactionDetailsTitle: "Transaction Details",
 
     /*Table columns Kisan Detail Page*/
-    balance: "Outstanding Advance  (₹)",
+    currentBillTableRowSectionText:"Entered Amounts In The Bill (₹)",
+    overAllOutstandingTableRowSectionText:"Total Outstanding After Bill (₹)",
+    balance: "Outstanding Advance",
     date: "Date",
     comment: "Comment",
-    advanceDebited: "Advance Taken (₹)",
-    grossTotalWithCurrency: "Trading Total (₹)",
-    billTotal: "Bill Total (₹)",
-    advanceCredited: "Advance Settled (₹)",
-    cashPaid: "Cash Paid (₹)",
-    totalPaymentOfThisBill : "Total Payment Of This Bill (₹)",
-    carryForwardFromThisBill : "Carry Forward From This Bill (₹)",
-    carryForward: "Carry Forward Payment For Next Bill (₹)",
+    advanceDebited: "Advance Given",
+    grossTotalWithCurrency: "Trading Total",
+    billTotal: "Bill Total",
+    advanceCredited: "Advance Recovered",
+    cashPaid: "Cash Paid",
+    totalPaymentOfThisBill : "Total Payment Of This Bill",
+    carryForwardFromThisBill : "Carry Forward",
+    carryForward: "Total Carry Forward",
     actions: "Actions",
     editButtonText: "Edit",
     viewButtonText: "View",
@@ -81,15 +84,13 @@ const en = {
 
     /*Debit Entry Form*/
     advanceDetails: "Advance Details",
-    amount: "Advance Amount",
     createEntryButtonText: "Create Entry",
     amountSBGTZ: "The amount should be greater than 0.",
     amountCNBZ: "The amount is required, 0 not allowed, +ve amd -ve both amounts are allowed.",
     advanceSCNBMTO: "Amount cannot be more than outstanding balance. Max allowed amount =  ₹ ",
 
     /*Advance Deposit Form*/
-    advanceDepositDetails: "Deposit Details",
-    advanceDepositAmount: "Deposit Amount",
+    advanceDepositDetails: "Advance Recovery Details",
     balanceTextTillThisWithoutCurrency: "Outstanding advance before this transaction",
 
     /*Credit Entry Form*/
@@ -111,13 +112,12 @@ const en = {
     hammali: "Handling Charges/Hammali (₹) :",
     bhada: "Transportation Charges/Bhada (₹):",
     netTotal: "Bill Total (After Deductions) : ₹ ",
-    amountToSettle: "Amount to Settle : ",
-    traderSettlementSectionTitle: "Trader Settlement",
+    paymentToSettle: "Payment To Settle",
+    paymentSettlementSectionTitle: "Payment Settlement",
+    advanceSettlementSectionTitle: "Advance Settlement",
     settlementSectionTitleForPaymentOnly: "Payment Summary",
     billettlementSummarySectionTitle: "Bill Settlement",
-    balanceTextWithoutCurrency: "Advance to Settle",
-    balanceAfterBillTextWithoutCurrency: "Ramaining Advance After Bill (₹)",
-    carryForwardAmountWithoutCurrency: "Carry Forward Payments Upto Last Bill",
+    balanceAfterBillTextWithoutCurrency: "Outstanding Advance After Bill (₹)",
     whatAreYouBuyingText: "Name of the Commodity  :",
     Matar: "Matar",
     Tamatar: "Tamatar",
@@ -134,12 +134,12 @@ const en = {
     totalCommissionCNBLTZ: "Commission cannot be less than 0.",
     hammaliCNBLTZ: "Handling Charges (Hammali) cannot be less than 0.",
     bhadaCNBLTZ: "Transportation Charges (Bhada) cannot be less than 0.",
-    balanceCNBLTZ: "Advance Settled cannot be less than 0.",
+    balanceCNBLTZ: "Advance Recovered cannot be less than 0.",
     cashPaidCNBLTZ: "Cash Paid cannot be less than 0.",
     balanceCBMTCB:
-      'Advance settled cannot be more than the "Amount to Settle". Max allowed amount =  ₹ ',
+      'Advance Recovered cannot be more than the "Amount to Settle". Max allowed amount =  ₹ ',
     balanceCBMTOA:
-      'Advance settled cannot be more than "Outstanding Advance". Max allowed amount =  ₹ ',
+      'Advance Recovered cannot be more than "Outstanding Advance". Max allowed amount =  ₹ ',
     cashPaidCBMTCB:
       'Cash paid cannot be greater than the "Amount to Settle". Max allowed amount =  ₹  ',
     commentIsRequired: "Comment is required.",

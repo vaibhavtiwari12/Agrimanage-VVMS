@@ -247,7 +247,7 @@ const Advancesettlementform = () => {
                      </h6>
                   ) : (
                      <b>
-                        <FormattedMessage id="balanceTextWithoutCurrency" /> :{" "}
+                        <FormattedMessage id="balance" /> :{" "}
                         <span className="text-primary">
                            <FormattedMessage id="currency" /> {kisan.balance}
                         </span>
@@ -256,7 +256,7 @@ const Advancesettlementform = () => {
                   <FormGroup className="mt-2">
                      <Label for="amount">
                         {" "}
-                        <FormattedMessage id="advanceDepositAmount" />{" "}
+                        <FormattedMessage id="advanceCredited" />{" "}<FormattedMessage id="currencyWithBracket" />
                      </Label>
                      <Input
                         disabled={type === "edit" ? true : false}

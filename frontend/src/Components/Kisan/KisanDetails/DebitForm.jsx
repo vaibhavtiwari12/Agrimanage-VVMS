@@ -194,7 +194,7 @@ const Debitform = () => {
         {/*  {hasError && <Alert color="danger"> FORM HAS AN ERROR </Alert>} */}
         <h2 className="text-center text-secondary mt-3 font-15"><FormattedMessage id="advanceDetails"/></h2>
         <FormGroup className="mt-2">
-          <Label for="amount"> <FormattedMessage id="amount"/> </Label>
+          <Label for="amount"> <FormattedMessage id="advanceDebited" />{" "}<FormattedMessage id="currencyWithBracket" /></Label>
           <Input
             disabled={type === "edit" ? true : false}
             invalid={amount <= 0 && isAmountValid === ""}
