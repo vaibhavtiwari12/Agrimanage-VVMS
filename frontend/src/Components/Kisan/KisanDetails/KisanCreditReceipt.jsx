@@ -46,7 +46,7 @@ const Kisancreditreceipt = React.forwardRef((props, ref) => {
                   </Table>
                   <Table className="receipt-table">
                      <tbody>
-                        {props.data.txn_grossTotal > 0 &&
+                        {props.data.txn_grossTotal > 0 ?
                            <tr>
                               <td colSpan={2} className="no-bottom-border">
                                  <Table bordered className="receipt-table">
@@ -132,9 +132,16 @@ const Kisancreditreceipt = React.forwardRef((props, ref) => {
                                        </tr>
                                     </tbody>
                                  </Table>
+                                 <div className="receipt-table pt-2">
+                                    <ul>
+                                       <li>कुल बकाया एडवांस = ₹ {-1 * props.data.balance}</li>
+                                       <li>पिछले बिल तक का बकाया भुगतान = ₹ {props.data.txn_previousBillSettlementAmount}</li>
+                                       <li>कुल बकाया भुगतान = ({props.data.txn_previousBillSettlementAmount} + {props.data.txn_carryForwardFromThisEntry - props.data.txn_previousBillSettlementAmount}) = ₹ {props.data.txn_carryForwardFromThisEntry}</li>
+                                    </ul>
+                              </div>
                               </td>
                            </tr>
-                        } : {
+                         : 
                            <tr>
                               <td colSpan={2} className="no-bottom-border">
                                  <Table bordered className="receipt-table">
@@ -196,20 +203,22 @@ const Kisancreditreceipt = React.forwardRef((props, ref) => {
                                        </tr>
                                     </tbody>
                                  </Table>
+                                 <div className="receipt-table pt-2">
+                                    <ul>
+                                       <li>अगले बिल के लिए बकाया एडवांस = ({-1 * (props.data.balance - props.data.txn_advanceSettlement)} - {props.data.txn_advanceSettlement}) 
+                                       = ₹ {-1 * props.data.balance}</li>
+                                       <li>अगले बिल के लिए बकाया पेमेंट = ({props.data.txn_previousBillSettlementAmount} - {props.data.txn_paidToKisan}) 
+                                       = ₹ {props.data.txn_carryForwardFromThisEntry}</li>
+                                    </ul>
+                                 </div>
                               </td>
                            </tr>
                         }
                      </tbody>
                   </Table>
+                  
                </div>
-               <div className="receipt-table">
-                  <ul>
-                     <li>अगले बिल के लिए बकाया एडवांस = ({-1 * (props.data.balance - props.data.txn_advanceSettlement)} - {props.data.txn_advanceSettlement}) 
-                     = ₹ {-1 * props.data.balance}</li>
-                     <li>अगले बिल के लिए बकाया पेमेंट = ({props.data.txn_previousBillSettlementAmount} - {props.data.txn_paidToKisan}) 
-                     = ₹ {props.data.txn_carryForwardFromThisEntry}</li>
-                  </ul>
-               </div>
+               
                <div className="text-end pt-4">
                   <span>हस्ताक्षर</span>
                </div>

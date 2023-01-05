@@ -69,6 +69,7 @@ const en = {
     advanceCredited: "Advance Settled (₹)",
     cashPaid: "Cash Paid (₹)",
     totalPaymentOfThisBill : "Total Payment Of This Bill (₹)",
+    carryForwardFromThisBill : "Carry Forward From This Bill (₹)",
     carryForward: "Carry Forward Payment For Next Bill (₹)",
     actions: "Actions",
     editButtonText: "Edit",

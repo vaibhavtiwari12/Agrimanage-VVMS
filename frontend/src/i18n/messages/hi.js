@@ -68,6 +68,7 @@ const hi = {
     billTotal: "बिल टोटल (₹)",
     advanceCredited: "एडवांस चुकाया (₹)",
     cashPaid: "नगद भुगतान किया (₹)",
+    carryForwardFromThisBill : "Carry Forward From This Bill (₹)",
     carryForward: "अगले बिल के लिए बकाया  भुगतान (₹)",
     totalPaymentOfThisBill : "इस बिल की कुल पेमेंट (₹)",
     actions: "कार्यवाही",

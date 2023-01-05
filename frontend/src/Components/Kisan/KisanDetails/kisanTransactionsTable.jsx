@@ -222,6 +222,9 @@ const Kisantransactionstable = ({ kisan, updateKisan }) => {
               <FormattedMessage id="cashPaid" />
             </th>
             <th>
+              <FormattedMessage id="carryForwardFromThisBill" />
+            </th>
+            <th>
               <FormattedMessage id="carryForward" />
             </th>
             <th>
@@ -260,6 +263,10 @@ const Kisantransactionstable = ({ kisan, updateKisan }) => {
                     </td>
 
                     <td>{transaction.paidToKisan}</td>
+                    {transaction.type==="CREDIT" && transaction.netTotal > 0 ? 
+                      <td>{transaction.netTotal - transaction.advanceSettlement - transaction.paidToKisan }</td> : 
+                      <td>0</td>
+                    }
                     <td>{transaction.carryForwardFromThisEntry}</td>
                     {/*  <td>{balances[index] <0 ? <span className="text-danger">{balances[index]}</span> : <span className="text-success">{balances[index]}</span> }</td> */}
                     <td>
