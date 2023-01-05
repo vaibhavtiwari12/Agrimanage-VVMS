@@ -9,7 +9,7 @@ const hi = {
     currency: "₹",
     companyName: "कंपनी (फ़र्म) का नाम",
     editKisan: "किसान का ब्यौरा सुधारें",
-    editPurchaser:"ख़रीदार का ब्यौरा सुधारें",
+    editPurchaser:"खरीदार का ब्यौरा सुधारें",
 
     /*login Page */
     login: "लॉगइन",
@@ -21,7 +21,7 @@ const hi = {
 
     /*Header*/
     hello: "नमस्ते",
-    purchaser: "ख़रीदार",
+    purchaser: "खरीदार",
     kisan: "किसान",
     report: "रिपोर्ट",
     logout: "लॉगआउट",
@@ -53,14 +53,14 @@ const hi = {
 
     /*Kisan Detail Page*/
     kisanDetailsTitle: "किसान का विवरण",
-    carryForwardAmount: "पिछले बिलों का कोई बक़ाया भुगतान (₹)",
+    carryForwardAmount: "पिछले बिल तक का बकाया  भुगतान (₹)",
     giveAdvanceKisanButtonText: "एडवांस दें",
     createBillKisanButtonText: "बिल बनायें",
     depositAdvanceKisanButtonText: "एडवांस वापसी की एंट्री करें",
     transactionDetailsTitle: "लेन-देन का विवरण",
 
     /*Table columns Kisan Detail Page*/
-    balance: "कुल बक़ाया एडवांस (₹)",
+    balance: "कुल बकाया  एडवांस (₹)",
     date: "दिनांक",
     comment: "एंट्री का विवरण",
     advanceDebited: "एडवांस लिया (₹)",
@@ -68,7 +68,8 @@ const hi = {
     billTotal: "बिल टोटल (₹)",
     advanceCredited: "एडवांस चुकाया (₹)",
     cashPaid: "नगद भुगतान किया (₹)",
-    carryForward: "बिल का बक़ाया भुगतान (₹)",
+    carryForward: "अगले बिल के लिए बकाया  भुगतान (₹)",
+    totalPaymentOfThisBill : "इस बिल की कुल पेमेंट (₹)",
     actions: "कार्यवाही",
     editButtonText: "सुधारें",
     viewButtonText: "देखें",
@@ -77,49 +78,53 @@ const hi = {
     entryAddSuccessMsg:"एंटी सफलतापूर्वक जोड़ी गयी...!",
     entryEditSuccessMsg:"एंटी सफलतापूर्वक सुधारी गयी...!",
 
-
     /*Debit Entry Form*/
     advanceDetails: "एडवांस का विवरण",
     amount: "एडवांस की राशि",
     createEntryButtonText: "एंट्री करें",
     amountSBGTZ: "एडवांस की राशि 0 से अधिक होनी चाहिये। ",
     amountCNBZ: "राशि दर्ज़ करना अनिवार्य है! राशि + या - में दर्ज़ कर सकते हैं। 0 अमान्य है ।",
-    advanceSCNBMTO: "यह राशि, कुल बक़ाया एडवांस से ज्यादा नहीं हो सकती है। अधिकतम मान्य राशि = ₹ ",
+    advanceSCNBMTO: "यह राशि, कुल बकाया  एडवांस से ज्यादा नहीं हो सकती है। अधिकतम मान्य राशि = ₹ ",
 
     /*Advance Deposit Form*/
     advanceDepositDetails: "एडवांस वापसी हेतु किसान द्वारा जमा की जाने वाली राशि का विवरण",
     advanceDepositAmount: "डिपॉज़िट राशि",
-    balanceTextTillThisWithoutCurrency: "इस एंट्री के पहले कुल बक़ाया एडवांस",
+    balanceTextTillThisWithoutCurrency: "इस एंट्री के पहले कुल बकाया  एडवांस",
 
     /*Credit Entry Form*/
     billDetails: "बिल का विवरण",
     tradingSectionTitle: "ट्रेडिंग का विवरण",
     carryForwardSectionTitle: "पिछले बक़ाये का विवरण",
-    carryForwardTotal: "टोटल बक़ाया भुगतान",
-    selectTradingType: "-- कमोडिटी का नाम  चुनें --",
+    carryForwardTotal: "टोटल बकाया  भुगतान",
+    selectTradingType: "-- कमोडिटी का नाम चुनें --",
     numberOfBags: "बोरों की संख्या (नग)",
     totalWeight: "कुल वजन (कि.ग्रा.में)",
     ratePerKg: "प्रति किलोग्राम भाव (₹)",
     grossTotal: "ट्रेडिंग टोटल (कमोडिटी का कुल मूल्य) : ₹ ",
-    purchaserSectionTitle: "ख़रीददार का विवरण",
-    purchaserName: "ख़रीददार का नाम",
-    selectPurchaser: "-- ख़रीददार का नाम चुनें --",
+    purchaserSectionTitle: "खरीदार का विवरण",
+    purchaserName: "खरीदार का नाम",
+    selectPurchaser: "-- खरीदार का नाम चुनें --",
     deductionsSectionTitle: "कटौती",
     commission: "कमीशन (% में) :",
     totalCommission: "कुल कमीशन : ",
     hammali: "हम्माली (₹) :",
     bhada: "भाड़ा (₹) :",
     netTotal: "बिल टोटल (कटौती के बाद) : ₹ ",
-    amountToSettle: "समायोजित की जाने वाली राशि : ",
-    settlementSectionTitle: "समायोजन",
-    balanceTextWithoutCurrency: "कुल बक़ाया एडवांस",
-    carryForwardAmountWithoutCurrency: "पिछले बिलों का कोई बक़ाया भुगतान",
+    amountToSettle: "बकाया  भुगतान",
+    traderSettlementSectionTitle: "ट्रेडर का हिसाब",
+    settlementSectionTitleForPaymentOnly: "पेमेंट का ब्यौरा",
+    billettlementSummarySectionTitle: "बिल का हिसाब",
+    balanceTextWithoutCurrency: "बकाया  एडवांस",
+    balanceAfterBillTextWithoutCurrency: "अगले बिल के लिए बकाया  एडवांस (₹)",
+    carryForwardAmountWithoutCurrency: "पिछले बिल तक का बकाया  भुगतान",
     whatAreYouBuyingText: "कमोडिटी (सामग्री) का नाम :",
     Matar: "मटर",
     Tamatar: "टमाटर",
     Dhaniya: "धनिया",
     editCreditEntryButtonTitle: "एंट्री अपडेट करें",
-    billDate:"Bill Date",
+    billDateSectionTitle: "बिल दिनाँक",
+    billDateLabel:"बिल में दिखायी जाने वाली दिनाँक",
+    backDatedBillMsg:"बैक डेटेड बिल",
 
     /*Credit Entry Form Errors*/
     numberOfBagsCNBLTZ: "बोरों की संख्या (नग) 0 से काम नहीं हो सकती है। ",
@@ -133,15 +138,17 @@ const hi = {
     balanceCBMTCB:
       'एडवांस चुकाने की राशि, "समायोजित की जाने वाली राशि" से अधिक नहीं हो सकती है। अधिकतम मान्य राशि = ₹ ',
     balanceCBMTOA:
-      'एडवांस चुकाने की राशि, "कुल बक़ाया एडवांस" से अधिक नहीं हो सकती है। अधिकतम मान्य राशि = ₹',
+      'एडवांस चुकाने की राशि, "कुल बकाया  एडवांस" से अधिक नहीं हो सकती है। अधिकतम मान्य राशि = ₹',
     cashPaidCBMTCB:
       'नगद भुगतान की राशि "समायोजित की जाने वाली राशि" से अधिक नहीं हो सकती है। अधिकतम मान्य राशि = ₹ ',
     commentIsRequired: "एंट्री का विवरण देना अनिवार्य है। ",
-    selectTradingAndPurchaserIsRequired: "यदि आप किसी कमोडिटी का चयन कर रहे हैं, तो ख़रीददार का चयन करना भी अनिवार्य है। ",
-    selectingPurchaserIsRequired: "ख़रीददार का चयन करना अनिवार्य है। ",
+    selectTradingAndPurchaserIsRequired: "यदि आप किसी कमोडिटी का चयन कर रहे हैं, तो खरीदार का चयन करना भी अनिवार्य है। ",
+    selectingPurchaserIsRequired: "खरीदार का चयन करना अनिवार्य है। ",
     advanceSettlementAddedSuccessfully:"एडवांस वापसी की एंटी सफलतापूर्वक जोड़ी गयी।",
     advanceSettlementUpdatedSuccessfully:"एडवांस वापसी की एंटी सफलतापूर्वक सुधारी गयी।",
-
+    kisanHasTxnAfterThisDateMsg: "इस किसान के लिए, चयनित दिनांक के बाद की दिनांकों पर, अन्य लेन-देन दर्ज किये जा चुके हैं : इसलिए आपको चयनित दिनांक पर इस किसान का बिल बनाने की अनुमति नहीं है।",
+    purchaserHasTxnAfterThisDateMsg: "चयनित खरीदार के लिए, चयनित दिनांक के बाद की दिनांकों पर,अन्य लेन-देन दर्ज किये जा चुके हैं : इसलिए आपको इस दिनांक पर इस खरीदार के साथ इस किसान का बिल बनाने की अनुमति नहीं है।",
+    actualBillCreationDateMsg: "बिल एंट्री की दिनांक ",
     /* Inventory Langing */
     inventoryLandingTitle: "इनवेंटरी विवरणिका",
     addfasalType: "कमोडिटी जोड़ें",
@@ -155,26 +162,26 @@ const hi = {
     inventory_addSuccessful: "कमोडिटी सफलतापूर्वक जोड़ी गयी",
 
     /* Purchaser */
-    purchaserLandingTitle: "ख़रीदार विवरणिका",
-    addPurchaserButtonText: "ख़रीदार जोड़ें",
-    newPurchaserDeatils: "नये ख़रीदार का ब्यौरा",
+    purchaserLandingTitle: "खरीदार विवरणिका",
+    addPurchaserButtonText: "खरीदार जोड़ें",
+    newPurchaserDeatils: "नये खरीदार का ब्यौरा",
 
     /*Add Purchaser Form*/
     companyNameIsRequired: "कंपनी (फ़र्म) का नाम देना अनिवार्य है।",
-    purchaser_addSuccessful: "ख़रीदार सफलतापूर्वक जोड़ा गया !",
-    purchaser_editSuccessful : "Purchaser has been edited successfully",
+    purchaser_addSuccessful: "खरीदार सफलतापूर्वक जोड़ा गया !",
+    purchaser_editSuccessful : "खरीदार का विवरण सफलतापूर्वक सुधारा गया !",
 
     /*Purchase Table*/
-    nameOfPurchase: "ख़रीदार का नाम",
-    outstandingPayment: "कुल बक़ाया पेमेंट (₹)",
-    outstandingPaymentADT: "एंट्री तक का बक़ाया (₹)",
+    nameOfPurchase: "खरीदार का नाम",
+    outstandingPayment: "कुल बकाया  पेमेंट (₹)",
+    outstandingPaymentADT: "एंट्री तक का बकाया  (₹)",
 
     /*Purchaser Details*/
-    purchaserDetailsPageTitle: "ख़रीदार का विवरण",
+    purchaserDetailsPageTitle: "खरीदार का विवरण",
     purchaserPaymentEntryButtonText: "पेमेंट एंट्री",
-    purchaseTotal: "ख़रीदी का टोटल (₹)",
+    purchaseTotal: "खरीदी का टोटल (₹)",
     transactionType: "लेन देन का प्रकार",
-    tt_purchase: "ख़रीद",
+    tt_purchase: "खरीद",
     tt_payment: "पेमेंट",
     purchaserPaymentFormTitle: "पेमेंट विवरण",
     paymentAmount: "पेमेंट की राशि",
@@ -182,8 +189,8 @@ const hi = {
     negativePaymentPopupContent: "कृपया पुष्टि करें कि क्या आप यह राशि दर्ज करना चाहते हैं (₹) = ",
 
     /*Dashboard Page*/
-    totalAdvacePendingWithKisan:"किसानो का कुल बक़ाया एडवांस (₹)",
-    totalPurchaserOutstanding:"ख़रीददारों की कुल बक़ाया पेमेंट्स (₹)",
+    totalAdvacePendingWithKisan:"किसानो का कुल बकाया  एडवांस (₹)",
+    totalPurchaserOutstanding:"खरीदारों की कुल बकाया  पेमेंट्स (₹)",
     totalItemweight:"कुल वजन (कि.ग्रा.में)",
     totalBagsSoldToday:"आज बेचे गए कुल बोरों की संख्या (नग)",
 

@@ -37,14 +37,15 @@ const CreditForm = () => {
    const [paidToKisan, setPaidToKisan] = useState(0);
    const [advanceSettlement, setAdvanceSettlement] = useState(0);
    const [carryForwardFromThisEntry, setCarryForwardFromThisEntry] =
-   useState(0);
+      useState(0);
    const [balanceAfterThisTransaction, setBalanceAfterThisTransaction] =
-   useState(0);
+      useState(0);
    const [itemType, setItemType] = useState("");
    const [purchaser, setPurchaser] = useState("");
    const [selectedPurchaser, setSelectedPurchaser] = useState({});
+   const [backDate, setBackDate] = useState("");
    const [creationDate, setCreationDate] = useState("");
-   
+
    // Validity States
    const [isCommentValid, setIsCommentValid] = useState("PRISTINE");
    const [
@@ -59,7 +60,7 @@ const CreditForm = () => {
    const [isBhadaValid, setIsBhadaValid] = useState("PRISTINE");
    const [isPaidToKisanValid, setIsPaidToKisanValid] = useState("PRISTINE");
    const [isAdvanceSettlementValid, setIsAdvanceSettlementValid] =
-   useState("PRISTINE");
+      useState("PRISTINE");
    const [
       isCarryForwardFromThisEntryValid,
       setIsCarryForwardFromThisEntryValid,
@@ -69,7 +70,7 @@ const CreditForm = () => {
    const [billDate, setBillDate] = useState(formatDate(new Date()));
    const [isDateEditable, setIsDateEditable] = useState(false);
    const [isBillDateValid, setIsBillDateValid] = useState("PRISTINE");
-   
+
 
    //Misclaeneous
    const [kisan, setKisan] = useState({});
@@ -147,9 +148,9 @@ const CreditForm = () => {
       if (type === "add") {
          setCarryForwardFromThisEntry(
             netTotal -
-               advanceSettlement -
-               paidToKisan +
-               previousBillSettlementAmount
+            advanceSettlement -
+            paidToKisan +
+            previousBillSettlementAmount
          );
       }
    }, [paidToKisan, advanceSettlement, netTotal]);
@@ -160,12 +161,12 @@ const CreditForm = () => {
       }
    }, [kisan]);
    useEffect(() => {
-    if(purchaserData.length>0){
-      if(billDate !== getTodaysFormattedDate()){
-         billDateChange({target: {value: billDate}})
+      if (purchaserData.length > 0) {
+         if (billDate !== getTodaysFormattedDate()) {
+            billDateChange({ target: { value: billDate } })
+         }
       }
-    }
-  }, [purchaser]);
+   }, [purchaser]);
    /*  useEffect(() => {
     if(inventory.length>0){
       console.log("INVENTORY ", inventory)
@@ -212,7 +213,10 @@ const CreditForm = () => {
          setBalanceAfterThisTransaction(
             transactionToedit.balanceAfterThisTransaction
          );
-         setCreationDate(transactionToedit.creationDate)
+         if (transactionToedit.backDate) {
+            setCreationDate(transactionToedit.creationDate)
+            setBackDate(transactionToedit.backDate)
+         }
          setItemType(transactionToedit.itemType);
          setBillDate(formatDate(transactionToedit.date))
          setIsItemTypeInvalid("PRISTINE");
@@ -278,7 +282,7 @@ const CreditForm = () => {
          setIsItemTypeInvalid("TRUE");
          isInvalid = true;
       }
-      if(isBillDateValid !== "" && isBillDateValid !== "PRISTINE"){
+      if (isBillDateValid !== "" && isBillDateValid !== "PRISTINE") {
          console.log("transaction is invalid becaise isBillDate --- ", isBillDateValid);
          isInvalid = true;
       }
@@ -341,56 +345,56 @@ const CreditForm = () => {
    }
    const billDateChange = (e) => {
       console.log(e.target.value)
-      if(type === "edit"){
+      if (type === "edit") {
          setBillDate(e.target.value);
          setIsBillDateValid("");
-      }else {
-         if(e.target.value !== getTodaysFormattedDate()){
+      } else {
+         if (e.target.value !== getTodaysFormattedDate()) {
             let hasError = false;
             //check the kisan transaction post selected date.
-            if(purchaserData[purchaser] && purchaserData[purchaser].name){
+            if (purchaserData[purchaser] && purchaserData[purchaser].name) {
                console.log(purchaserData[purchaser]);
-               if(purchaserData[purchaser].transactions && purchaserData[purchaser].transactions.length>0){
+               if (purchaserData[purchaser].transactions && purchaserData[purchaser].transactions.length > 0) {
                   console.log("yahan AAya?????")
                   const latestPurchaserTransactionDate = getLatestPurchaserTransactionDate();
                   console.log("Latest Transction Date of Purchaser  ", latestPurchaserTransactionDate)
-                  if(new Date(latestPurchaserTransactionDate) > new Date(e.target.value)){
+                  if (new Date(latestPurchaserTransactionDate) > new Date(e.target.value)) {
                      setBillDate(e.target.value);
                      setIsBillDateValid("HASPURCHASERTRANSACTIONPOSTTHISDATE");
                      console.log("Throw Error")
                      hasError = true;
-                  }else {
+                  } else {
                      console.log("1");
                      setBillDate(e.target.value);
                      setIsBillDateValid("");
                   }
-               }else {
+               } else {
                   console.log("2");
                   setBillDate(e.target.value);
                   setIsBillDateValid("");
                }
-            }else {
+            } else {
                console.log("3");
                setBillDate(e.target.value);
                setIsBillDateValid("");
             }
-   
+
             //Check if Kisan has transactions after this date.
-            if(hasError === false){
-               if(kisan.transactions && kisan.transactions.length>0){
+            if (hasError === false) {
+               if (kisan.transactions && kisan.transactions.length > 0) {
                   const latestKisanTransactionDate = getLatestKisanTransactionDate();
                   console.log("Latest Transction Date of Kisan  ", latestKisanTransactionDate)
-                  if(new Date(latestKisanTransactionDate) > new Date(e.target.value)) {
+                  if (new Date(latestKisanTransactionDate) > new Date(e.target.value)) {
                      setIsBillDateValid("HASKISANTRANSACTIONPOSTTHISDATE");
                      setBillDate(e.target.value);
                   }
-               }else {
-                     setBillDate(e.target.value);
-                     setIsBillDateValid("");
+               } else {
+                  setBillDate(e.target.value);
+                  setIsBillDateValid("");
                }
             }
          }
-         if(e.target.value === getTodaysFormattedDate()){
+         if (e.target.value === getTodaysFormattedDate()) {
             setBillDate(e.target.value);
             setIsBillDateValid("");
          }
@@ -398,23 +402,23 @@ const CreditForm = () => {
    };
    function formatDate(date) {
       var d = new Date(date),
-          month = '' + (d.getMonth() + 1),
-          day = '' + d.getDate(),
-          year = d.getFullYear();
-  
-      if (month.length < 2) 
-          month = '0' + month;
-      if (day.length < 2) 
-          day = '0' + day;
-  
+         month = '' + (d.getMonth() + 1),
+         day = '' + d.getDate(),
+         year = d.getFullYear();
+
+      if (month.length < 2)
+         month = '0' + month;
+      if (day.length < 2)
+         day = '0' + day;
+
       return [year, month, day].join('-');
-  }
+   }
    const handleEditDateEnabler = () => {
       setIsDateEditable((isDateEditable) => !isDateEditable);
    };
    useEffect(() => {
-      if(!isDateEditable){
-         billDateChange({target:{value:getTodaysFormattedDate()}})
+      if (!isDateEditable) {
+         billDateChange({ target: { value: getTodaysFormattedDate() } })
       }
    }, [isDateEditable]);
    const previousBillSettlementAmountChange = (e) => {
@@ -529,7 +533,7 @@ const CreditForm = () => {
                purchaserkisanName: kisan.name,
             },
          };
-         if((isBillDateValid === "" || isBillDateValid === "PRISTINE") && billDate !== getTodaysFormattedDate() && isDateEditable){
+         if ((isBillDateValid === "" || isBillDateValid === "PRISTINE") && billDate !== getTodaysFormattedDate() && isDateEditable) {
             const backDateHours = new Date().getHours()
             const backDateMinutes = new Date().getMinutes()
             const backDateSeconds = new Date().getSeconds()
@@ -648,10 +652,7 @@ const CreditForm = () => {
                <Breadcrumb className="ps-3 mt-2">
                   <BreadcrumbItem>
                      <Link
-                        className="link-no-decoration-black text-primary"
-                        to="/"
-                     >
-                        Home
+                        className="link-no-decoration-black text-primary" to="/"> Home
                      </Link>
                   </BreadcrumbItem>
                   <BreadcrumbItem>
@@ -687,13 +688,12 @@ const CreditForm = () => {
                   <h2 className="text-center text-secondary mt-3 font-15">
                      <FormattedMessage id="billDetails" />
                   </h2>
-
                   {/* ------------------ Previous Bill Section ------------------ */}
                   <div className="shadow p-3 m-3">
                      <FormGroup className="mt-2">
-                        {/* <h4 className="text-secondary">
-                <FormattedMessage id="carryForwardSectionTitle" />
-               </h4> */}
+                        {<h3 className="text-dark font-15">
+                           <FormattedMessage id="carryForwardSectionTitle" />
+                        </h3>}
                         <Label
                            for="previousBillSettlementAmount"
                            className="mt-2"
@@ -714,18 +714,72 @@ const CreditForm = () => {
                            {" "}
                            Previous Bill Settlement Amount is required.{" "}
                         </FormFeedback>{" "}
-                        {/* {<div className="text-end mt-3">
-                   <h5>
-                     <FormattedMessage id="carryForwardTotal" /> :{" "}
-                     <FormattedMessage id="currency" />{" "}
-                     {previousBillSettlementAmount}
-                   </h5>
-                 </div> } */}
+                        {/*{<div className="text-end mt-3">
+                           <h5>
+                              <FormattedMessage id="carryForwardTotal" /> :{" "}
+                              <FormattedMessage id="currency" />{" "}
+                              {previousBillSettlementAmount}
+                           </h5>
+                        </div>}*/}
                      </FormGroup>
                   </div>
-
-                  {/* ------------------ Trading Details Section ------------------ */}
+                  {/* ------------------ Bill Date Section ------------------ */}
                   <div className="shadow p-3 m-3">
+                     <div>
+                        {type === "edit" && backDate !== "" &&
+                           <div className="text pt-2">
+                              <h3 className="text-dark font-15"><FormattedMessage id="backDatedBillMsg" /></h3>
+                              <div className="text-secondary">
+                                 <FormattedMessage id="actualBillCreationDateMsg" />{" : "} <span className="text-primary">{formatDate(creationDate).split("-").reverse().join("-")}</span>
+                              </div>
+                           </div>}
+                        {type === "edit" && backDate === "" &&
+                           <div className="text pt-2">
+                              <h3 className="text-dark font-15"><FormattedMessage id="billDateSectionTitle" /></h3>
+                           </div>}
+                        {type !== "edit" && <div className="switch-container d-flex">
+                           <h3 className="text"><FormattedMessage id="backDatedBillMsg" />?{"  "}</h3>
+                           <div className="flex-fill d-flex justify-content-end">
+                              <label className="toggle-switch">
+                                 {"  "}<input
+                                    type="checkbox"
+                                    name="toggleSwitch"
+                                    className="toggle-switch__checkbox"
+                                    id="myToggleSwitch"
+                                    onChange={handleEditDateEnabler}
+                                    checked={isDateEditable}
+                                 />
+                                 <span className="toggle-switch__label">
+                                    <span className="toggle-switch__inner"></span>
+                                 </span>
+                              </label>
+                           </div>
+                        </div>
+                        }
+                     </div>
+                     <FormGroup className="mt-2">
+                        {<Label for="billDate">
+                           <FormattedMessage id="billDateLabel" />
+                        </Label>}
+                        <Input
+                           invalid={isBillDateValid !== "PRISTINE" && isBillDateValid !== "" ? true : false}
+                           name="billDate"
+                           type="date"
+                           value={billDate}
+                           max={formatDate(new Date())}
+                           disabled={!isDateEditable}
+                           onChange={(e) => billDateChange(e)}
+                        />{" "}
+                        <FormFeedback>
+                           {
+                              isBillDateValid === "HASPURCHASERTRANSACTIONPOSTTHISDATE" ? <FormattedMessage id="purchaserHasTxnAfterThisDateMsg" /> :
+                                 isBillDateValid === "HASKISANTRANSACTIONPOSTTHISDATE" ? <FormattedMessage id="kisanHasTxnAfterThisDateMsg" /> : "invalid"
+                           }
+                        </FormFeedback>
+                     </FormGroup>
+                  </div>
+                  {/* ------------------ Trading Details Section ------------------ */}
+                  {(type === "add" || netTotal > 0) && <div className="shadow p-3 m-3">
                      <h3 className="text-dark font-15">
                         <FormattedMessage id="tradingSectionTitle" />
                      </h3>
@@ -865,10 +919,10 @@ const CreditForm = () => {
                            </h5>
                         </div>
                      </FormGroup>
-                  </div>
+                  </div>}
 
                   {/* ------------------ Deductions Section ------------------ */}
-                  <div className="shadow p-3 m-3">
+                  {(type === "add" || netTotal > 0) && <div className="shadow p-3 m-3">
                      <h3 className="text-dark font-15">
                         <FormattedMessage id="deductionsSectionTitle" />
                      </h3>
@@ -945,7 +999,7 @@ const CreditForm = () => {
                            </h5>
                         </div>
                         <div className="text-end mt-3">
-                           <span>
+                           {type === "add" && <span>
                               <FormattedMessage id="netTotal" />
                               <b>{netTotal}</b> +{" "}
                               <FormattedMessage id="carryForwardAmountWithoutCurrency" />{" "}
@@ -958,238 +1012,279 @@ const CreditForm = () => {
                                     {netTotal + previousBillSettlementAmount}
                                  </span>
                               </b>
-                           </span>
+                           </span>}
                         </div>
                      </FormGroup>
-                  </div>
-                  <div className="shadow p-3 m-3">
-                     <div>
-                        <h3 className="text-dark font-15">
-                           <FormattedMessage id="billDate" />
-                        </h3>
-                        {type !== "edit" && <div className="switch-container d-flex">
-                              <div className="text-danger">Do you want to change the Bill Date?</div>
-                              <div className="flex-fill d-flex justify-content-end">
-                                 <label className="toggle-switch">
-                                 <input
-                                    type="checkbox"
-                                    name="toggleSwitch"
-                                    className="toggle-switch__checkbox"
-                                    id="myToggleSwitch"
-                                    onChange={handleEditDateEnabler}
-                                    checked={isDateEditable}
-                                 />
-                                 <span className="toggle-switch__label">
-                                    <span className="toggle-switch__inner"></span>
-                                 </span>
-                                 </label>
-                              </div>
-                           </div>
+                  </div>}
+         {/* ------------------ Bill Settlement Section ------------------ */}
+         {type === "edit" && netTotal > 0 && <div className="shadow p-3 m-3">
+            <div>
+               <h3 className="text-dark font-15">
+                  <FormattedMessage id="billettlementSummarySectionTitle" />
+               </h3>
+               <h5 className="mt-3">
+                  <span className="text-secondary">
+                     <FormattedMessage id="netTotal" />
+                  </span>
+                  <span className="text-primary">
+                     {netTotal}
+                  </span>
+               </h5>
+            </div>
+            <FormGroup className="mt-2">
+               <Label for="advanceSettlement1" className="mt-2">
+                  {" "}
+                  <FormattedMessage id="advanceCredited" />
+               </Label>{" "}
+               <Input type="number" name="advanceSettlement1" value={advanceSettlement} disabled />
+            </FormGroup>
+            <FormGroup className="mt-2">
+               <Label for="paidToKisan1">
+                  {" "}
+                  <FormattedMessage id="cashPaid" />
+               </Label>{" "}
+               <Input type="number" name="paidToKisan1" value={paidToKisan} disabled />
+            </FormGroup>
+            <FormGroup className="mt-2">
+               <Label for="carryForwardFromThisEntry1">
+                  <FormattedMessage id="carryForward" />
+               </Label>{" "}
+               <Input type="number" name="carryForwardFromThisEntry1" value={carryForwardFromThisEntry - previousBillSettlementAmount} disabled />
+            </FormGroup>
+         </div>}
+         {/* ------------------ Trader Settlement Section ------------------ */}
+         <div className="shadow p-3 m-3">
+            <div>
+               <h3 className="text-dark font-15">
+                  <FormattedMessage id="traderSettlementSectionTitle" />
+               </h3>
+               {/* -------Advance to Settle---------*/}
+               <div className="pt-2">
+                  <h5 className="mt-3">
+                     <span className="text">
+                        <FormattedMessage id="balanceTextWithoutCurrency" />{" = "}
+                     </span>
+                     <span className="text-primary">
+                        <FormattedMessage id="currency" />{" "}
+                        {type === "add"
+                           ? kisan.balance
+                           :  Math.abs(balanceAfterThisTransaction - advanceSettlement)}
+                     </span>
+                  </h5>
+                  <FormGroup className="mt-2">
+                     <Label for="advanceSettlement" className="mt-2">
+                        {" "}
+                        <FormattedMessage id="advanceCredited" />
+                     </Label>{" "}
+                     <Input
+                        disabled={
+                           type === "edit" || kisan.balance === 0
+                              ? true
+                              : false
                         }
-                     </div>
-                     <FormGroup className="mt-2">
-                        <Label for="billDate">
-                           {" "}
-                           <FormattedMessage id="billDate" />:  {/* {isBillDateValid} */} 
-                        </Label>{" "}
-                        <Input
-                           invalid={ isBillDateValid !== "PRISTINE" && isBillDateValid !== ""  ? true: false }
-                           name="billDate"
-                           type="date"
-                           value={billDate}
-                           max={formatDate(new Date())}
-                           disabled= {!isDateEditable}
-                           onChange={(e) => billDateChange(e)}
-                           />{" "}
-                        <FormFeedback>
-                           {
-                              isBillDateValid === "HASPURCHASERTRANSACTIONPOSTTHISDATE" ? "Purchaser has Transaction after this Date" : 
-                              isBillDateValid === "HASKISANTRANSACTIONPOSTTHISDATE" ? "Kisan has transaction after this Date" : "invalid"
-                           }
-                        </FormFeedback>
-                        {type==="edit" && creationDate!=="" && <div className="text-primary pt-2">Actual Creation date of transaction: <b>{formatDate(creationDate).split("-").reverse().join("-")}</b></div>}
-                     </FormGroup>
-                  </div>
-                  {/* ------------------ Settlement Section ------------------ */}
-                  <div className="shadow p-3 m-3">
-                     <div>
-                        <h3 className="text-dark font-15">
-                           <FormattedMessage id="settlementSectionTitle" />
-                        </h3>
-                        <h5 className="mt-3">
-                           <span className="text-secondary">
-                              <FormattedMessage id="amountToSettle" />
+                        invalid={
+                           isAdvanceSettlementValid ===
+                           "OUTSTANDINGEXCEEDED" ||
+                           isAdvanceSettlementValid === "TOTALEXCEEDED" ||
+                           isAdvanceSettlementValid === ""
+                        }
+                        onWheel={(e) => e.target.blur()}
+                        name="advanceSettlement"
+                        type="number"
+                        value={advanceSettlement}
+                        onChange={(e) => advanceSettlementChange(e)}
+                     />
+                     <FormFeedback>
+                        {isAdvanceSettlementValid === "" ? (
+                           <span>
+                              <FormattedMessage id="balanceCNBLTZ" />
                            </span>
-                           <span className="text-primary">
-                              <FormattedMessage id="currency" />{" "}
+                        ) : isAdvanceSettlementValid ===
+                           "OUTSTANDINGEXCEEDED" ? (
+                           <span>
+                              <FormattedMessage id="balanceCBMTOA" />{" "}
+                              {Math.abs(kisan.balance)}
+                           </span>
+                        ) : (
+                           <span>
+                              <FormattedMessage id="balanceCBMTCB" />{" "}
                               {netTotal + previousBillSettlementAmount}
                            </span>
-                        </h5>
-                     </div>
+                        )}{" "}
+                     </FormFeedback>{" "}
+                  </FormGroup>
+                  {type === "edit" &&
                      <FormGroup className="mt-2">
-                        <Label for="advanceSettlement" className="mt-2">
-                           {" "}
-                           <FormattedMessage id="advanceCredited" /> -{" "}
-                           <b>
-                              <FormattedMessage id="balanceTextWithoutCurrency" />{" "}
-                              :{" "}
-                              <span className="text-primary">
-                                 <FormattedMessage id="currency" />{" "}
-                                 {type === "add"
-                                    ? kisan.balance
-                                    : balanceAfterThisTransaction}
-                              </span>
-                           </b>
-                        </Label>{" "}
-                        <Input
-                           disabled={
-                              type === "edit" || kisan.balance === 0
-                                 ? true
-                                 : false
-                           }
-                           invalid={
-                              isAdvanceSettlementValid ===
-                                 "OUTSTANDINGEXCEEDED" ||
-                              isAdvanceSettlementValid === "TOTALEXCEEDED" ||
-                              isAdvanceSettlementValid === ""
-                           }
-                           onWheel={(e) => e.target.blur()}
-                           name="advanceSettlement"
-                           type="number"
-                           value={advanceSettlement}
-                           onChange={(e) => advanceSettlementChange(e)}
-                        />
-                        <FormFeedback>
-                           {isAdvanceSettlementValid === "" ? (
-                              <span>
-                                 <FormattedMessage id="balanceCNBLTZ" />
-                              </span>
-                           ) : isAdvanceSettlementValid ===
-                             "OUTSTANDINGEXCEEDED" ? (
-                              <span>
-                                 <FormattedMessage id="balanceCBMTOA" />{" "}
-                                 {Math.abs(kisan.balance)}
-                              </span>
-                           ) : (
-                              <span>
-                                 <FormattedMessage id="balanceCBMTCB" />{" "}
-                                 {netTotal + previousBillSettlementAmount}
-                              </span>
-                           )}{" "}
-                        </FormFeedback>{" "}
-                     </FormGroup>
-                     <FormGroup className="mt-2">
-                        <Label for="paidToKisan">
-                           {" "}
-                           <FormattedMessage id="cashPaid" />
-                        </Label>{" "}
-                        <Input
-                           disabled={type === "edit" ? true : false}
-                           invalid={
-                              isPaidToKisanValid === "" ||
-                              isPaidToKisanValid === "TOTALEXCEEDED"
-                           }
-                           name="paidToKisan"
-                           type="number"
-                           onWheel={(e) => e.target.blur()}
-                           value={paidToKisan}
-                           onChange={(e) => paidToKisanChange(e)}
-                        />
-                        <FormFeedback>
-                           {isPaidToKisanValid === "TOTALEXCEEDED" ? (
-                              <span>
-                                 <FormattedMessage id="cashPaidCBMTCB" />{" "}
-                                 {netTotal + previousBillSettlementAmount}
-                              </span>
-                           ) : (
-                              <span>
-                                 <FormattedMessage id="cashPaidCNBLTZ" />
-                              </span>
-                           )}
-                        </FormFeedback>{" "}
-                     </FormGroup>
-                     <FormGroup className="mt-2">
-                        <Label for="carryForwardFromThisEntry">
-                           <FormattedMessage id="carryForward" />
+                        <Label for="carryForwardAdvance">
+                           <FormattedMessage id="balanceAfterBillTextWithoutCurrency" />
                         </Label>{" "}
                         <Input
                            disabled
-                           name="carryForwardFromThisEntry"
+                           name="carryForwardAdvance"
                            type="number"
                            onWheel={(e) => e.target.blur()}
-                           value={carryForwardFromThisEntry}
-                           onChange={(e) => carryForwardFromThisEntryChange(e)}
+                           value={Math.abs(balanceAfterThisTransaction)}
                         />
-                        <FormFeedback>
-                           {" "}
-                           Paid To Kisan is required.{" "}
-                        </FormFeedback>{" "}
-                     </FormGroup>
-                  </div>
-
-                  <div className="shadow p-3 m-3">               
-                     <FormGroup className="mt-2">
-                        <Label for="comment">
-                           {" "}
-                           <FormattedMessage id="comment" />
-                        </Label>{" "}
-                        <Input
-                           invalid={
-                              comment.length <= 0 && isCommentValid === ""
-                           }
-                           name="comment"
-                           type="text"
-                           value={comment}
-                           onChange={(e) => commentChange(e)}
-                        />{" "}
-                        <FormFeedback>
-                           {" "}
-                           <FormattedMessage id="commentIsRequired" />
-                        </FormFeedback>{" "}
-                     </FormGroup>{" "}
-                  </div>
-                  {type === "add" ? (
-                     <React.Fragment>
-                        <Button type="submit" color="primary" className="mt-3" disabled={isSubmitting}>
-                          {isSubmitting &&( <span><Spinner className="spinner-size-1"/> &nbsp;</span> )} Create a Credit Entry
-                        </Button>
-                        <Button
-                           type="reset"
-                           color="danger"
-                           className="ms-1 mt-3"
-                           onClick={clear}
-                        >
-                           Reset
-                        </Button>
-                     </React.Fragment>
-                  ) : (
-                     <Button
-                        type="button"
-                        color="primary"
-                        className="mt-3"
-                        onClick={handleEdit}
-                        disabled={isSubmitting}
-                     >
-                        {isSubmitting &&( <span><Spinner className="spinner-size-1"/> &nbsp;</span> )}<FormattedMessage id="editCreditEntryButtonTitle" />
-                     </Button>
-                  )}
-                  {showAlert ? (
-                     type === "add" ? (
-                        <Alert className="mt-4">
-                           <FormattedMessage id="entryAddSuccessMsg" />
-                        </Alert>
-                     ) : (
-                        <Alert className="mt-4">
-                           <FormattedMessage id="entryEditSuccessMsg" />
-                        </Alert>
-                     )
-                  ) : (
-                     ""
-                  )}
-               </Form>
+                     </FormGroup>}
+               </div>
+               {/* -------Amount to Settle---------*/}
+               <div className="pt-2">
+                  <h5 className="mt-4">
+                     <span className="text">
+                        <FormattedMessage id="amountToSettle" />{" = "}
+                     </span>{"  "}
+                     <span className="text-primary">
+                        <FormattedMessage id="currency" />{" "}
+                        {netTotal + previousBillSettlementAmount}
+                     </span>
+                  </h5>
+                  <FormGroup className="mt-2">
+                     <Label for="paidToKisan">
+                        {" "}
+                        <FormattedMessage id="cashPaid" />
+                     </Label>{" "}
+                     <Input
+                        disabled={type === "edit" ? true : false}
+                        invalid={
+                           isPaidToKisanValid === "" ||
+                           isPaidToKisanValid === "TOTALEXCEEDED"
+                        }
+                        name="paidToKisan"
+                        type="number"
+                        onWheel={(e) => e.target.blur()}
+                        value={paidToKisan}
+                        onChange={(e) => paidToKisanChange(e)}
+                     />
+                     <FormFeedback>
+                        {isPaidToKisanValid === "TOTALEXCEEDED" ? (
+                           <span>
+                              <FormattedMessage id="cashPaidCBMTCB" />{" "}
+                              {netTotal + previousBillSettlementAmount}
+                           </span>
+                        ) : (
+                           <span>
+                              <FormattedMessage id="cashPaidCNBLTZ" />
+                           </span>
+                        )}
+                     </FormFeedback>{" "}
+                  </FormGroup>
+                  <FormGroup className="mt-2">
+                     <Label for="carryForwardFromThisEntry">
+                        <FormattedMessage id="carryForward" />
+                     </Label>{" "}
+                     <Input
+                        disabled
+                        name="carryForwardFromThisEntry"
+                        type="number"
+                        onWheel={(e) => e.target.blur()}
+                        value={carryForwardFromThisEntry}
+                        onChange={(e) => carryForwardFromThisEntryChange(e)}
+                     />
+                     <FormFeedback>
+                        {" "}
+                        Paid To Kisan is required.{" "}
+                     </FormFeedback>{" "}
+                  </FormGroup>
+               </div>
             </div>
+         </div>
+         {/* ------------------ Payment Summary Section ------------------ */}
+         {type === "edit" && netTotal < 1 && <div className="shadow p-3 m-3">
+            <h3 className="text-dark font-15">
+               <FormattedMessage id="settlementSectionTitleForPaymentOnly" />
+            </h3>
+            <div className="pt-2">
+               <h5 className="mt-3">
+                  <span className="text-secondary">
+                     <FormattedMessage id="advanceCredited" />
+                  </span>{" "}
+                  <span className="text">
+                     {advanceSettlement}
+                  </span>
+               </h5>
+               <h5 className="mt-3">
+                  <span className="text-secondary">
+                     <FormattedMessage id="cashPaid" />
+                  </span>{" "}
+                  <span className="text">
+                     {paidToKisan}
+                  </span>
+               </h5>
+               <h5 className="mt-3">
+                  <span className="text">
+                     <FormattedMessage id="totalPaymentOfThisBill" />
+                  </span>{" "}
+                  <span className="text-primary">
+                     {paidToKisan + advanceSettlement}
+                  </span>
+               </h5>
+            </div>
+         </div>
+         }
+         {/* ------------------ Comment Section ------------------ */}
+         <div className="shadow p-3 m-3">
+            <FormGroup className="mt-2">
+               <Label for="comment">
+                  {" "}
+                  <FormattedMessage id="comment" />
+               </Label>{" "}
+               <Input
+                  invalid={
+                     comment.length <= 0 && isCommentValid === ""
+                  }
+                  name="comment"
+                  type="text"
+                  value={comment}
+                  onChange={(e) => commentChange(e)}
+               />{" "}
+               <FormFeedback>
+                  {" "}
+                  <FormattedMessage id="commentIsRequired" />
+               </FormFeedback>{" "}
+            </FormGroup>{" "}
+         </div>
+         {type === "add" ? (
+            <React.Fragment>
+               <Button type="submit" color="primary" className="mt-3" disabled={isSubmitting}>
+                  {isSubmitting && (<span><Spinner className="spinner-size-1" /> &nbsp;</span>)} Create a Credit Entry
+               </Button>
+               <Button
+                  type="reset"
+                  color="danger"
+                  className="ms-1 mt-3"
+                  onClick={clear}
+               >
+                  Reset
+               </Button>
+            </React.Fragment>
+         ) : (
+            <Button
+               type="button"
+               color="primary"
+               className="mt-3"
+               onClick={handleEdit}
+               disabled={isSubmitting}
+            >
+               {isSubmitting && (<span><Spinner className="spinner-size-1" /> &nbsp;</span>)}<FormattedMessage id="editCreditEntryButtonTitle" />
+            </Button>
          )}
-      </div>
+         {showAlert ? (
+            type === "add" ? (
+               <Alert className="mt-4">
+                  <FormattedMessage id="entryAddSuccessMsg" />
+               </Alert>
+            ) : (
+               <Alert className="mt-4">
+                  <FormattedMessage id="entryEditSuccessMsg" />
+               </Alert>
+            )
+         ) : (
+            ""
+         )}
+      </Form>
+            </div >
+         )}
+      </div >
    );
 };
 

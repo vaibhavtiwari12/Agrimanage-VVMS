@@ -66,7 +66,7 @@ const PurchaserBill = React.forwardRef((props, ref) => {
                </tbody>
             </Table>
             <hr />
-            <b>ख़रीददारी का बेयौरा </b> दिनांक : {props.data.date}
+            <b>खरीदी का बेयौरा </b> दिनांक : {props.data.date}
             <Table bordered className="mt-2">
                <thead>
                   <tr className="text-end">
@@ -110,7 +110,7 @@ const PurchaserBill = React.forwardRef((props, ref) => {
                   <tr>
                      <td className="fill-row">
                         <b>
-                           ख़रीददारी का कुल योग + पुराना बचा बैलेंस (कुल देनदारी)
+                           खरीदी का कुल योग + पुराना बचा बैलेंस (कुल देनदारी)
                         </b>
                      </td>
                      <td className="text-end">
