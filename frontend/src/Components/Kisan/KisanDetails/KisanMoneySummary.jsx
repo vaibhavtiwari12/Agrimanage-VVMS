@@ -1,6 +1,7 @@
 import React from "react";
 import { Table } from "reactstrap";
 import { FormattedMessage } from "react-intl";
+import { toFixed } from "../../../Utility/utility";
 const Kisanmoneysummary = ({ kisan }) => {
   return (
     <div className="p-3 font-10">
@@ -24,11 +25,11 @@ const Kisanmoneysummary = ({ kisan }) => {
           </tr>
           <tr>
             <th><FormattedMessage id="balance"/>{" "}<FormattedMessage id="currencyWithBracket"/></th>
-            <td>{kisan.balance}</td>
+            <td>{toFixed(kisan.balance)}</td>
           </tr>
           <tr>
             <th><FormattedMessage id="carryForwardAmount"/>{" "}<FormattedMessage id="currencyWithBracket" /></th>
-            <td>{kisan.carryForwardAmount}</td>
+            <td>{toFixed(kisan.carryForwardAmount)}</td>
           </tr>
         </tbody>
       </Table>

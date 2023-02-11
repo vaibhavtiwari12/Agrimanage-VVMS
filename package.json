@@ -25,6 +25,8 @@
     "env-cmd": "^10.1.0",
     "mongoose": "^5.13.2",
     "nodemon": "^2.0.15",
+    "react-autocomplete": "^1.8.1",
+    "react-bootstrap-typeahead": "^6.0.0",
     "redux-thunk": "^2.3.0",
     "shx": "^0.3.3"
   },

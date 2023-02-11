@@ -6,7 +6,7 @@ import { Button, Table, Spinner } from "reactstrap";
 import { useReactToPrint } from "react-to-print";
 import Kisanreceipt from "./KisanReceipt";
 import { useRef } from "react";
-import { dateConverter } from "../../../Utility/utility";
+import { dateConverter, toFixed } from "../../../Utility/utility";
 import Kisancreditreceipt from "./KisanCreditReceipt";
 import { FormattedMessage } from "react-intl";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
@@ -252,26 +252,26 @@ const Kisantransactionstable = ({ kisan, updateKisan }) => {
                       <td>{transaction.comment}</td>
                       <td>
                         {transaction.type === "DEBIT"
-                          ? transaction.transactionAmount
+                          ? toFixed(transaction.transactionAmount)
                           : ""}
                       </td>
-                      <td>{transaction.grossTotal}</td>
-                      <td>{transaction.netTotal}</td>
+                      <td>{toFixed(transaction.grossTotal)}</td>
+                      <td>{toFixed(transaction.netTotal)}</td>
 
                       <td>
                         {transaction.type === "CREDIT"
-                          ? transaction.advanceSettlement
+                          ? toFixed(transaction.advanceSettlement)
                           : transaction.type === "ADVANCESETTLEMENT"
-                            ? transaction.transactionAmount
+                            ? toFixed(transaction.transactionAmount)
                             : ""}
                       </td>
 
-                      <td>{transaction.paidToKisan}</td>
+                      <td>{toFixed(transaction.paidToKisan)}</td>
                       {transaction.type === "CREDIT" && transaction.netTotal > 0 ?
-                        <td>{transaction.netTotal - transaction.advanceSettlement - transaction.paidToKisan}</td> :
+                        <td>{toFixed(transaction.netTotal - transaction.advanceSettlement - transaction.paidToKisan )}</td> :
                         <td>0</td>
                       }
-                      <td>{transaction.carryForwardFromThisEntry}</td>
+                      <td>{toFixed(transaction.carryForwardFromThisEntry)}</td>
                       {/*  <td>{balances[index] <0 ? <span className="text-danger">{balances[index]}</span> : <span className="text-success">{balances[index]}</span> }</td> */}
                       <td>
                         <span
@@ -281,7 +281,7 @@ const Kisantransactionstable = ({ kisan, updateKisan }) => {
                               : "text-primary"
                           }
                         >
-                          {transaction.balanceAfterThisTransaction}
+                          {toFixed(transaction.balanceAfterThisTransaction)}
                         </span>
                       </td>
                       <td>

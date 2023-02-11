@@ -14,7 +14,7 @@ import {
 import { FormattedMessage, useIntl } from "react-intl";
 import { useState } from "react";
 import { Link, useHistory, useParams } from "react-router-dom";
-import { getKisanByID } from "../../../Utility/utility";
+import { getKisanByID, toFixed } from "../../../Utility/utility";
 import Kisanmoneysummary from "./KisanMoneySummary";
 import "../../../Utility/creditFormSwitch.css"
 import axios from "axios";
@@ -108,21 +108,21 @@ const CreditForm = () => {
    // calculate gross total
    useEffect(() => {
       if (type === "add") {
-         setGrossTotal(rate * totalweight);
+         setGrossTotal(toFixed(rate * totalweight));
       }
    }, [rate, totalweight]);
 
    useEffect(() => {
       if (type === "add") {
          setNetTotal(
-            grossTotal - (commission / 100) * grossTotal - hammali - bhada
+            toFixed(grossTotal - (commission / 100) * grossTotal - hammali - bhada)
          );
       }
    }, [grossTotal, commission, hammali, bhada]);
 
    useEffect(() => {
       if (type === "add") {
-         setHammali(numberofBags * 7);
+         setHammali(toFixed(numberofBags * 7));
       }
    }, [numberofBags]);
 
@@ -139,7 +139,7 @@ const CreditForm = () => {
    useEffect(() => {
       if (type === "add") {
          setPaidToKisan(
-            netTotal - advanceSettlement + previousBillSettlementAmount
+            toFixed(netTotal - advanceSettlement + previousBillSettlementAmount)
          );
       }
    }, [advanceSettlement, netTotal, previousBillSettlementAmount]);
@@ -147,17 +147,17 @@ const CreditForm = () => {
    useEffect(() => {
       if (type === "add") {
          setCarryForwardFromThisEntry(
-            netTotal -
+            toFixed(netTotal -
             advanceSettlement -
             paidToKisan +
-            previousBillSettlementAmount
+            previousBillSettlementAmount)
          );
       }
    }, [paidToKisan, advanceSettlement, netTotal]);
 
    useEffect(() => {
       if (Object.keys(kisan).length > 0) {
-         setPreviousBillSettlementAmount(kisan.carryForwardAmount);
+         setPreviousBillSettlementAmount(toFixed(kisan.carryForwardAmount));
       }
    }, [kisan]);
    useEffect(() => {
@@ -193,26 +193,26 @@ const CreditForm = () => {
          }
 
          console.log("transactionToedit", transactionToedit);
-         setPreviousBillSettlementAmount(
+         setPreviousBillSettlementAmount(toFixed(
             transactionToedit.previousBillSettlementAmount
-         );
-         setNumberOfBags(transactionToedit.numberofBags);
-         setTotalweight(transactionToedit.totalweight);
-         setRate(transactionToedit.rate);
-         setGrossTotal(transactionToedit.grossTotal);
-         setCommission(transactionToedit.commission);
-         setHammali(transactionToedit.hammali);
-         setBhada(transactionToedit.bhada);
-         setNetTotal(transactionToedit.netTotal);
-         setAdvanceSettlement(transactionToedit.advanceSettlement);
-         setPaidToKisan(transactionToedit.paidToKisan);
+         ));
+         setNumberOfBags(toFixed(transactionToedit.numberofBags));
+         setTotalweight(toFixed(transactionToedit.totalweight));
+         setRate(toFixed(transactionToedit.rate));
+         setGrossTotal(toFixed(transactionToedit.grossTotal));
+         setCommission(toFixed(transactionToedit.commission));
+         setHammali(toFixed(transactionToedit.hammali));
+         setBhada(toFixed(transactionToedit.bhada));
+         setNetTotal(toFixed(transactionToedit.netTotal));
+         setAdvanceSettlement(toFixed(transactionToedit.advanceSettlement));
+         setPaidToKisan(toFixed(transactionToedit.paidToKisan));
          setComment(transactionToedit.comment);
-         setCarryForwardFromThisEntry(
+         setCarryForwardFromThisEntry(toFixed(
             transactionToedit.carryForwardFromThisEntry
-         );
-         setBalanceAfterThisTransaction(
+         ));
+         setBalanceAfterThisTransaction(toFixed(
             transactionToedit.balanceAfterThisTransaction
-         );
+         ));
          if (transactionToedit.backDate) {
             setCreationDate(transactionToedit.creationDate)
             setBackDate(transactionToedit.backDate)
@@ -1005,7 +1005,7 @@ const CreditForm = () => {
                               <FormattedMessage id="carryForwardAmount" />{" "}
                               <span className="text-primary">
                                  {" = "}<b><FormattedMessage id="currency" />{" "}
-                                    {netTotal + previousBillSettlementAmount}</b>
+                                    {toFixed(netTotal + previousBillSettlementAmount)}</b>
                               </span>
                            </span>}
                         </div>
