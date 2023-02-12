@@ -35,7 +35,6 @@ const controller = async (type, data) => {
     case "Edit": {
       //Editing data
       const kisan = await Kisan.findById(data.id);
-      console.log("Kisan Found ", kisan)
       kisan.name = data.name;
       kisan.fatherName = data.fatherName;
       kisan.phone = data.phone;
@@ -45,7 +44,6 @@ const controller = async (type, data) => {
       return saved
     }
     case "FindByID": {
-      console.log("IS Here", data);
       const kisan = await Kisan.findById(data);
       return kisan;
     }
@@ -85,7 +83,6 @@ const controller = async (type, data) => {
       return finalKisan;
     }
     case "deleteTransaction" : {
-      console.log("Data Received in Delete ", data)
       let deleteKisanTxn = await Kisan.findById(data.id);
       let deleteInventoryTxn = await Inventory.findById(data.inventoryItemId);
       let deletePurchaserTxn = await Purchaser.findById(data.purchaseId);
@@ -97,7 +94,6 @@ const controller = async (type, data) => {
       if(deletePurchaserTxn) {
         deletePurchaserTxn.transactions.map((txn,index) => {
           if(txn._id == data.purchaserTxnId){
-            console.log("Is Coming here?")
             purTxnIndexToDelete = index
             deletedtransactionAmount = txn.transactionAmount;
             deletePurchaserTxn.balance += txn.transactionAmount;
@@ -105,17 +101,12 @@ const controller = async (type, data) => {
             // update the balance of all the transactions after the deleted 
             // transaction with the transaction amount of the deleted transaction.
             if(purTxnIndexToDelete!==null && index>purTxnIndexToDelete){
-                console.log("updating Index ================= ", index)
-                console.log("Value of the Delete Transaction ========", deletedtransactionAmount);
-                console.log("Updated Value BEFORE the transaction ====== ", txn.balanceAfterThisTransaction)
                 txn.balanceAfterThisTransaction +=  deletedtransactionAmount;
-                console.log("Updated Value AFTER the transaction ====== ", txn.balanceAfterThisTransaction)
             }
             updatedTransactionsForPurchase.push(txn);
           }
         })
         deletePurchaserTxn.transactions = updatedTransactionsForPurchase;
-        console.log("delete PurchaserTxn",updatedTransactionsForPurchase)
         await deletePurchaserTxn.save();
       }
 
@@ -177,9 +168,7 @@ const controller = async (type, data) => {
           return { ...trans, comment: data.comment };
         } else return trans;
       });
-      console.log("newKisanTransaction", newKisanTransaction);
       kisanToUpdate.transactions = newKisanTransaction;
-      console.log("kisanToUpdate", kisanToUpdate);
       const finalKisan = await kisanToUpdate.save();
       return finalKisan;
     }

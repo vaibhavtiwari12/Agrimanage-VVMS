@@ -10,7 +10,6 @@ MongoRouter.get("/get",async (req,res) => {
 });
 
 MongoRouter.post("/add",async (req,res) => {
-    console.log("IS here", req.body)
     const post = new BlogPosts({
         title:req.body.title,
         body:req.body.body,
@@ -26,7 +25,6 @@ MongoRouter.patch("/patch/:id",async (req,res) => {
 });
 
 MongoRouter.get("/delete/:id",async (req,res) => {
-    console.log("Reaching Router");
     const deletedPost = await controller('Delete', {id: req.params.id});
     res.json(deletedPost);
 });

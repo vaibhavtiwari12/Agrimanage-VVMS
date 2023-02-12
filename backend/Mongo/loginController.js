@@ -11,12 +11,10 @@ const controller = async (type, data) => {
         userName: data.userName.toLowerCase(),
         password: data.password,
       });
-      console.log(logins);
       return logins;
     }
     case "add": {
       // Find Request
-      console.log("Data", data)
       const logn = new login({
         userName: data.userName.toLowerCase(),
         password: data.password,

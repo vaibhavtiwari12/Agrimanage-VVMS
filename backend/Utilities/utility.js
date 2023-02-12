@@ -358,7 +358,6 @@ const getDayWisecommissions = (kisans) => {
       `${todaysDate.getFullYear()-1}-08-01`,
       `${todaysDate.getFullYear()}-07-31`
    );
-   console.log("montheforyear---------------------------------------------",getMonthsForyear)
    const commissions = transactions.reduce((commissions, transaction) => {
       if (transaction.date > new Date(todaysDate.getFullYear()-1, 7, 1)) {
          if (transaction.type === "CREDIT") {
@@ -377,7 +376,6 @@ const getDayWisecommissions = (kisans) => {
       }
       return commissions;
    }, {});
-   console.log("Commissions --- ", commissions)
    const groupArrays = Object.keys(commissions).map((date) => {
       const deleteExistingMonth = getMonthsForyear.indexOf(date);
       getMonthsForyear.splice(deleteExistingMonth, 1);
@@ -391,7 +389,6 @@ const getDayWisecommissions = (kisans) => {
          sequencePriority: monthToNumberMapping[date].sequencePriority
       };
    });
-   console.log("Group Array s= ", groupArrays)
    const emptyMonths = getMonthsForyear.map((month) => {
       return {
          date: monthToNumberMapping[month].name,

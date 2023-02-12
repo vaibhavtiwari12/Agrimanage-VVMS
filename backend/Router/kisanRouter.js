@@ -32,7 +32,6 @@ KisanRouter.post("/add", async (req, res) => {
   res.json(addedKisan);
 });
 KisanRouter.post("/edit", async (req, res) => {
-  console.log("IS EDIT", req.body);
   const editedKisan = await controller("Edit", req.body);
   res.json(editedKisan);
 });
@@ -42,7 +41,6 @@ KisanRouter.post("/AddTransaction/:id", async (req, res) => {
   let purchaserDataGenerated = "";
   if(req.body.transaction && req.body.transaction.purchaserId && req.body.transaction.purchaserId !== "") {
     var id = mongoose.Types.ObjectId();
-    console.log("req.body",req.body.transaction)
     let date = new Date();
     if(req.body.transaction && req.body.transaction.backDate && req.body.transaction.backDate.length>0) {
       date = new Date(req.body.transaction.backDate)
@@ -52,7 +50,6 @@ KisanRouter.post("/AddTransaction/:id", async (req, res) => {
       id: req.body.transaction.purchaserId,
       transaction: { ...req.body.transaction, date: date, _id: id, creationDate: new Date()},
     });
-    console.log(" PURCAHSER DATA GENERATED ----> ", purchaserDataGenerated)
   }
   let addedtransaction = {};
   if(req.body.transaction.type === "DEBIT" || req.body.transaction.type === "ADVANCESETTLEMENT"){
@@ -119,7 +116,6 @@ KisanRouter.get("/getTodaysTransaction/:dateToSearch", async (req, res) => {
   const todaysTransaction = await controller("todaystransactions", {
     dateToSearch: req.params.dateToSearch,
   });
-  console.log("todaystransactions", todaysTransaction);
   res.json(todaysTransaction);
 });
 
@@ -127,7 +123,6 @@ KisanRouter.get("/getTransactionByMonth/:monthToSearch", async (req, res) => {
   const monthsTransaction = await controller("monthTransaction", {
     monthToSearch: req.params.monthToSearch,
   });
-  console.log("monthsTransaction", monthsTransaction);
   res.json(monthsTransaction);
 });
 KisanRouter.get(
@@ -138,7 +133,6 @@ KisanRouter.get(
       endDate: req.params.endDate,
       type: "kisan",
     });
-    console.log("between Dates", monthsTransaction);
     res.json(monthsTransaction);
   }
 );

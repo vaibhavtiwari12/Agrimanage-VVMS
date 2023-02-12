@@ -58,7 +58,6 @@ purchaserRouter.get("/getTransactionByMonth/:monthToSearch", async (req, res) =>
   const monthsTransaction = await controller("monthTransaction", {
     monthToSearch: req.params.monthToSearch,
   });
-  console.log("monthsTransaction - Purchaser", monthsTransaction);
   res.json(monthsTransaction);
 });
 
@@ -70,7 +69,6 @@ purchaserRouter.get(
       endDate: req.params.endDate,
       type: "purchaser",
     });
-    console.log("between Dates - Purchaser", monthsTransaction);
     res.json(monthsTransaction);
   }
 );
