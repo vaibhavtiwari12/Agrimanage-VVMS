@@ -197,12 +197,12 @@ const Kisantransactionstable = ({ kisan, updateKisan }) => {
           <thead>
             <tr className="text-center">
               <th colSpan={3} className="bg-light">{" "}</th>
-              <th colSpan={1} className="bg-primary text-white"><FormattedMessage id="currencyWithBracket"/></th>
-              <th colSpan={5} className="bg-success text-white"><FormattedMessage id="currentBillTableRowSectionText"/></th>
-              <th colSpan={2} className="bg-danger text-white"><FormattedMessage id="overAllOutstandingTableRowSectionText"/></th>
+              <th colSpan={1} className="table-primary text-gray"><FormattedMessage id="currencyWithBracket"/></th>
+              <th colSpan={5} className="text-gray table-success"><FormattedMessage id="currentBillTableRowSectionText"/></th>
+              <th colSpan={2} className="table-danger text-gray"><FormattedMessage id="overAllOutstandingTableRowSectionText"/></th>
               <th colSpan={1} className="bg-light"></th>
             </tr>
-            <tr className="text-center text-secondary">
+            <tr className="text-center text-gray">
               <th>{" "}#{" "}</th>
               <th>
                 <FormattedMessage id="date" />

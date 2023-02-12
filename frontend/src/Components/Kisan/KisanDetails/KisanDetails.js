@@ -69,14 +69,14 @@ const Kisandetails = () => {
         </div>
         <div></div>
       </div>
-      <div className="text-center mt-3">
+      <div className="text-center mt-3 d-flex justify-content-center ms-3 me-3">
         <Button className="font-10" color="danger" onClick={e => handleButtonclick(`/kisanDebitForm/${id}/add`)}>
             <FormattedMessage id="giveAdvanceKisanButtonText" />
         </Button>
         <Button color="success" className="ms-3 font-10" onClick={e => handleButtonclick(`/kisanAdvanceSettlement/${id}/add`)}>
             <FormattedMessage id="depositAdvanceKisanButtonText" />
         </Button>
-        <Button color="primary" className="ms-5 font-10" onClick={e => handleButtonclick(`/kisanCreditForm/${id}/add`)}>
+        <Button color="primary" className="ms-3 font-10" onClick={e => handleButtonclick(`/kisanCreditForm/${id}/add`)}>
             <FormattedMessage id="createBillKisanButtonText" />
         </Button>
       </div>

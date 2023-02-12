@@ -149,9 +149,9 @@ const en = {
     selectingPurchaserIsRequired: "Selecting a Purchaser is required.",
     advanceSettlementAddedSuccessfully:"Advance Settlement Entry been added successfully.",
     advanceSettlementUpdatedSuccessfully:"Advance Settlement Entry has been Edited successfully.",
-    kisanHasTxnAfterThisDateMsg: "This kisan has some other transactions recorded after the selected date, Hence your are not allowed to create bill for selected date.",
-    kisanHasTxnAfterThisDateMsgForEntry: "This kisan has some other transactions recorded after the selected date, Hence your are not allowed to create entry for selected date.",
-    purchaserHasTxnAfterThisDateMsg: "Selected Purchaser has some other transactions recorded after the selected date, Hence you are not allowed to create the bill of this kisan with this Purchaser on selected date.",
+    kisanHasTxnAfterThisDateMsg: "This kisan has some other transactions recorded after the selected date, Hence you are not allowed to create bill for the selected date.",
+    kisanHasTxnAfterThisDateMsgForEntry: "This kisan has some other transactions recorded after the selected date, Hence you are not allowed to create entry for the selected date.",
+    purchaserHasTxnAfterThisDateMsg: "Selected Purchaser has some other transactions recorded after the selected date, Hence you are not allowed to create the bill of this kisan with this Purchaser on the selected date.",
     actualBillCreationDateMsg: "Created on",
     /* Inventory Langing */
     inventoryLandingTitle: "Inventory",
