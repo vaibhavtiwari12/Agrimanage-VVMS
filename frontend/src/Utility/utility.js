@@ -106,3 +106,23 @@ export const toFixed = (num, fixed = 2) => {
   fixed = Math.pow(10, fixed);
   return Math.floor(num * fixed) / fixed;
 }
+
+export const formatDate = (date) => {
+  var d = new Date(date),
+     month = '' + (d.getMonth() + 1),
+     day = '' + d.getDate(),
+     year = d.getFullYear();
+
+  if (month.length < 2)
+     month = '0' + month;
+  if (day.length < 2)
+     day = '0' + day;
+
+  return [year, month, day].join('-');
+}
+
+export const getTodaysFormattedDate = () => {
+  let todaysDate = new Date()
+  let todaysDateFormatted = new Date(todaysDate.getTime() - (todaysDate.getTimezoneOffset() * 60000)).toISOString().split('T')[0]
+  return todaysDateFormatted;
+}

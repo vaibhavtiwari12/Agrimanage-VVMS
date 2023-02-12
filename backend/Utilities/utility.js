@@ -3,54 +3,67 @@ const inventorySchema = require("../Schema/inventorySchema");
 const Kisan = require("../Schema/kisanSchema");
 const Purchaser = require("../Schema/purchaserSchema");
 const dashboard = require("../Schema/dashboardSchema");
+const todaysDate = new Date()
 const monthToNumberMapping = {
    "01": {
-      name: "January",
+      name: `Jan ${todaysDate.getFullYear()}`,
       number: "01",
+      sequencePriority: 6
    },
    "02": {
-      name: "February",
+      name: `Feb ${todaysDate.getFullYear()}`,
       number: "02",
+      sequencePriority: 7
    },
    "03": {
-      name: "March",
+      name: `Mar ${todaysDate.getFullYear()}`,
       number: "03",
+      sequencePriority: 8
    },
    "04": {
-      name: "April",
+      name: `Apr ${todaysDate.getFullYear()}`,
       number: "04",
+      sequencePriority: 7
    },
    "05": {
-      name: "May",
+      name: `May ${todaysDate.getFullYear()}`,
       number: "01",
+      sequencePriority: 10
    },
    "06": {
-      name: "June",
+      name: `Jun ${todaysDate.getFullYear()}`,
       number: "01",
+      sequencePriority: 11
    },
    "07": {
-      name: "July",
+      name: `Jul ${todaysDate.getFullYear()}`,
       number: "01",
+      sequencePriority: 12
    },
    "08": {
-      name: "August",
+      name: `Aug ${todaysDate.getFullYear() - 1 }`,
       number: "01",
+      sequencePriority: 1
    },
    "09": {
-      name: "September",
+      name: `Sep ${todaysDate.getFullYear() - 1}`,
       number: "01",
+      sequencePriority: 2
    },
    10: {
-      name: "October",
+      name: `Oct ${todaysDate.getFullYear() - 1}`,
       number: "01",
+      sequencePriority: 3
    },
    11: {
-      name: "November",
+      name: `Nov ${todaysDate.getFullYear() - 1}`,
       number: "01",
+      sequencePriority: 4
    },
    12: {
-      name: "December",
+      name: `Dec ${todaysDate.getFullYear() - 1}`,
       number: "01",
+      sequencePriority: 5
    },
 };
 const getTransaction = (kisans, dateToSearch, type) => {
@@ -342,11 +355,12 @@ const getDayWisecommissions = (kisans) => {
    );
    const todaysDate = new Date();
    const getMonthsForyear = getMonthsBetweenDates(
-      `${todaysDate.getFullYear()}-01-01`,
-      `${todaysDate.getFullYear()}-12-31`
+      `${todaysDate.getFullYear()-1}-08-01`,
+      `${todaysDate.getFullYear()}-07-31`
    );
+   console.log("montheforyear---------------------------------------------",getMonthsForyear)
    const commissions = transactions.reduce((commissions, transaction) => {
-      if (transaction.date > new Date(todaysDate.getFullYear(), 0, 1)) {
+      if (transaction.date > new Date(todaysDate.getFullYear()-1, 7, 1)) {
          if (transaction.type === "CREDIT") {
             const D = new Date(transaction.date);
             /* const date = `${D.getDate()}/${D.getMonth() + 1}/${D.getFullYear()}`; */
@@ -363,6 +377,7 @@ const getDayWisecommissions = (kisans) => {
       }
       return commissions;
    }, {});
+   console.log("Commissions --- ", commissions)
    const groupArrays = Object.keys(commissions).map((date) => {
       const deleteExistingMonth = getMonthsForyear.indexOf(date);
       getMonthsForyear.splice(deleteExistingMonth, 1);
@@ -373,17 +388,20 @@ const getDayWisecommissions = (kisans) => {
             (partialSum, a) => partialSum + a,
             0
          ),
+         sequencePriority: monthToNumberMapping[date].sequencePriority
       };
    });
+   console.log("Group Array s= ", groupArrays)
    const emptyMonths = getMonthsForyear.map((month) => {
       return {
          date: monthToNumberMapping[month].name,
          dateNumber: month,
          commissions: 0,
+         sequencePriority: monthToNumberMapping[month].sequencePriority
       };
    });
    const finalComissionsObject = [...groupArrays, ...emptyMonths].sort(
-      (a, b) => parseFloat(a.dateNumber) - parseFloat(b.dateNumber)
+      (a, b) => parseFloat(a.sequencePriority) - parseFloat(b.sequencePriority)
    );
    return finalComissionsObject;
 };

@@ -14,10 +14,11 @@ import {
 import { FormattedMessage, useIntl } from "react-intl";
 import { useState } from "react";
 import { Link, useHistory, useParams } from "react-router-dom";
-import { getKisanByID, toFixed } from "../../../Utility/utility";
+import { formatDate, getKisanByID, getTodaysFormattedDate, toFixed } from "../../../Utility/utility";
 import Kisanmoneysummary from "./KisanMoneySummary";
 import "../../../Utility/creditFormSwitch.css"
 import axios from "axios";
+import TypeAhead from "./TypeAhead";
 
 const CreditForm = () => {
    const { id, type, transactionNumber } = useParams();
@@ -95,8 +96,13 @@ const CreditForm = () => {
                setIsLoading(false);
             }
             const purchaserData = await axios.get("/purchaser/get");
-            console.log("Purchaser Data", purchaserData.data);
-            setPurchaserData(purchaserData.data);
+            const purchasersWithLabel = purchaserData.data.map(purchaser => {
+               return {
+                  ...purchaser, 
+                  label : `${purchaser.name}-${purchaser.companyName}`
+               }
+            }) 
+            setPurchaserData(purchasersWithLabel);
          };
          fetchData();
       } catch (e) {
@@ -184,15 +190,13 @@ const CreditForm = () => {
             let purchaserToPopulate = {};
             purchaserData.find((purchaser, index) => {
                if (transactionToedit.purchaserId === purchaser._id) {
-                  purchaserToPopulate = { ...purchaser, index };
+                  purchaserToPopulate = { ...purchaser, index, label : `${purchaser.name}-${purchaser.companyName}` };
                }
             });
-            console.log("aaaaaaaaaa", purchaserToPopulate);
             setPurchaser(purchaserToPopulate.index);
             setSelectedPurchaser(purchaserToPopulate);
          }
 
-         console.log("transactionToedit", transactionToedit);
          setPreviousBillSettlementAmount(toFixed(
             transactionToedit.previousBillSettlementAmount
          ));
@@ -337,14 +341,8 @@ const CreditForm = () => {
       return kisanLatestTransactionDate;
    }
 
-   const getTodaysFormattedDate = () => {
-      let todaysDate = new Date()
-      let todaysDateFormatted = new Date(todaysDate.getTime() - (todaysDate.getTimezoneOffset() * 60000)).toISOString().split('T')[0]
-      console.log("Today's Date Formatted ", todaysDateFormatted)
-      return todaysDateFormatted;
-   }
+   
    const billDateChange = (e) => {
-      console.log(e.target.value)
       if (type === "edit") {
          setBillDate(e.target.value);
          setIsBillDateValid("");
@@ -353,28 +351,21 @@ const CreditForm = () => {
             let hasError = false;
             //check the kisan transaction post selected date.
             if (purchaserData[purchaser] && purchaserData[purchaser].name) {
-               console.log(purchaserData[purchaser]);
                if (purchaserData[purchaser].transactions && purchaserData[purchaser].transactions.length > 0) {
-                  console.log("yahan AAya?????")
                   const latestPurchaserTransactionDate = getLatestPurchaserTransactionDate();
-                  console.log("Latest Transction Date of Purchaser  ", latestPurchaserTransactionDate)
                   if (new Date(latestPurchaserTransactionDate) > new Date(e.target.value)) {
                      setBillDate(e.target.value);
                      setIsBillDateValid("HASPURCHASERTRANSACTIONPOSTTHISDATE");
-                     console.log("Throw Error")
                      hasError = true;
                   } else {
-                     console.log("1");
                      setBillDate(e.target.value);
                      setIsBillDateValid("");
                   }
                } else {
-                  console.log("2");
                   setBillDate(e.target.value);
                   setIsBillDateValid("");
                }
             } else {
-               console.log("3");
                setBillDate(e.target.value);
                setIsBillDateValid("");
             }
@@ -383,7 +374,6 @@ const CreditForm = () => {
             if (hasError === false) {
                if (kisan.transactions && kisan.transactions.length > 0) {
                   const latestKisanTransactionDate = getLatestKisanTransactionDate();
-                  console.log("Latest Transction Date of Kisan  ", latestKisanTransactionDate)
                   if (new Date(latestKisanTransactionDate) > new Date(e.target.value)) {
                      setIsBillDateValid("HASKISANTRANSACTIONPOSTTHISDATE");
                      setBillDate(e.target.value);
@@ -400,19 +390,7 @@ const CreditForm = () => {
          }
       }
    };
-   function formatDate(date) {
-      var d = new Date(date),
-         month = '' + (d.getMonth() + 1),
-         day = '' + d.getDate(),
-         year = d.getFullYear();
-
-      if (month.length < 2)
-         month = '0' + month;
-      if (day.length < 2)
-         day = '0' + day;
-
-      return [year, month, day].join('-');
-   }
+  
    const handleEditDateEnabler = () => {
       setIsDateEditable((isDateEditable) => !isDateEditable);
    };
@@ -542,7 +520,6 @@ const CreditForm = () => {
             formData.transaction["backDateSeconds"] = backDateSeconds;
             formData.transaction["backDate"] = billDate;
          }
-         console.log("FORM DATA", formData);
          fetch(`/kisan/AddTransaction/${id}`, {
             method: "POST",
             body: JSON.stringify(formData),
@@ -553,14 +530,12 @@ const CreditForm = () => {
          })
             .then((res) => res.json())
             .then((res) => {
-               console.log("Res", res);
                handleAlert();
                clear();
                setIsSubmitting(false)
             })
             .catch((error) => {
                setIsSubmitting(false)
-               console.log("is Here", error);
                throw new error("Somethign Went Wrong", error);
             });
       } else {
@@ -607,10 +582,16 @@ const CreditForm = () => {
    const handleItemChange = (e) => {
       setItemType(e.target.value);
    };
-   const handlePurchaserChange = (e) => {
-      setPurchaser(e.target.value);
-
-      setSelectedPurchaser(purchaserData[parseInt(e.target.value)]);
+   const handlePurchaserChange = (item, index) => {
+      setSelectedPurchaser(item)
+      let  purchaserIndex = null;
+      purchaserData.filter((purchaser,index) => {
+         if(purchaser._id === item._id){
+            purchaserIndex = index;
+         }
+      })
+      setPurchaser(purchaserIndex)
+      /* setSelectedPurchaser(purchaserData[parseInt(e.target.value)]); */ 
    };
 
    useEffect(() => {
@@ -626,7 +607,6 @@ const CreditForm = () => {
    }, [purchaser, itemType]);
 
    const validatePurchaserAndVegetable = () => {
-      console.log(purchaser, itemType);
       if (purchaser === "" && itemType !== "") {
          setIsPurchaserinvalid("TRUE");
       } else {
@@ -683,7 +663,7 @@ const CreditForm = () => {
                   </div>
                   <div></div>
                </div>
-
+               
                <Form onSubmit={(e) => submit(e)} className="p-3">
                   <h2 className="text-center text-secondary mt-3 font-15">
                      <FormattedMessage id="billDetails" />
@@ -815,7 +795,14 @@ const CreditForm = () => {
                         </FormFeedback>
                      </FormGroup>
                      <FormGroup>
-                        <Label for="purchaserName" className="mt-2">
+                        {purchaserData.length>0 && <TypeAhead purchaserData={purchaserData} 
+                           selectedPurchaser={handlePurchaserChange}
+                           type={type}
+                           editedValue={purchaser}
+                           isDisabled= { type === "edit" || itemType === "" ? true : false}
+                           isInvalid = {ispurchaserInvalid === "TRUE" || isItemTypeInvalid === "TRUE"}
+                        />}
+                        {/* <Label for="purchaserName" className="mt-2">
                            <FormattedMessage id="purchaserName" /> :{" "}
                         </Label>
                         <Input
@@ -845,7 +832,7 @@ const CreditForm = () => {
                         </Input>
                         <FormFeedback>
                            <FormattedMessage id="selectingPurchaserIsRequired" />
-                        </FormFeedback>
+                        </FormFeedback> */}
                      </FormGroup>
 
                      <FormGroup className="mt-2">

@@ -19,7 +19,7 @@ const Kisanreceipt = React.forwardRef((props, ref) => {
       <div className="mt-4 d-flex receipt-font-size">
         <div>
           <div>
-            <b>दिनांक:</b> {dateConverter(new Date())}
+            <b>दिनांक:</b> {props.data.date}
           </div>
           <div>
             <b>फ़ोन:</b> {props.data.phone}

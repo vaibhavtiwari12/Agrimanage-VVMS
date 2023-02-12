@@ -17,6 +17,7 @@ import {
   NavLink,
 } from "reactstrap";
 import logo from "./particleBG.svg";
+import '../../toggleSwitchNav.css'
 const NavBar = ({ isAuthenticated, logout, changelanguage }) => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [isLanguageEnglish, setIsLanguageEnglish] = useState(true);
@@ -39,7 +40,6 @@ const NavBar = ({ isAuthenticated, logout, changelanguage }) => {
     setCollapsed(true)
   }
   useEffect(() => {
-    console.log("Language Change ", isLanguageEnglish);
     changelanguage(isLanguageEnglish);
   }, [isLanguageEnglish]);
 
@@ -117,7 +117,7 @@ const NavBar = ({ isAuthenticated, logout, changelanguage }) => {
                   checked={isLanguageEnglish}
                 />
                 <span className="toggle-switch__label">
-                  <span className="toggle-switch__inner"></span>
+                  <span className="toggle-switch__inner_navbar"></span>
                 </span>
               </label>
             </div>

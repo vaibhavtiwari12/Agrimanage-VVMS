@@ -160,103 +160,7 @@
   border-color: #f9fafb;
 }
  */
-.toggle-switch {
-   position: relative;
-   display: block;
-   width: 60px;
-   height: 28px;
-   -webkit-user-select: none;
-   -moz-user-select: none;
-   -ms-user-select: none;
-}
 
-.toggle-switch__checkbox {
-   display: none;
-}
-
-.toggle-switch__label {
-   display: block;
-   overflow: hidden;
-   cursor: pointer;
-   height: 30px;
-   padding: 0;
-   line-height: 30px;
-   border: 0;
-   border-radius: 30px;
-   background-color: #0d6efd;
-   border: 2px solid white !important;
-   transition: all 1s ease-in;
-}
-
-.toggle-switch__label:before {
-   content: "";
-   display: block;
-   width: 26px;
-   height: 26px;
-   margin: 0px;
-   background: #ffffff;
-   position: absolute;
-   top: 2px;
-   bottom: 2px;
-   left: 2px;
-   border: 0;
-   border-radius: 100%;
-   box-shadow: 0 0 1px 0 rgba(0, 0, 0, 0.25), 0 3px 3px 0 rgba(0, 0, 0, 0.15);
-   transition: all 1s ease-in 0s;
-}
-
-.toggle-switch__checkbox:checked + .toggle-switch__label {
-   background-color: #0d6efd;
-}
-
-.toggle-switch__checkbox:checked + .toggle-switch__label {
-   border-color: #0d6efd;
-}
-
-.toggle-switch__checkbox:checked + .toggle-switch__label:before {
-   left: auto;
-   right: 2px;
-}
-
-.toggle-switch__inner {
-   display: block;
-   position: relative;
-}
-
-.toggle-switch__inner:before,
-.toggle-switch__inner:after {
-   position: absolute;
-   top: -2px;
-   bottom: 0;
-   z-index: 1;
-   font-size: 1.5vh;
-   color: #fff;
-   opacity: 1;
-   transition: all 0s ease-in-out;
-}
-
-.toggle-switch__inner:before {
-   content: "En";
-   left: -100%;
-}
-
-.toggle-switch__inner:after {
-   content: "हिं";
-   right: 10px;
-}
-
-.toggle-switch__checkbox:checked
-   + .toggle-switch__label
-   .toggle-switch__inner:after {
-   opacity: 0;
-   right: -100%;
-}
-
-.toggle-switch__checkbox:checked
-   + .toggle-switch__label
-   .toggle-switch__inner:before {
-   left: 8px;
-}
 
 @media (max-width: 770px) {
    .form-width {
@@ -281,6 +185,10 @@
 }
 .details-card {
    margin-left: 1.5rem !important;
+}
+/* TypeAhead Error show */
+.display-block {
+   display: block!important;
 }
 
 @media (max-width: 1098px) {

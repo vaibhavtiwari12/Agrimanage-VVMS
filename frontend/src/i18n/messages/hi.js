@@ -126,6 +126,8 @@ const hi = {
     billDateSectionTitle: "बिल दिनाँक",
     billDateLabel:"बिल में दिखायी जाने वाली दिनाँक",
     backDatedBillMsg:"बैक डेटेड बिल",
+    backDatedEntryMsg:"बैक डेटेड एंट्री",
+    entryDateLabel: "दिखायी जाने वाली दिनाँक",
 
     /*Credit Entry Form Errors*/
     numberOfBagsCNBLTZ: "बोरों की संख्या (नग) 0 से काम नहीं हो सकती है। ",
@@ -148,6 +150,7 @@ const hi = {
     advanceSettlementAddedSuccessfully:"एडवांस वापसी की एंटी सफलतापूर्वक जोड़ी गयी।",
     advanceSettlementUpdatedSuccessfully:"एडवांस वापसी की एंटी सफलतापूर्वक सुधारी गयी।",
     kisanHasTxnAfterThisDateMsg: "इस किसान के लिए, चयनित दिनांक के बाद की दिनांकों पर, अन्य लेन-देन दर्ज किये जा चुके हैं : इसलिए आपको चयनित दिनांक पर इस किसान का बिल बनाने की अनुमति नहीं है।",
+    kisanHasTxnAfterThisDateMsgForEntry: "इस किसान के लिए, चयनित दिनांक के बाद की दिनांकों पर, अन्य लेन-देन दर्ज किये जा चुके हैं : इसलिए आपको चयनित दिनांक पर इस किसान की एंट्री करने की अनुमति नहीं है।",
     purchaserHasTxnAfterThisDateMsg: "चयनित खरीदार के लिए, चयनित दिनांक के बाद की दिनांकों पर,अन्य लेन-देन दर्ज किये जा चुके हैं : इसलिए आपको इस दिनांक पर इस खरीदार के साथ इस किसान का बिल बनाने की अनुमति नहीं है।",
     actualBillCreationDateMsg: "बिल एंट्री की दिनांक ",
     /* Inventory Langing */

@@ -126,6 +126,8 @@ const en = {
     billDateSectionTitle: "Bill Date",
     billDateLabel: "Display Date On Bill",
     backDatedBillMsg:"Back Dated Bill",
+    backDatedEntryMsg:"Back Dated Entry",
+    entryDateLabel: "Display Date",
 
     /*Credit Entry Form Errors*/
     numberOfBagsCNBLTZ: "Number of Bags cannot be less than 0.",
@@ -148,6 +150,7 @@ const en = {
     advanceSettlementAddedSuccessfully:"Advance Settlement Entry been added successfully.",
     advanceSettlementUpdatedSuccessfully:"Advance Settlement Entry has been Edited successfully.",
     kisanHasTxnAfterThisDateMsg: "This kisan has some other transactions recorded after the selected date, Hence your are not allowed to create bill for selected date.",
+    kisanHasTxnAfterThisDateMsgForEntry: "This kisan has some other transactions recorded after the selected date, Hence your are not allowed to create entry for selected date.",
     purchaserHasTxnAfterThisDateMsg: "Selected Purchaser has some other transactions recorded after the selected date, Hence you are not allowed to create the bill of this kisan with this Purchaser on selected date.",
     actualBillCreationDateMsg: "Created on",
     /* Inventory Langing */

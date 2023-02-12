@@ -56,9 +56,14 @@ KisanRouter.post("/AddTransaction/:id", async (req, res) => {
   }
   let addedtransaction = {};
   if(req.body.transaction.type === "DEBIT" || req.body.transaction.type === "ADVANCESETTLEMENT"){
+    let date = new Date();
+    if(req.body.transaction && req.body.transaction.backDate && req.body.transaction.backDate.length>0) {
+      date = new Date(req.body.transaction.backDate)
+      date.setHours( req.body.transaction.backDateHours, req.body.transaction.backDateMinutes, req.body.transaction.backDateSeconds,999)
+    }
     addedTransaction = await controller("AddTransaction", {
       id: req.params.id,
-      transaction: { ...req.body.transaction, date: new Date(), _id: id },
+      transaction: { ...req.body.transaction, date: date, _id: id, creationDate: new Date() },
     });
   }else {
     const purchaseTxnId = purchaserDataGenerated._id ? purchaserDataGenerated._id.toString() : ""

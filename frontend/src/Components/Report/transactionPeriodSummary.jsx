@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Table } from "reactstrap";
-import { dateConverter } from "../../Utility/utility";
+import { dateConverter, toFixed } from "../../Utility/utility";
 
 const Transactionperiodsummary = ({ transactionSummary, date }) => {
   const [outGoingCash, setOutGoingCash] = useState(0);
@@ -8,8 +8,8 @@ const Transactionperiodsummary = ({ transactionSummary, date }) => {
   const [carryForwardAmount, setCarryForwardAmount] = useState(0);
   const [advanceTaken, setAdvanceTaken] = useState(0);
   const [cashPaidTokisan, setCashPaidTokisan] = useState(0);
+  const [totalComissionEarned, setTotalComissionEarned] = useState(0);
   useEffect(() => {
-    console.log("props changed");
     calculateOutGoingCash();
   }, [transactionSummary]);
 
@@ -20,6 +20,7 @@ const Transactionperiodsummary = ({ transactionSummary, date }) => {
     let totalCarryForwardAmount = 0;
     let cashPaidTokisan = 0;
     let advanceTaken = 0;
+    let comissionEarned = 0;
     if (transactionSummary && transactionSummary.length > 0) {
       transactionSummary.map((transaction) => {
         if (transaction.type === "DEBIT") {
@@ -33,6 +34,7 @@ const Transactionperiodsummary = ({ transactionSummary, date }) => {
           cashPaidTokisan += parseInt(transaction.paidToKisan);
           totalCarryForwardAmount += parseInt(transaction.carryForwardAmount);
           totalAdvanceSettled += parseInt(transaction.advanceSettlement);
+          comissionEarned += transaction.grossTotal * (transaction.commission/100)
         }
       });
       setOutGoingCash(totalOutGoingCash);
@@ -40,6 +42,7 @@ const Transactionperiodsummary = ({ transactionSummary, date }) => {
       setCarryForwardAmount(totalCarryForwardAmount);
       setCashPaidTokisan(cashPaidTokisan);
       setAdvanceTaken(advanceTaken);
+      setTotalComissionEarned(comissionEarned)
       return null;
     }
   };
@@ -71,6 +74,10 @@ const Transactionperiodsummary = ({ transactionSummary, date }) => {
             <tr>
               <th>Total Amount Carry Forwarded</th>
               <td>{carryForwardAmount}</td>
+            </tr>
+            <tr>
+              <th>Total Commision Earned</th>
+              <td>{toFixed(totalComissionEarned)}</td>
             </tr>
           </tbody>
         </Table>
