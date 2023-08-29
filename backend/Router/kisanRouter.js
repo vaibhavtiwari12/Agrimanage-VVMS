@@ -5,7 +5,7 @@ const Kisan = require("../Schema/kisanSchema");
 const mongoose = require("mongoose");
 
 const KisanRouter = express.Router();
-
+//making comment to make commit
 KisanRouter.get("/get", async (req, res) => {
   const allKisan = await controller("Get");
   res.json(allKisan);
