@@ -477,11 +477,16 @@ const getAdvancePaidAndSettledByKisan = (kisans) => {
 
 // DASHBOARD = calculating everything related to Purchaser 
 const purchaserDataExtraction = (purchasers) => {
-   const transactions = [].concat.apply(
+   let temp = [].concat.apply(
       [],
       purchasers.map((purchaser) => purchaser.transactions)
    );
    const {monthToPrint, dateSixMonthback} = getDateSixMonthBack();
+   let transactions = temp.filter((tran)=>{
+      if(new Date(tran.date) > dateSixMonthback) {
+         return tran;
+      }
+   })
    const monthwisepurchaserData = transactions.reduce(
       (groups = [], transaction) => {
          if (new Date(transaction.date) > dateSixMonthback) {
