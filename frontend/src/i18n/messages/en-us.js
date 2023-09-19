@@ -199,7 +199,7 @@ const en = {
     totalBagsSoldToday:"Total bags sold today (in Packs)",
 
     /* Year Selector */
-    selectYearTitle: "Please select the Transacion Year",
+    selectYearTitle: "Please select the Transaction Year",
     yearTitle: "Year",
   },
 };
