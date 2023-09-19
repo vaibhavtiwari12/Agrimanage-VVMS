@@ -198,6 +198,9 @@ const en = {
     totalItemweight:"Total Item weight (in KGs)",
     totalBagsSoldToday:"Total bags sold today (in Packs)",
 
+    /* Year Selector */
+    selectYearTitle: "Please select the Transacion Year",
+    yearTitle: "Year",
   },
 };
 export default en;

@@ -45,14 +45,14 @@ const Search = ({ setSearchTermChange, setSearchTermType }) => {
           />
         </FormGroup>
         <FormGroup inline>
-          <Button size="md" color="primary" className="mt-3 font-10" type="submit">
+          {/* <Button size="md" color="primary" className="mt-3 font-10" type="submit">
             <FormattedMessage id="searchButtonText"/>
-          </Button>
+          </Button> */}
           <Button
             size="md"
             color="danger"
             onClick={handleReset}
-            className="mt-3 ms-2 font-10"
+            className="mt-3 font-10"
           >
             <FormattedMessage id="resetButtonText"/>
           </Button>

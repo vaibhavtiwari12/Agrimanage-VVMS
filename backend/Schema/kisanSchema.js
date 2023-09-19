@@ -16,4 +16,4 @@ const KisanSchema = new Schema({
   transactions: [],
 });
 
-module.exports = mongoose.model("Kisan", KisanSchema);
+module.exports = KisanSchema

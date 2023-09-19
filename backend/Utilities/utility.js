@@ -1,8 +1,9 @@
 const { createDBConnection, closeConnection } = require("../Mongo/mongoConnector");
-const inventorySchema = require("../Schema/inventorySchema");
-const Kisan = require("../Schema/kisanSchema");
-const Purchaser = require("../Schema/purchaserSchema");
-const dashboard = require("../Schema/dashboardSchema");
+//const inventorySchema = require("../Schema/inventorySchema");
+//const Kisan = require("../Schema/kisanSchema");
+//const Purchaser = require("../Schema/purchaserSchema");
+//const dashboard = require("../Schema/dashboardSchema");
+const { getKisanModel, getPurchaserModel, getInventoryModel } = require("../Model/model");
 const todaysDate = new Date()
 const monthToNumberMapping = {
    "01": {
@@ -252,6 +253,7 @@ const generateDashboard = async () => {
 
    let commissions = [];
    await createDBConnection();
+   const Kisan = getKisanModel();
    const kisans = await Kisan.find();
    kisans.map((kisan) => {
       totalAdvancePending += kisan.balance;
@@ -262,6 +264,7 @@ const generateDashboard = async () => {
          }
       });
    });
+   const Purchaser = getPurchaserModel();
    const purchasers = await Purchaser.find();
    purchasers.map((purchaser) => {
       totalPurchaserPending += purchaser.balance;
@@ -273,6 +276,7 @@ const generateDashboard = async () => {
    commissions = getDayWisecommissions(kisans);
    const advanceDataGivenAndTakenConsolidated =
       getAdvancePaidAndSettledByKisan(kisans);
+      const inventorySchema = getInventoryModel();
    const inventory = await inventorySchema.find();
    const topSoldItems = topSellingItemByWeight(inventory)
    const topBuyingPurchaser = topBuyingPurchasers(purchasers);
@@ -405,11 +409,16 @@ const getDayWisecommissions = (kisans) => {
 
 // DASHBOARD = calculating everything related to kisan - other than commission.
 const getAdvancePaidAndSettledByKisan = (kisans) => {
-   const transactions = [].concat.apply(
+   const temp = [].concat.apply(
       [],
       kisans.map((kisan) => kisan.transactions)
    );
    const {monthToPrint, dateSixMonthback} = getDateSixMonthBack();
+   let transactions = temp.filter((tran)=>{
+      if(new Date(tran.date) > dateSixMonthback) {
+         return tran;
+      }
+   })
    const monthWiseAdvanceData = transactions.reduce(
       (groups = [], transaction) => {
          if (new Date(transaction.date) > dateSixMonthback) {

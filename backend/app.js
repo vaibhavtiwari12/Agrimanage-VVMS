@@ -1,6 +1,7 @@
 const express = require("express");
 const path = require("path");
 const dotenv = require("dotenv");
+dotenv.config({ path: path.resolve(__dirname, "./.env") });
 var compression = require('compression')
 /* const { controller } = require('./Mongo/mongoController'); */
 const MongoRouter = require("./Router/mongoRouter");
@@ -17,7 +18,6 @@ const  { generateDashboard} = require("./Utilities/utility");
 var MongoDBStore = require("connect-mongodb-session")(session);
 
 //Conifiguring the dotenv to read the env file variables.
-dotenv.config({ path: path.resolve(__dirname, "./.env") });
 
 const app = express();
 
@@ -66,12 +66,29 @@ const sessionMW = session({
     maxAge: 3600000,
   },
 });
-
-app.use("/mongo", sessionMW, middlewares.isAuthenticated, MongoRouter);
+//app.use("/mongo", sessionMW, middlewares.isAuthenticated, MongoRouter);
 app.use("/kisan", sessionMW, middlewares.isAuthenticated, KisanRouter);
 app.use("/login", sessionMW, middlewares.isAuthenticated, loginRouter);
 app.use("/inventory", sessionMW, middlewares.isAuthenticated, inventoryRouter);
 app.use("/purchaser", sessionMW, middlewares.isAuthenticated, purchaserRouter);
+
+app.post("/yearChange", sessionMW, middlewares.isAuthenticated, (req, res)=>{
+  console.log("Year ", req.body.year)
+  process.YEAR =  req.body.year 
+  console.log("Year post Update", process.YEAR)
+  if(process.YEAR === 2023){
+    process.env.KISANTABLE = "kisans2023"
+    process.env.INVENTORYTABLE = "inventory2023"
+    process.env.PURCHASERTABLE = "purchasers2023"
+    console.log("MONGO URL SET 2023",  process.env.KISANTABLE, process.env.INVENTORYTABLE, process.env.PURCHASERTABLE)
+  }else {
+    process.env.KISANTABLE = "kisans"
+    process.env.INVENTORYTABLE = "inventories"
+    process.env.PURCHASERTABLE = "purchasers"
+    console.log("MONGO URL SET 2022",  process.env.KISANTABLE, process.env.INVENTORYTABLE, process.env.PURCHASERTABLE)
+  }
+  res.status(200).json({year: process.YEAR})
+})
 
 app.post("/getLogin", sessionMW, async (req, res) => {
   const logins = await controller("get", {
@@ -116,7 +133,7 @@ app.get(
 );
 
 app.get('/dashboardinfo',async  (req,res) => {
-    console.log("Porcessing Dashboard Information")
+    console.log("Processing Dashboard Information")
     const generatedData = await generateDashboard();
     res.json(generatedData)
 })

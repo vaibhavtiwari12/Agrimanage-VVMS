@@ -2,6 +2,7 @@ const express = require("express");
 const { controller } = require("../Mongo/inventoryController");
 const Inventory = require("../Schema/inventorySchema");
 const mongoose = require("mongoose");
+const { getInventoryModel } = require("../Model/model");
 
 const InventoryRouter = express.Router();
 
@@ -16,6 +17,7 @@ InventoryRouter.get("/getByID/:id", async (req, res) => {
 });
 
 InventoryRouter.post("/add", async (req, res) => {
+  const Inventory = getInventoryModel();
   const newItem = new Inventory({
     itemName: req.body.name,
     date: new Date(),

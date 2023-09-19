@@ -1,30 +1,29 @@
 const { createDBConnection, closeConnection } = require("./mongoConnector");
-const Kisan = require("../Schema/kisanSchema");
 const InventoryController = require("../Mongo/inventoryController");
-const Inventory = require("../Schema/inventorySchema");
 const {
   getTransactionsBetweenDates,
   getTransaction,
 } = require("../Utilities/utility");
-const Purchaser = require("../Schema/purchaserSchema");
-
+const mongoose = require("mongoose");
+const { getKisanModel, getPurchaserModel, getInventoryModel } = require("../Model/model");
 /* IMPORTANT
-    RDBMS       VS      MONGO
-    Database            Database
-    Table               Collections
-    Rows                Documents
-    Columns             Fields
+RDBMS       VS      MONGO
+Database            Database
+Table               Collections
+Rows                Documents
+Columns             Fields
 
 */
 const controller = async (type, data) => {
   //Creating MONGO Connection
   await createDBConnection();
-
+  
   //All Operation in Mongo
   switch (type) {
     case "Get": {
       // Find Request
-      const posts = await Kisan.find();
+      const Kisan = getKisanModel();
+      const posts = await Kisan.find()
       return posts;
     }
     case "Add": {
@@ -34,6 +33,7 @@ const controller = async (type, data) => {
     }
     case "Edit": {
       //Editing data
+      const Kisan = getKisanModel();
       const kisan = await Kisan.findById(data.id);
       kisan.name = data.name;
       kisan.fatherName = data.fatherName;
@@ -44,11 +44,13 @@ const controller = async (type, data) => {
       return saved
     }
     case "FindByID": {
+      const Kisan = getKisanModel();
       const kisan = await Kisan.findById(data);
       return kisan;
     }
     case "AddTransaction": {
       // Updating the data
+      const Kisan = getKisanModel();
       let updatekisan = await Kisan.findById(data.id);
       
       if (
@@ -83,6 +85,9 @@ const controller = async (type, data) => {
       return finalKisan;
     }
     case "deleteTransaction" : {
+      const Kisan = getKisanModel();
+      const Inventory = getInventoryModel();
+      const Purchaser = getPurchaserModel();
       let deleteKisanTxn = await Kisan.findById(data.id);
       let deleteInventoryTxn = await Inventory.findById(data.inventoryItemId);
       let deletePurchaserTxn = await Purchaser.findById(data.purchaseId);
@@ -139,6 +144,7 @@ const controller = async (type, data) => {
     }
 
     case "deleteDebitTransaction" : {
+      const Kisan = getKisanModel();
       let deleteKisanTxn = await Kisan.findById(data.kisanId);
       if(deleteKisanTxn) {
        if(deleteKisanTxn.transactions[deleteKisanTxn.transactions.length-1]._id.toString() === data.transactionID.toString()) {
@@ -150,6 +156,7 @@ const controller = async (type, data) => {
       return "Kisan Debit Transaction Deleted Successfully"
     }
     case "DeleteAdvanceSettlementTransaction" : {
+      const Kisan = getKisanModel();
       let deleteKisanTxn = await Kisan.findById(data.kisanId);
       if(deleteKisanTxn) {
        if(deleteKisanTxn.transactions[deleteKisanTxn.transactions.length-1]._id.toString() === data.transactionID.toString()) {
@@ -161,6 +168,7 @@ const controller = async (type, data) => {
       return "Kisan AdvanceSettlement Transaction Deleted Successfully"
     }
     case "editTransaction": {
+      const Kisan = getKisanModel();
       // Delete
       const kisanToUpdate = await Kisan.findById(data.id);
       const newKisanTransaction = kisanToUpdate.transactions.map((trans) => {
@@ -173,6 +181,7 @@ const controller = async (type, data) => {
       return finalKisan;
     }
     case "todaystransactions": {
+      const Kisan = getKisanModel();
       // Delete
       const allKisans = await Kisan.find();
       const transactions = getTransaction(
@@ -184,6 +193,7 @@ const controller = async (type, data) => {
     }
     case "monthTransaction": {
       // Delete
+      const Kisan = getKisanModel();
       const allKisans = await Kisan.find();
       const transactions = getTransaction(
         allKisans,
@@ -194,6 +204,7 @@ const controller = async (type, data) => {
     }
     case "transactionBetweenDates": {
       // Delete
+      const Kisan = getKisanModel();
       const allKisans = await Kisan.find();
       const transactions = getTransactionsBetweenDates(
         allKisans,

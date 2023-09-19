@@ -1,5 +1,6 @@
+const { getInventoryModel } = require("../Model/model");
 const { createDBConnection, closeConnection } = require("./mongoConnector");
-const Inventory = require("../Schema/inventorySchema");
+
 const mongoose = require("mongoose");
 
 const Schema = mongoose.Schema;
@@ -12,6 +13,7 @@ const controller = async (type, data) => {
   switch (type) {
     case "Get": {
       // Find Request
+      const Inventory = getInventoryModel();
       const inventory = await Inventory.find();
       return inventory;
     }
@@ -21,11 +23,13 @@ const controller = async (type, data) => {
       return saved;
     }
     case "FindByID": {
+      const Inventory = getInventoryModel();
       const inventory = await Inventory.findById(data);
       return inventory;
     }
     case "AddTransaction": {
       // Updating the data
+      const Inventory = getInventoryModel();
       let fetchedInventory = await Inventory.findOne({
         itemName: data.itemName,
       });

@@ -3,6 +3,7 @@ const { controller } = require("../Mongo/kisanController");
 const purchaserController = require("../Mongo/purchaserController.js")
 const Kisan = require("../Schema/kisanSchema");
 const mongoose = require("mongoose");
+const { getKisanModel } = require("../Model/model");
 
 const KisanRouter = express.Router();
 //making comment to make commit
@@ -18,6 +19,7 @@ KisanRouter.get("/getByID/:id", async (req, res) => {
 });
 
 KisanRouter.post("/add", async (req, res) => {
+  const Kisan = getKisanModel();
   const newkisan = new Kisan({
     name: req.body.name,
     fatherName: req.body.fatherName,

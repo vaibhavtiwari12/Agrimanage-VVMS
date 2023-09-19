@@ -1,5 +1,4 @@
 const { createDBConnection, closeConnection } = require("./mongoConnector");
-const Purchaser = require("../Schema/purchaserSchema");
 const InventoryController = require("./inventoryController");
 const {
   getTransactionsBetweenDates,
@@ -7,6 +6,7 @@ const {
   modifyTransactionGroupByDate,
   getPurchasers,
 } = require("../Utilities/utility");
+const { getPurchaserModel } = require("../Model/model");
 
 /* IMPORTANT
     RDBMS       VS      MONGO
@@ -24,11 +24,13 @@ const controller = async (type, data) => {
   switch (type) {
     case "Get": {
       // Find Request
+      const Purchaser = getPurchaserModel();
       const purchaseDetails = await Purchaser.find();
       return purchaseDetails;
     }
     case "Add": {
       //Adding data
+      const Purchaser = getPurchaserModel();
       const newPurchaser = new Purchaser({
         name: data.name,
         companyName: data.companyName,
@@ -42,6 +44,7 @@ const controller = async (type, data) => {
     }
     case "Edit": {
       //Adding data
+      const Purchaser = getPurchaserModel();
       const purchaser = await Purchaser.findById(data.id);
       purchaser.name= data.name
       purchaser.companyName= data.companyName
@@ -53,6 +56,7 @@ const controller = async (type, data) => {
     }
     case "DeleteTransaction": {
       //Deleting data
+      const Purchaser = getPurchaserModel();
       const purchaser = await Purchaser.findById(data.purchaserId);
       if(purchaser) {
         if(purchaser.transactions[purchaser.transactions.length-1]._id.toString() === data.purchaserTxnId.toString()) {
@@ -64,12 +68,12 @@ const controller = async (type, data) => {
        return {message:"Purchaser Credit/Payment Transaction Deleted Successfully"}
     }
     case "FindByID": {
-      console.log("IS Here", data);
+      const Purchaser = getPurchaserModel();
       const purchasers = await Purchaser.findById(data);
       return purchasers;
     }
     case "findByCustomTransactions": {
-      console.log("IS Here", data);
+      const Purchaser = getPurchaserModel();
       const purchaser = await Purchaser.findById(data);
       const modifiedTransactions = modifyTransactionGroupByDate(purchaser)
       return modifiedTransactions;
@@ -77,6 +81,7 @@ const controller = async (type, data) => {
     case "AddTransaction": {
       // Updating the data
       console.log("Add Transaction to Purchaser----- ",data)
+      const Purchaser = getPurchaserModel();
       let fetchedPurchaser = await Purchaser.findById(data.id);
       if (data.transaction.purchaserTxnType === "DEBIT") {
         fetchedPurchaser.balance -= data.transaction.grossTotal;
@@ -100,6 +105,7 @@ const controller = async (type, data) => {
     case "AddCreditTransaction": {
       // Updating the data
       console.log("Add credit transaction to Purchaser----- ",data)
+      const Purchaser = getPurchaserModel();
       let fetchedPurchaser = await Purchaser.findById(data.id);
         fetchedPurchaser.balance += data.transaction.transactionAmount;
         const transactionToPush = {
@@ -115,6 +121,7 @@ const controller = async (type, data) => {
     }
     case "todaystransactions": {
       // Delete
+      const Purchaser = getPurchaserModel();
       const allPurchasers = await Purchaser.find();
       const transactions = getPurchasers(
         allPurchasers,
@@ -125,6 +132,7 @@ const controller = async (type, data) => {
     }
     case "monthTransaction": {
       // Delete
+      const Purchaser = getPurchaserModel();
       const allPurchasers = await Purchaser.find();
       const transactions = getPurchasers(
         allPurchasers,
@@ -135,6 +143,7 @@ const controller = async (type, data) => {
     }
     case "transactionBetweenDates": {
       // Delete
+      const Purchaser = getPurchaserModel();
       const allPurchasers = await Purchaser.find();
       const transactions = getTransactionsBetweenDates(
         allPurchasers,

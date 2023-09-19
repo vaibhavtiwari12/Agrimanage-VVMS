@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { FormattedMessage } from "react-intl";
 import {
@@ -18,10 +18,12 @@ import {
 } from "reactstrap";
 import logo from "./particleBG.svg";
 import '../../toggleSwitchNav.css'
+import YearContext from "../../Context/YearContext";
 const NavBar = ({ isAuthenticated, logout, changelanguage }) => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [isLanguageEnglish, setIsLanguageEnglish] = useState(true);
   const [collapsed, setCollapsed] = useState(true);
+  const year = useContext(YearContext).year
   const toggleNavbar = () => {
     setCollapsed(!collapsed);
   };
@@ -49,8 +51,14 @@ const NavBar = ({ isAuthenticated, logout, changelanguage }) => {
         <Link className="nav-brand link-no-decoration text-white custom-logo-design" to="/">
           <img className="logo" src={logo} alt="MahrajVegetables" />
         </Link>
-        <NavbarToggler onClick={toggleNavbar} className="mr-2" />
-        <Collapse isOpen={!collapsed} navbar>
+        <Link
+              className="nav-item ps-3 link-no-decoration text-white d-md-none"
+              onClick={collapse} to="/yearSelector"
+            >
+              <div>{year ? year === 2022 ? <p><FormattedMessage id="yearTitle"/>-2022-23</p> : <p><FormattedMessage id="yearTitle"/>-2023-24</p> : ""}</div>
+            </Link>
+        <NavbarToggler onClick={toggleNavbar} className="mr-2" /> 
+        <Collapse className="mt-md-3" isOpen={!collapsed} navbar>
           <Nav className="" navbar>
             <Link
               className="nav-item ps-3 link-no-decoration text-white"
@@ -76,8 +84,14 @@ const NavBar = ({ isAuthenticated, logout, changelanguage }) => {
             >
               <FormattedMessage id="inventory" />
             </Link>
+            <Link
+              className="nav-item ps-3 link-no-decoration text-white"
+              onClick={collapse} to="/yearSelector"
+            >
+              <div>{year ? year === 2022 ? <p><FormattedMessage id="yearTitle"/>-2022-23</p> : <p><FormattedMessage id="yearTitle"/>-2023-24</p> : ""}</div>
+            </Link>
           </Nav>
-          <Nav className="d-flex justify-content-end flex-fill" navbar>
+          <Nav className="d-flex justify-content-end flex-fill mb-3" navbar>
             {isAuthenticated === "TRUE" ? (
               <div className="text-white greeting-container font-10">
                 <ButtonDropdown

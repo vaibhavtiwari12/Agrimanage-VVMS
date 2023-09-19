@@ -198,6 +198,9 @@ const hi = {
     totalItemweight:"कुल वजन (कि.ग्रा.में)",
     totalBagsSoldToday:"आज बेचे गए कुल बोरों की संख्या (नग)",
 
+    /* Year Selector */
+    selectYearTitle: "कृपया ट्रांजेक्शन ईयर सेलेक्ट करें",
+    yearTitle: "ईयर",
   },
 };
 export default hi;

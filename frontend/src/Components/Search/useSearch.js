@@ -6,6 +6,10 @@ const useSearch = (setSearchTermChange, setSearchTermType) => {
   /*  useEffect(() => {
     console.log(searchType);
   }, [searchType]); */
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+  }
   const handleReset = async (event) => {
     setSearchTermState("");
     setSearchTypeState("Name");
@@ -26,6 +30,7 @@ const useSearch = (setSearchTermChange, setSearchTermType) => {
     handleReset,
     searchTerm,
     searchType,
+    handleSubmit
   };
 };
 
