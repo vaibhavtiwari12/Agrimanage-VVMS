@@ -13,6 +13,7 @@ const KisanSchema = new Schema({
   date: Date,
   balance: Number,
   carryForwardAmount: Number,
+  kisanCommodity: String,
   transactions: [],
 });
 

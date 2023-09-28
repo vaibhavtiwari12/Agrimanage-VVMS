@@ -28,6 +28,7 @@ KisanRouter.post("/add", async (req, res) => {
     date: new Date().toString(),
     balance: 0,
     carryForwardAmount: 0,
+    kisanCommodity: req.body.kisanCommodity,
     transactions: [],
   });
   const addedKisan = await controller("Add", newkisan);

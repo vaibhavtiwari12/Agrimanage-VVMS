@@ -12,6 +12,12 @@ export const getKisanByID = async (id) => {
   return allKisan;
 };
 
+export const setYearChange = async (changedYear) => {
+  await axios.post('/yearChange',{
+    year: parseInt(changedYear)
+  })
+}
+
 export const dateConverter = (date) => {
   const D = new Date(date);
   const formattedDate = `${D.getDate()}/${

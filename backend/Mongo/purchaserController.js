@@ -38,6 +38,7 @@ const controller = async (type, data) => {
         address: data.address,
         date: new Date().toString(),
         balance: 0,
+        purchaserCommodity: data.purchaserCommodity,
         transactions: [],
       });
       return await newPurchaser.save();

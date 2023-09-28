@@ -25,6 +25,7 @@ const purchaserSchema = new Schema({
   date: Date,
   balance: Number,
   comment: String,
+  purchaserCommodity: String,
   transactions: [transactions],
 });
 

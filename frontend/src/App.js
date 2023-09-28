@@ -13,6 +13,7 @@ import EditKisan from "./Components/Kisan/EditKisan/EditKisan";
 import EditPurchaser from "./Components/Purchaser/EditPurchaser";
 import YearSelector from "./Components/YearSeletor/YearSelector";
 import YearContext from "./Context/YearContext";
+import { setYearChange } from "./Utility/utility";
 
 /* import Login from "./Components/Login/Login";
 import AddKisan from "./Components/Kisan/AddKisan/AddKisan";
@@ -75,12 +76,14 @@ function App() {
    useEffect(() => {
       if(sessionStorage.getItem("Year")){
          yearChangeHandler(sessionStorage.getItem("Year"))
+         setYearChange(sessionStorage.getItem("Year"))
       }
       if(yearfromContext.year!== undefined && isAuthenticated!=="INIT"){
          if(!sessionStorage.getItem("Year")){
             history.push('/yearSelector')
          }else {
             yearChangeHandler(sessionStorage.getItem("Year"))
+            setYearChange(sessionStorage.getItem("Year"))
          }
       }
       let doesHisotoryAlreadyLoaded = false;
@@ -109,6 +112,9 @@ function App() {
             history.push('/yearSelector')
          }else {
             yearChangeHandler(sessionStorage.getItem("Year"))
+            if(isAuthenticated === "TRUE"){
+               setYearChange(sessionStorage.getItem("Year"))
+            }
          }
       }
    },[isAuthenticated])

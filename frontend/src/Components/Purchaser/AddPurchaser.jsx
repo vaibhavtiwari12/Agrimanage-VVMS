@@ -1,5 +1,6 @@
-import React, { useState } from "react";
-import { FormattedMessage } from "react-intl";
+import axios from "axios";
+import React, { useEffect, useState } from "react";
+import { FormattedMessage, useIntl } from "react-intl";
 import { Link, useHistory } from "react-router-dom";
 import {
     Form,
@@ -14,6 +15,7 @@ import {
     Spinner,
   } from "reactstrap";
 const AddPurchaser = () => {
+  const intlA = useIntl();
   const [name, setName] = useState("");
   const [companyName, setcompanyName] = useState("");
   const [phone, setPhone] = useState("");
@@ -25,7 +27,24 @@ const AddPurchaser = () => {
   const [hasError, setHasError] = useState(false);
   const [showAlert, setShowAlert] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
-
+  const [inventory, setInventory] = useState([])
+  const [itemType, setItemType] = useState("");
+  const [isItemTypeInvalid, setIsItemTypeInvalid] = useState("PRISTINE");
+  useEffect(()=>{
+    const fetchData = async () => {
+      const inventoryData = await axios.get("/inventory/get");
+      if (inventoryData.data.length <= 0) {
+         history.push("/inventory");
+      } else {
+         setInventory(inventoryData.data);
+      }
+    }
+    fetchData();
+  },[])
+  const handleItemChange = (e) =>{
+    setItemType(e.target.value);
+    setIsItemTypeInvalid("FALSE")
+  }
   const isFormValid = () => {
     let isInvalid = false;
     if (name.length <= 0) {
@@ -42,6 +61,10 @@ const AddPurchaser = () => {
     }
     if (address.length <= 0) {
       setIsAddressValid("");
+      isInvalid = true;
+    }
+    if (itemType === "") {
+      setIsItemTypeInvalid("TRUE");
       isInvalid = true;
     }
     return isInvalid ? false : true;
@@ -86,6 +109,7 @@ const AddPurchaser = () => {
         companyName,
         phone,
         address,
+        purchaserCommodity: itemType
       };
       fetch("/purchaser/add", {
         method: "POST",
@@ -199,6 +223,34 @@ const AddPurchaser = () => {
           <FormattedMessage id="addressIsRequired" />
         </FormFeedback>{" "}
       </FormGroup>{" "}
+      <FormGroup>
+        <Label for="itemType" className="mt-2">
+            <FormattedMessage id="whatAreYouBuyingText" />
+        </Label>
+        <Input
+            type="select"
+            /* disabled={type === "edit" ? true : false} */
+            name="select"
+            invalid={isItemTypeInvalid === "TRUE"}
+            id="itemType"
+            value={itemType}
+            onChange={(e) => handleItemChange(e)}
+        >
+            <option value="">
+              {intlA.formatMessage({ id: "selectTradingType" })}
+            </option>
+            {inventory.map((item) => {
+              return (
+                  <option key={item._id} value={item.itemName}>
+                    {item.itemName}
+                  </option>
+              );
+            })}
+        </Input>
+        <FormFeedback>
+        <FormattedMessage id="inventory_itemError" />
+        </FormFeedback>
+      </FormGroup>
       <Button type="submit" color="primary" className="mt-3" disabled={isSubmitting}>
       {isSubmitting &&( <span><Spinner className="spinner-size-1"/> &nbsp;</span> )}<FormattedMessage id="addPurchaserButtonText" />
       </Button>

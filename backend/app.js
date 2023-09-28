@@ -73,10 +73,10 @@ app.use("/inventory", sessionMW, middlewares.isAuthenticated, inventoryRouter);
 app.use("/purchaser", sessionMW, middlewares.isAuthenticated, purchaserRouter);
 
 app.post("/yearChange", sessionMW, middlewares.isAuthenticated, (req, res)=>{
-  console.log("Year ", req.body.year)
+  console.log("Year from body", req.body.year)
   process.YEAR =  req.body.year 
   console.log("Year post Update", process.YEAR)
-  if(process.YEAR === 2023){
+  if(req.body.year == 2023){
     process.env.KISANTABLE = "kisans2023"
     process.env.INVENTORYTABLE = "inventory2023"
     process.env.PURCHASERTABLE = "purchasers2023"

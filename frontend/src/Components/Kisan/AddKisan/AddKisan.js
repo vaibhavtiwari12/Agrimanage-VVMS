@@ -8,10 +8,10 @@ import {
   Alert,
   Spinner
 } from "reactstrap";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";
-import { FormattedMessage } from "react-intl";
-
+import { FormattedMessage, useIntl } from "react-intl";
+import axios from "axios";
 const AddKisan = () => {
   const [name, setName] = useState("");
   const [fatherName, setfatherName] = useState("");
@@ -24,7 +24,26 @@ const AddKisan = () => {
   const [hasError, setHasError] = useState(false);
   const [showAlert, setShowAlert] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
-
+  const [inventory, setInventory] = useState([])
+  const [itemType, setItemType] = useState("");
+  const [isItemTypeInvalid, setIsItemTypeInvalid] = useState("PRISTINE");
+  const intlA = useIntl();
+  useEffect(()=>{
+    const fetchData = async () => {
+      const inventoryData = await axios.get("/inventory/get");
+      if (inventoryData.data.length <= 0) {
+         history.push("/inventory");
+      } else {
+         setInventory(inventoryData.data);
+         //setIsLoading(false);
+      }
+    }
+    fetchData();
+  },[])
+  const handleItemChange = (e) =>{
+    setItemType(e.target.value);
+    setIsItemTypeInvalid("FALSE")
+  }
   const isFormValid = () => {
     let isInvalid = false;
     if (name.length <= 0) {
@@ -43,6 +62,10 @@ const AddKisan = () => {
       setIsAddressValid("");
       isInvalid = true;
     }
+    if (itemType === "") {
+         setIsItemTypeInvalid("TRUE");
+         isInvalid = true;
+      }
     return isInvalid ? false : true;
   };
   const history = useHistory();
@@ -85,6 +108,7 @@ const AddKisan = () => {
         fatherName,
         phone,
         address,
+        kisanCommodity : itemType
       };
       fetch("/kisan/add", {
         method: "POST",
@@ -168,6 +192,34 @@ const AddKisan = () => {
         />{" "}
         <FormFeedback><FormattedMessage id="addressIsRequired"/></FormFeedback>{" "}
       </FormGroup>{" "}
+      <FormGroup>
+        <Label for="itemType" className="mt-2">
+            <FormattedMessage id="whatAreYouBuyingText" />
+        </Label>
+        <Input
+            type="select"
+            /* disabled={type === "edit" ? true : false} */
+            name="select"
+            invalid={isItemTypeInvalid === "TRUE"}
+            id="itemType"
+            value={itemType}
+            onChange={(e) => handleItemChange(e)}
+        >
+            <option value="">
+              {intlA.formatMessage({ id: "selectTradingType" })}
+            </option>
+            {inventory.map((item) => {
+              return (
+                <option key={item._id} value={item.itemName}>
+                    {item.itemName}
+                  </option>
+              );
+            })}
+        </Input>
+        <FormFeedback>
+            <FormattedMessage id="inventory_itemError" />
+        </FormFeedback>
+      </FormGroup>
       <Button type="submit" color="primary" className="mt-3" disabled={isSubmitting}>
         {isSubmitting &&( <span><Spinner className="spinner-size-1"/> &nbsp;</span> )}
         <FormattedMessage id="addNewKisanButtonText"/>{" "}
