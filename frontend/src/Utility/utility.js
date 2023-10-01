@@ -84,6 +84,11 @@ export const fetchCustomTransactionsForPurchaser = async  (id) => {
   return allPurchaser.data;
 }
 
+export const getPurchaserByCommodity = async (purchaserCommodity) => {
+  const res = await fetch(`/purchaser/getPurchaserByCommodity/${purchaserCommodity}`);
+  const purchasers = await res.json();
+  return purchasers;
+};
 
 export const getPurchaserTransactionsBydate = async (date) => {
   const res = await fetch(`purchaser/getTodaysTransaction/${date}`);

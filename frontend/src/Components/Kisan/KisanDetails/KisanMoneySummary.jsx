@@ -12,6 +12,10 @@ const Kisanmoneysummary = ({ kisan }) => {
             <td className="capitalize">{kisan.name}</td>
           </tr>
           <tr>
+            <th><FormattedMessage id="commodity"/></th>
+            <td>{kisan.kisanCommodity}</td>
+          </tr>
+          <tr>
             <th><FormattedMessage id="fatherName"/></th>
             <td className="capitalize">{kisan.fatherName}</td>
           </tr>

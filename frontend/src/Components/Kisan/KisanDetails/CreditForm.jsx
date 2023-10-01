@@ -14,7 +14,7 @@ import {
 import { FormattedMessage, useIntl } from "react-intl";
 import { useState } from "react";
 import { Link, useHistory, useParams } from "react-router-dom";
-import { formatDate, getKisanByID, getTodaysFormattedDate, toFixed } from "../../../Utility/utility";
+import { formatDate, getKisanByID, getPurchaserByCommodity, getTodaysFormattedDate, toFixed } from "../../../Utility/utility";
 import Kisanmoneysummary from "./KisanMoneySummary";
 import "../../../Utility/creditFormSwitch.css"
 import axios from "axios";
@@ -110,6 +110,10 @@ const CreditForm = () => {
          throw new Error("Something Went Wrong ", e);
       }
    }, []);
+
+   const handleCreatePurchaser = () => {
+      history.push('/addPurchaser')
+   }
 
    // calculate gross total
    useEffect(() => {
@@ -579,9 +583,24 @@ const CreditForm = () => {
       }
    };
 
-   const handleItemChange = (e) => {
+   const handleItemChange =async  (e) => {
       setItemType(e.target.value);
    };
+   useEffect(() => {
+      setPurchaser("")
+      setSelectedPurchaser("")
+      const fetchData = async () => {
+         const purchasers = await getPurchaserByCommodity(itemType)
+         const purchasersWithLabel = purchasers.map(purchaser => {
+            return {
+               ...purchaser, 
+               label : `${purchaser.name}-${purchaser.companyName}`
+            }
+         }) 
+         setPurchaserData(purchasersWithLabel)
+      }
+      fetchData();
+   }, [itemType]);
    const handlePurchaserChange = (item, index) => {
       setSelectedPurchaser(item)
       let  purchaserIndex = null;
@@ -795,13 +814,16 @@ const CreditForm = () => {
                         </FormFeedback>
                      </FormGroup>
                      <FormGroup>
-                        {purchaserData.length>0 && <TypeAhead purchaserData={purchaserData} 
+                        {purchaserData && purchaserData.length>0 ? <TypeAhead purchaserData={purchaserData} 
                            selectedPurchaser={handlePurchaserChange}
                            type={type}
                            editedValue={purchaser}
                            isDisabled= { type === "edit" || itemType === "" ? true : false}
                            isInvalid = {ispurchaserInvalid === "TRUE" || isItemTypeInvalid === "TRUE"}
-                        />}
+                        />:<div className="my-3">
+                              <p><b><FormattedMessage id="purchaserNotAvailableForSelectedCommodityText" /></b></p>
+                              <Button color="primary" onClick={handleCreatePurchaser}><FormattedMessage id="addPurchaserButtonText"/></Button>
+                           </div>}
                         {/* <Label for="purchaserName" className="mt-2">
                            <FormattedMessage id="purchaserName" /> :{" "}
                         </Label>

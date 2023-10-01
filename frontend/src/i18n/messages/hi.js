@@ -18,6 +18,7 @@ const hi = {
     signin: "साइन इन",
     usernameError: "यूज़र का नाम देना अनिवार्य है।",
     passwordError: "पासवर्ड देना अनिवार्य है।",
+    commodity:"कमोडिटी",
 
     /*Header*/
     hello: "नमस्ते",
@@ -51,6 +52,7 @@ const hi = {
     addKisanSuccessful: "नया किसान सफलतापूर्वक जोड़ा गया।",
     editKisanSuccessful: "किसान का ब्यौरा सफलतापूर्वक सुधारा गया।",
     updateKisanBtnText: "किसान का ब्यौरा सुधारें",
+    commodityChangeNotAllowedKisanText: "कमोडिटी को बदला नहीं जा सकता क्योंकि किसान के लिए ट्रांजेक्शन उपलब्ध हैं।",
 
     /*Kisan Detail Page*/
     kisanDetailsTitle: "किसान का विवरण",
@@ -112,6 +114,7 @@ const hi = {
     hammali: "हम्माली (₹) :",
     bhada: "भाड़ा (₹) :",
     netTotal: "बिल टोटल (कटौती के बाद) : ₹ ",
+    paymentToSettle: "कुल भुगतान राशि",
     amountToSettle: "बकाया  भुगतान",
     paymentSettlementSectionTitle: "पेमेंट समायोजन",
     advanceSettlementSectionTitle: "एडवांस समायोजन",
@@ -158,6 +161,7 @@ const hi = {
     addfasalType: "कमोडिटी जोड़ें",
     noInventoryForThisItem: "इस कमोडिटी की कोई इन्वेंटरी उपलब्ध नहीं है।",
     transacted: "हस्तांतरित ",
+    purchaserNotAvailableForSelectedCommodityText: "चयनित कमोडिटी के लिए कोई भी खरीददार उपलब्ध नहीं है।  कृपया खरीददार ऐड करें। ",
 
     /* Inventory Add Item Type */
     inventoryAddHeading: "नई  कमोडिटी (सामग्री) का विवरण",
@@ -174,6 +178,7 @@ const hi = {
     companyNameIsRequired: "कंपनी (फ़र्म) का नाम देना अनिवार्य है।",
     purchaser_addSuccessful: "खरीदार सफलतापूर्वक जोड़ा गया !",
     purchaser_editSuccessful : "खरीदार का विवरण सफलतापूर्वक सुधारा गया !",
+    commodityChangeNotAllowedPurchaserText: "कमोडिटी को बदला नहीं जा सकता क्योंकि ख़रीददार के लिए ट्रांजेक्शन उपलब्ध हैं।",
 
     /*Purchase Table*/
     nameOfPurchase: "खरीदार का नाम",

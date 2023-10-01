@@ -73,6 +73,13 @@ purchaserRouter.get(
   }
 );
 
+purchaserRouter.get("/getPurchaserByCommodity/:purchaserCommodity", async (req, res) => {
+  const editedTransaction = await controller("getPurchaserByCommodity", {
+    purchaserCommodity: req.params.purchaserCommodity,
+  });
+  res.json(editedTransaction);
+});
+
 /* 
 purchaserRouter.post("/editTransaction/:id", async (req, res) => {
   const editedTransaction = await controller("editTransaction", {

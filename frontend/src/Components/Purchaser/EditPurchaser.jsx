@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { FormattedMessage } from "react-intl";
+import { FormattedMessage, useIntl } from "react-intl";
 import { Link, useHistory, useParams } from "react-router-dom";
 import {
     Form,
@@ -14,6 +14,7 @@ import {
     Spinner
   } from "reactstrap";
 import { getPurchaserById } from "../../Utility/utility";
+import axios from "axios";
 const EditPurchaser = () => {
   const { id } = useParams();
   const [name, setName] = useState("");
@@ -28,6 +29,11 @@ const EditPurchaser = () => {
   const [showAlert, setShowAlert] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
+  const [purchaserCommodity, setPurchaserCommodity] = useState("")
+  const [purchaserCommodityInvalid, setPurchaserCommodityInvalid] = useState("PRISTINE")
+  const [transactions, setTransactions] = useState([])
+  const [inventory, setInventory] = useState([])
+  const intlA = useIntl();
   useEffect(() => {
     console.log(id);
     try {
@@ -39,7 +45,15 @@ const EditPurchaser = () => {
             setPhone(details.phone);
             setAddress(details.address)
             setIsLoading(false)
+            setPurchaserCommodity(details.purchaserCommodity)
+               setTransactions(details.transactions)
         }
+        const inventoryData = await axios.get("/inventory/get");
+            if (inventoryData.data.length <= 0) {
+               history.push("/inventory");
+            } else {
+               setInventory(inventoryData.data);
+            }
       };
       fetchData();
     } catch (e) {
@@ -47,6 +61,10 @@ const EditPurchaser = () => {
       throw new Error("Something Went Wrong ", e);
     }
   }, []);
+
+  const handleItemChange = (e) => {
+    setPurchaserCommodity(e.target.value)
+ }
   const isFormValid = () => {
     let isInvalid = false;
     if (name.length <= 0) {
@@ -65,6 +83,10 @@ const EditPurchaser = () => {
       setIsAddressValid("");
       isInvalid = true;
     }
+    if (purchaserCommodity === "") {
+      setPurchaserCommodityInvalid("TRUE");
+      isInvalid = true;
+   }
     return isInvalid ? false : true;
   };
   const history = useHistory();
@@ -92,11 +114,13 @@ const EditPurchaser = () => {
     setcompanyName("");
     setPhone("");
     setAddress("");
+    setPurchaserCommodity("");
     setHasError(false);
     setIscompanyNameValid("PRISTINE");
     setIsnameValid("PRISTINE");
     setIsPhonePristine("PRISTINE");
     setIsAddressValid("PRISTINE");
+    setPurchaserCommodityInvalid("PRISTINE")
   };
   const submit = (e) => {
     e.preventDefault();
@@ -107,7 +131,8 @@ const EditPurchaser = () => {
         companyName,
         phone,
         address,
-        id
+        id,
+        purchaserCommodity
       };
       fetch("/purchaser/edit", {
         method: "POST",
@@ -228,6 +253,35 @@ const EditPurchaser = () => {
               <FormattedMessage id="addressIsRequired" />
             </FormFeedback>{" "}
           </FormGroup>{" "}
+          <FormGroup>
+                  <Label for="itemType" className="mt-2">
+                        <FormattedMessage id="whatAreYouBuyingText" />
+                  </Label>
+                  <Input
+                        type="select"
+                        disabled={transactions.length>0 ? true : false}
+                        name="select"
+                        invalid={purchaserCommodityInvalid === "TRUE" || transactions.length>0}
+                        id="itemType"
+                        value={purchaserCommodity}
+                        onChange={(e) => handleItemChange(e)}
+                  >
+                        <option value="">
+                        {intlA.formatMessage({ id: "selectTradingType" })}
+                        </option>
+                        {inventory.map((item) => {
+                        return (
+                           <option key={item._id} value={item.itemName}>
+                              {item.itemName}
+                              </option>
+                        );
+                        })}
+                  </Input>
+                  <FormFeedback>
+                        {purchaserCommodityInvalid === "TRUE" && <FormattedMessage id="inventory_itemError" />}
+                        {transactions.length > 0 && <FormattedMessage id="commodityChangeNotAllowedPurchaserText" />}
+                  </FormFeedback>
+               </FormGroup>
           <Button type="submit" color="primary" className="mt-3" disabled={isSubmitting}>
             {/* <FormattedMessage id="addPurchaserButtonText" /> */}
             {isSubmitting &&( <span><Spinner className="spinner-size-1"/> &nbsp;</span> )}

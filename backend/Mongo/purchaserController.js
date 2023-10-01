@@ -51,6 +51,7 @@ const controller = async (type, data) => {
       purchaser.companyName= data.companyName
       purchaser.phone= data.phone
       purchaser.address= data.address
+      purchaser.purchaserCommodity = data.purchaserCommodity
       purchaser.date= new Date().toString()
       const editedPurchaser = await purchaser.save();
       return editedPurchaser
@@ -71,6 +72,11 @@ const controller = async (type, data) => {
     case "FindByID": {
       const Purchaser = getPurchaserModel();
       const purchasers = await Purchaser.findById(data);
+      return purchasers;
+    }
+    case "getPurchaserByCommodity": {
+      const Purchaser = getPurchaserModel();
+      const purchasers = await Purchaser.find({purchaserCommodity: data.purchaserCommodity});
       return purchasers;
     }
     case "findByCustomTransactions": {

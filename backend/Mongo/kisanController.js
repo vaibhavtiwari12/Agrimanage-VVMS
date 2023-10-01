@@ -40,6 +40,7 @@ const controller = async (type, data) => {
       kisan.phone = data.phone;
       kisan.address = data.address;
       kisan.date= new Date();
+      kisan.kisanCommodity = data.kisanCommodity
       const saved = await kisan.save();
       return saved
     }

@@ -18,6 +18,7 @@ const en = {
     signin: "Sign In",
     usernameError: "UserName is required",
     passwordError: "Password is required",
+    commodity:"Commodity",
 
     /*Header*/
     hello: "hello",
@@ -51,6 +52,7 @@ const en = {
     addKisanSuccessful: "Kisan has been added successfully",
     editKisanSuccessful: "Kisan has been Edited successfully",
     updateKisanBtnText: "Update Kisan Details",
+    commodityChangeNotAllowedKisanText: "Commodity cannot be changed as kisan has transactions.",
 
     /*Kisan Detail Page*/
     kisanDetailsTitle: "Kisan Details",
@@ -158,6 +160,7 @@ const en = {
     addfasalType: "Add Commodity",
     noInventoryForThisItem: "No Inventory is Available for This commodity.",
     transacted: "Transacted ",
+    purchaserNotAvailableForSelectedCommodityText:"There are no purchasers available for selected commodity. Please add a Purchaser",
 
     /* Inventory Add Item Type */
     inventoryAddHeading: "Add New Commodity Detail",
@@ -174,6 +177,7 @@ const en = {
     companyNameIsRequired: "Firm name is required.",
     purchaser_addSuccessful: "Purchaser has been added successfully",
     purchaser_editSuccessful : "Purchaser has been edited successfully",
+    commodityChangeNotAllowedPurchaserText: "Commodity cannot be changed as Purchaser has transactions.",
 
     /*Purchase Table*/
     nameOfPurchase: "Purchaser Name",

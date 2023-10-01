@@ -15,10 +15,10 @@ const Purchasertable = ({ purchasers, term, type }) => {
               </th>
               <th><FormattedMessage id="companyName" /></th>
               <th>
-                <FormattedMessage id="phone" />
+                <FormattedMessage id="commodity" />
               </th>
               <th>
-                <FormattedMessage id="address" />
+                <FormattedMessage id="phone" />
               </th>
               <th>
                 <FormattedMessage id="outstandingPayment" />
@@ -50,8 +50,8 @@ const Purchasertable = ({ purchasers, term, type }) => {
                       </Link>
                     </td>
                     <td className="capitalize">{purchaser.companyName}</td>
+                    <td className="capitalize">{purchaser.purchaserCommodity}</td>
                     <td>{purchaser.phone}</td>
-                    <td className="capitalize">{purchaser.address}</td>
                     <td>
                       {purchaser.balance < 0 ? (
                         <span className="text-danger">{purchaser.balance}</span>

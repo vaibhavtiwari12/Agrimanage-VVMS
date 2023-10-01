@@ -10,8 +10,9 @@ import {
 } from "reactstrap";
 import { useEffect, useState } from "react";
 import { useHistory, useParams } from "react-router-dom";
-import { FormattedMessage } from "react-intl";
+import { FormattedMessage, useIntl } from "react-intl";
 import { getKisanByID } from "../../../Utility/utility";
+import axios from "axios";
 
 const EditKisan = () => {
    const { id } = useParams();
@@ -27,7 +28,12 @@ const EditKisan = () => {
    const [hasError, setHasError] = useState(false);
    const [showAlert, setShowAlert] = useState(false);
    const [isSubmitting, setIsSubmitting] = useState(false);
+   const [kisanCommodity, setKisanCommodity] = useState("")
+   const [kisanCommodityInvalid, setKisanCommodityInvalid] = useState("PRISTINE")
+   const [transactions, setTransactions] = useState([])
+   const [inventory, setInventory] = useState([])
    const [isLoading, setIsLoading] = useState(true);
+   const intlA = useIntl();
 
    useEffect(() => {
       console.log(id);
@@ -39,9 +45,18 @@ const EditKisan = () => {
                setfatherName(details.fatherName);
                setPhone(details.phone);
                setAddress(details.address);
+               setKisanCommodity(details.kisanCommodity)
+               setTransactions(details.transactions)
                setIsLoading(false);
             }
+            const inventoryData = await axios.get("/inventory/get");
+            if (inventoryData.data.length <= 0) {
+               history.push("/inventory");
+            } else {
+               setInventory(inventoryData.data);
+            }
          };
+          fetchData();
          fetchData();
       } catch (e) {
          setIsLoading(false);
@@ -51,6 +66,10 @@ const EditKisan = () => {
          );
       }
    }, []);
+
+   const handleItemChange = (e) => {
+      setKisanCommodity(e.target.value)
+   }
    const isFormValid = () => {
       let isInvalid = false;
       if (name.length <= 0) {
@@ -67,6 +86,10 @@ const EditKisan = () => {
       }
       if (address.length <= 0) {
          setIsAddressValid("");
+         isInvalid = true;
+      }
+      if (kisanCommodity === "") {
+         setKisanCommodityInvalid("TRUE");
          isInvalid = true;
       }
       return isInvalid ? false : true;
@@ -91,16 +114,19 @@ const EditKisan = () => {
       setAddress(e.target.value);
       setIsAddressValid("");
    };
+   
    const clear = () => {
       setName("");
       setfatherName("");
       setPhone("");
       setAddress("");
+      setKisanCommodity("");
       setHasError(false);
       setIsfatherNameValid("PRISTINE");
       setIsnameValid("PRISTINE");
       setIsPhonePristine("PRISTINE");
       setIsAddressValid("PRISTINE");
+      setKisanCommodityInvalid("PRISTINE")
    };
    const submit = (e) => {
       e.preventDefault();
@@ -112,6 +138,7 @@ const EditKisan = () => {
             phone,
             address,
             id,
+            kisanCommodity
          };
          fetch("/kisan/edit", {
             method: "POST",
@@ -220,6 +247,35 @@ const EditKisan = () => {
                      <FormattedMessage id="addressIsRequired" />
                   </FormFeedback>{" "}
                </FormGroup>{" "}
+               <FormGroup>
+                  <Label for="itemType" className="mt-2">
+                        <FormattedMessage id="whatAreYouBuyingText" />
+                  </Label>
+                  <Input
+                        type="select"
+                        disabled={transactions.length>0 ? true : false}
+                        name="select"
+                        invalid={kisanCommodityInvalid === "TRUE" || transactions.length>0}
+                        id="itemType"
+                        value={kisanCommodity}
+                        onChange={(e) => handleItemChange(e)}
+                  >
+                        <option value="">
+                        {intlA.formatMessage({ id: "selectTradingType" })}
+                        </option>
+                        {inventory.map((item) => {
+                        return (
+                           <option key={item._id} value={item.itemName}>
+                              {item.itemName}
+                              </option>
+                        );
+                        })}
+                  </Input>
+                  <FormFeedback>
+                        {kisanCommodityInvalid === "TRUE" && <FormattedMessage id="inventory_itemError" />}
+                        {transactions.length > 0 && <FormattedMessage id="commodityChangeNotAllowedKisanText" />}
+                  </FormFeedback>
+               </FormGroup>
                <Button type="submit" color="primary" className="mt-3" disabled={isSubmitting}>
                   {/* <FormattedMessage id="addNewKisanButtonText"/> */}
                   {isSubmitting && (

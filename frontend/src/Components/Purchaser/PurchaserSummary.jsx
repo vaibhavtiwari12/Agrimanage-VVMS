@@ -12,6 +12,10 @@ const Purchasersummary = ({purchaser}) => {
                 <td className="capitalize">{purchaser.name}</td>
               </tr>
               <tr>
+                <th><FormattedMessage id="commodity"/></th>
+                <td>{purchaser.purchaserCommodity}</td>
+              </tr>
+              <tr>
                 <th><FormattedMessage id="companyName"/></th>
                 <td className="capitalize">{purchaser.companyName}</td>
               </tr>

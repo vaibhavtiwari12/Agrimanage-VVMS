@@ -10,8 +10,8 @@ const KisanTable = ({ kisans, term, type }) => {
             <th>#</th>
             <th><FormattedMessage id="name"/></th>
             <th><FormattedMessage id="fatherName"/></th>
+            <th><FormattedMessage id="commodity"/></th>
             <th><FormattedMessage id="phone"/></th>
-            <th><FormattedMessage id="address"/></th>
             <th><FormattedMessage id="balance"/></th>
           </tr>
         </thead>
@@ -36,8 +36,8 @@ const KisanTable = ({ kisans, term, type }) => {
                     <Link to={`kisanDetails/${kisan._id}`}>{kisan.name}</Link>
                   </td>
                   <td className="capitalize">{kisan.fatherName}</td>
+                  <td className="capitalize">{kisan.kisanCommodity}</td>
                   <td>{kisan.phone}</td>
-                  <td className="capitalize">{kisan.address}</td>
                   <td>
                     {kisan.balance < 0 ? (
                       <span className="text-danger">{kisan.balance}</span>
