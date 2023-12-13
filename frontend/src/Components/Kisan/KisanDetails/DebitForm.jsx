@@ -51,6 +51,9 @@ const Debitform = () => {
     if (!isDateEditable) {
        billDateChange({ target: { value: getTodaysFormattedDate() } })
     }
+    if(isDateEditable){
+      setBillDate(formatDate(new Date(),1))
+    }
  }, [isDateEditable]);
   useEffect(() => {
     if (transactionNumber && Object.keys(kisan).length > 0) {
@@ -300,7 +303,7 @@ const Debitform = () => {
                            name="billDate"
                            type="date"
                            value={billDate}
-                           max={formatDate(new Date())}
+                           max={formatDate(new Date(), 1)}
                            disabled={!isDateEditable}
                            onChange={(e) => billDateChange(e)}
                         />{" "}

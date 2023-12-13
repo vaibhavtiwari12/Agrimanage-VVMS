@@ -118,11 +118,14 @@ export const toFixed = (num, fixed = 2) => {
   return Math.floor(num * fixed) / fixed;
 }
 
-export const formatDate = (date) => {
-  var d = new Date(date),
-     month = '' + (d.getMonth() + 1),
-     day = '' + d.getDate(),
-     year = d.getFullYear();
+export const formatDate = (date, reduceDays) => {
+  var d = new Date(date)
+  if(reduceDays){
+    d.setDate(d.getDate() - reduceDays);
+  }
+  let month = '' + (d.getMonth() + 1)
+  let day = '' + d.getDate()
+  let year = d.getFullYear();
 
   if (month.length < 2)
      month = '0' + month;

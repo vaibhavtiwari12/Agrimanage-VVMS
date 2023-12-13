@@ -402,6 +402,9 @@ const CreditForm = () => {
       if (!isDateEditable) {
          billDateChange({ target: { value: getTodaysFormattedDate() } })
       }
+      if(isDateEditable){
+         setBillDate(formatDate(new Date(),1))
+       }
    }, [isDateEditable]);
    const previousBillSettlementAmountChange = (e) => {
       setPreviousBillSettlementAmount(parseInt(e.target.value));
@@ -765,7 +768,7 @@ const CreditForm = () => {
                            name="billDate"
                            type="date"
                            value={billDate}
-                           max={formatDate(new Date())}
+                           max={formatDate(new Date(), 1)}
                            disabled={!isDateEditable}
                            onChange={(e) => billDateChange(e)}
                         />{" "}
@@ -1059,6 +1062,7 @@ const CreditForm = () => {
 
 
                   {/* ------------------ Advance Settlement Section ------------------ */}
+                  {kisan.balance !== 0 &&
                   <div className="shadow p-3 m-3">
                      <div>
                         <h3 className="text-dark font-15">
@@ -1133,7 +1137,7 @@ const CreditForm = () => {
                               </FormGroup>
                         </div>
                      </div>
-                  </div>
+                  </div>}
                   <div className="shadow p-3 m-3">
                      <div>
                         <h3 className="text-dark font-15">

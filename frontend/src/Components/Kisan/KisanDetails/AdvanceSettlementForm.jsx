@@ -53,6 +53,9 @@ const Advancesettlementform = () => {
       if (!isDateEditable) {
          billDateChange({ target: { value: getTodaysFormattedDate() } })
       }
+      if(isDateEditable){
+         setBillDate(formatDate(new Date(),1))
+       }
    }, [isDateEditable]);
 
    useEffect(() => {
