@@ -140,3 +140,21 @@ export const getTodaysFormattedDate = () => {
   let todaysDateFormatted = new Date(todaysDate.getTime() - (todaysDate.getTimezoneOffset() * 60000)).toISOString().split('T')[0]
   return todaysDateFormatted;
 }
+
+export const getYearValue = (year) => {
+  switch(year) {
+      case 2022 : {
+          return '2022-23'
+          
+      }
+      case 2023 : {
+          return '2023-24'
+      }
+      case 2024 : {
+          return '2024-25'
+      }
+      default : {
+          return "Select Year"
+      }
+  }
+}

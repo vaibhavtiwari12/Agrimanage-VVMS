@@ -4,6 +4,7 @@ import { useHistory } from "react-router-dom/cjs/react-router-dom.min";
 import { Dropdown, DropdownItem, DropdownMenu, DropdownToggle } from "reactstrap";
 import { FormattedMessage } from "react-intl";
 import YearContext from "../../Context/YearContext.js";
+import { getYearValue } from "../../Utility/utility.js";
 
 const YearSelector = () => {
     const [dropdownOpen, setDropdownOpen] = useState(false);
@@ -12,7 +13,7 @@ const YearSelector = () => {
     const toggle = () => {
         setDropdownOpen((prev) => !prev)
       }
-    
+
     const onClickYearHandler = async (changedYear) => {
         await axios.post('/yearChange',{
             year: changedYear
@@ -29,8 +30,9 @@ const YearSelector = () => {
         </div>
       <div className="d-flex justify-content-center mt-5">
          <Dropdown isOpen={dropdownOpen} toggle={toggle} >
-            <DropdownToggle color="primary" caret>{yearCtx.year ? yearCtx.year === 2022 ? '2022-23' : '2023-24' : "Select Year"}</DropdownToggle>
+            <DropdownToggle color="primary" caret>{getYearValue(yearCtx.year)}</DropdownToggle>
             <DropdownMenu>
+               <DropdownItem active={yearCtx.year === 2024} onClick={() =>onClickYearHandler(2024)}>2024-25</DropdownItem>
                <DropdownItem active={yearCtx.year === 2023} onClick={() =>onClickYearHandler(2023)}>2023-24</DropdownItem>
                <DropdownItem active={yearCtx.year === 2022} onClick={() =>onClickYearHandler(2022)}>2022-23</DropdownItem>
             </DropdownMenu>

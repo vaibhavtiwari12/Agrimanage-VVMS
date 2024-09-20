@@ -8,10 +8,10 @@ const updateKisanWithCommodity = async (req) => {
     const db = client.db("VVMS");
     
         await db
-      .collection("kisans")
+      .collection("kisans2024")
       .updateMany({},{
         $set: {
-            kisanCommodity : "मटर "
+            kisanCommodity : "मटर"
         }
       });
       await client.close()
@@ -25,13 +25,14 @@ const updatePurchaserWithCommodity = async (req) => {
     await client.connect();
     const db = client.db("VVMS");
     
-        await db
-      .collection("purchasers")
-      .updateMany({},{
-        $set: {
-            purchaserCommodity : "मटर "
-        }
-      });
+        await db.collection("purchasers").updateMany(
+          { name: { $ne: 'Sm हावड़ा' } }, // Filter to exclude the document with the specified name
+          {
+            $set: {
+              purchaserCommodity: "मटर "
+            }
+          }
+        );
       await client.close()
 
 
@@ -39,4 +40,4 @@ const updatePurchaserWithCommodity = async (req) => {
 
 };
 updateKisanWithCommodity();
-updatePurchaserWithCommodity();
+//updatePurchaserWithCommodity();

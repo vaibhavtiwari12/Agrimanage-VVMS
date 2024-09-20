@@ -19,6 +19,7 @@ import {
 import logo from "./particleBG.svg";
 import '../../toggleSwitchNav.css'
 import YearContext from "../../Context/YearContext";
+import { getYearValue } from "../../Utility/utility";
 const NavBar = ({ isAuthenticated, logout, changelanguage }) => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [isLanguageEnglish, setIsLanguageEnglish] = useState(true);
@@ -55,8 +56,8 @@ const NavBar = ({ isAuthenticated, logout, changelanguage }) => {
               className="nav-item ps-3 link-no-decoration text-white d-md-none"
               onClick={collapse} to="/yearSelector"
             >
-              <div>{year ? year === 2022 ? <p><FormattedMessage id="yearTitle"/>-2022-23</p> : <p><FormattedMessage id="yearTitle"/>-2023-24</p> : ""}</div>
-            </Link>
+              <div> {year && <p><FormattedMessage id="yearTitle"/>-{getYearValue(year)}</p>}</div>
+        </Link>
         <NavbarToggler onClick={toggleNavbar} className="mr-2" /> 
         <Collapse className="mt-md-3" isOpen={!collapsed} navbar>
           <Nav className="" navbar>
@@ -88,7 +89,7 @@ const NavBar = ({ isAuthenticated, logout, changelanguage }) => {
               className="nav-item ps-3 link-no-decoration text-white"
               onClick={collapse} to="/yearSelector"
             >
-              <div>{year ? year === 2022 ? <p><FormattedMessage id="yearTitle"/>-2022-23</p> : <p><FormattedMessage id="yearTitle"/>-2023-24</p> : ""}</div>
+              <div> {year && <p><FormattedMessage id="yearTitle"/>-{getYearValue(year)}</p>}</div>
             </Link>
           </Nav>
           <Nav className="d-flex justify-content-end flex-fill mb-3" navbar>

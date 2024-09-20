@@ -8,7 +8,7 @@ const duplicateKisanDataWithoutTransactions = async (req) => {
     const db = client.db("VVMS");
     let kisans = [];
     kisans = await db
-      .collection("kisans")
+      .collection("kisans2023")
       .find({}).toArray();
       
 
@@ -21,7 +21,7 @@ const duplicateKisanDataWithoutTransactions = async (req) => {
     
     
         await db
-      .collection("kisans2023")
+      .collection("kisans2024")
       .insertMany(kisansWithoutTransactions);
       await client.close()
 
@@ -36,7 +36,7 @@ const duplicatePurchaserDataWithoutTransactions =async  () => {
     const db = client.db("VVMS");
     let purchasers = [];
     purchasers = await db
-      .collection("purchasers")
+      .collection("purchasers2023")
       .find({}).toArray();
       
 
@@ -48,7 +48,7 @@ const duplicatePurchaserDataWithoutTransactions =async  () => {
     
     
         await db
-      .collection("purchasers2023")
+      .collection("purchasers2024")
       .insertMany(purchaserssWithoutTransactions);
       await client.close()
 

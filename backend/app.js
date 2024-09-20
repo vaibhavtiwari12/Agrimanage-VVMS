@@ -13,7 +13,7 @@ const loginRouter = require("./Router/loginRouter");
 const middlewares = require("./Middleware/middleware");
 const { controller } = require("./Mongo/loginController");
 const purchaserRouter = require("./Router/purchaserRouter");
-const  { generateDashboard} = require("./Utilities/utility");
+const  { generateDashboard, getYearWiseDBCollection, setYearWiseDBCollection} = require("./Utilities/utility");
 
 var MongoDBStore = require("connect-mongodb-session")(session);
 
@@ -76,17 +76,7 @@ app.post("/yearChange", sessionMW, middlewares.isAuthenticated, (req, res)=>{
   console.log("Year from body", req.body.year)
   process.YEAR =  req.body.year 
   console.log("Year post Update", process.YEAR)
-  if(req.body.year == 2023){
-    process.env.KISANTABLE = "kisans2023"
-    process.env.INVENTORYTABLE = "inventory2023"
-    process.env.PURCHASERTABLE = "purchasers2023"
-    console.log("MONGO URL SET 2023",  process.env.KISANTABLE, process.env.INVENTORYTABLE, process.env.PURCHASERTABLE)
-  }else {
-    process.env.KISANTABLE = "kisans"
-    process.env.INVENTORYTABLE = "inventories"
-    process.env.PURCHASERTABLE = "purchasers"
-    console.log("MONGO URL SET 2022",  process.env.KISANTABLE, process.env.INVENTORYTABLE, process.env.PURCHASERTABLE)
-  }
+  setYearWiseDBCollection(process.YEAR)
   res.status(200).json({year: process.YEAR})
 })
 

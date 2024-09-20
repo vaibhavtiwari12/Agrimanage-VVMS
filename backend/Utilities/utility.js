@@ -582,10 +582,25 @@ const getMonthsBetweenDates = (startDate, endDate) => {
    return dates;
 };
 
+const setYearWiseDBCollection = (year) => {
+   if(year>2022) {
+      process.env.KISANTABLE = `kisans${year}`
+      process.env.INVENTORYTABLE = `inventory${year}`
+      process.env.PURCHASERTABLE = `purchasers${year}`
+      console.log(`MONGO URL SET ${year}`,  process.env.KISANTABLE, process.env.INVENTORYTABLE, process.env.PURCHASERTABLE)
+   } else {
+      process.env.KISANTABLE = "kisans"
+      process.env.INVENTORYTABLE = "inventories"
+      process.env.PURCHASERTABLE = "purchasers"
+      console.log("MONGO URL SET 2022",  process.env.KISANTABLE, process.env.INVENTORYTABLE, process.env.PURCHASERTABLE)
+   }
+}
+
 module.exports = {
    getTransaction,
    getTransactionsBetweenDates,
    modifyTransactionGroupByDate,
    generateDashboard,
    getPurchasers,
+   setYearWiseDBCollection
 };
