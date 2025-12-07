@@ -19,6 +19,12 @@ jobs:
     name: Scan Docker Image for Vulnerabilities
     runs-on: ubuntu-latest
 
+    # Required permissions for uploading SARIF results
+    permissions:
+      contents: read
+      security-events: write
+      actions: read
+
     steps:
       # Step 1: Checkout code
       - name: 📥 Checkout Code
@@ -47,7 +53,7 @@ jobs:
 
       # Step 5: Upload results to GitHub Security
       - name: 📊 Upload Trivy Results
-        uses: github/codeql-action/upload-sarif@v2
+        uses: github/codeql-action/upload-sarif@v3
         if: always()
         with:
           sarif_file: 'trivy-results.sarif'
