@@ -7,16 +7,19 @@ import {
   Spin,
   Divider as AntdDivider,
   Modal as AntdModal,
+  Dropdown as AntdDropdown,
 } from 'antd';
 import {
   EditOutlined,
   DeleteOutlined,
   PrinterOutlined,
   UnorderedListOutlined,
+  DownOutlined,
 } from '@ant-design/icons';
 import { dateConverter, toFixed } from '../../../Utility/utility';
 import Kisanreceipt from './KisanReceipt';
 import Kisancreditreceipt from './KisanCreditReceipt';
+import KisanCreditReceiptThermal from './KisanCreditReceiptThermal';
 import { FormattedMessage } from 'react-intl';
 import { useReactToPrint } from 'react-to-print';
 import './kisanDetailsClean.css';
@@ -31,8 +34,10 @@ const Kisantransactionstable = ({
   const [isLoading, setIsLoading] = useState(true);
   const [isDeleting, setIsDeleting] = useState(false);
   const [transaction, setTransaction] = useState({});
+  const [printType, setPrintType] = useState('fullpage'); // 'fullpage' or 'thermal'
   const componentRef = useRef();
   const creditPrintRef = useRef();
+  const creditThermalPrintRef = useRef();
 
   const print = currentTransaction => {
     setTransaction({
@@ -77,6 +82,9 @@ const Kisantransactionstable = ({
   const handlePrintCreditEntry = useReactToPrint({
     content: () => creditPrintRef.current,
   });
+  const handlePrintCreditThermal = useReactToPrint({
+    content: () => creditThermalPrintRef.current,
+  });
 
   useEffect(() => {
     if (kisan !== null && kisan !== undefined) {
@@ -91,7 +99,12 @@ const Kisantransactionstable = ({
       if (transaction && transaction.type === 'DEBIT') {
         handlePrint();
       } else {
-        handlePrintCreditEntry();
+        // For credit entries, check print type
+        if (printType === 'thermal') {
+          handlePrintCreditThermal();
+        } else {
+          handlePrintCreditEntry();
+        }
       }
     }
   }, [transaction]);
@@ -350,6 +363,25 @@ const Kisantransactionstable = ({
             </div>
           );
         } else {
+          const printMenuItems = [
+            {
+              key: 'fullpage',
+              label: 'Full Page Print',
+              onClick: () => {
+                setPrintType('fullpage');
+                printCreditEntry(transaction);
+              },
+            },
+            {
+              key: 'thermal',
+              label: 'Thermal Print (80mm)',
+              onClick: () => {
+                setPrintType('thermal');
+                printCreditEntry(transaction);
+              },
+            },
+          ];
+
           return (
             <div style={{ display: 'flex', gap: 8 }}>
               <AntdTooltip title={<FormattedMessage id="editButtonText" defaultMessage="Edit" />}>
@@ -367,15 +399,16 @@ const Kisantransactionstable = ({
                   />
                 </Link>
               </AntdTooltip>
-              <AntdTooltip title={<FormattedMessage id="printButtonText" defaultMessage="Print" />}>
+              <AntdDropdown menu={{ items: printMenuItems }} trigger={['click']}>
                 <AntdButton
                   icon={<PrinterOutlined />}
                   style={{ borderColor: '#1890ff', color: '#1890ff' }}
-                  onClick={() => printCreditEntry(transaction)}
                   size="middle"
                   type="default"
-                />
-              </AntdTooltip>
+                >
+                  <DownOutlined style={{ fontSize: '10px' }} />
+                </AntdButton>
+              </AntdDropdown>
               {index === 0 &&
                 (isDeleting ? (
                   <AntdButton danger loading size="middle" />
@@ -689,6 +722,9 @@ const Kisantransactionstable = ({
       </div>
       <div className="hide-till-print">
         <Kisancreditreceipt data={transaction} ref={creditPrintRef} />
+      </div>
+      <div className="hide-till-print">
+        <KisanCreditReceiptThermal data={transaction} ref={creditThermalPrintRef} />
       </div>
     </div>
   );

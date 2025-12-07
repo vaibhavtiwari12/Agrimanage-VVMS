@@ -1,0 +1,219 @@
+/* Thermal Receipt Styles - Optimized for 80mm thermal printer */
+.thermal-receipt {
+    width: 302px;
+    /* 80mm = ~302px at 96 DPI */
+    max-width: 302px;
+    margin: 0 auto;
+    padding: 8px;
+    font-family: 'Courier New', monospace;
+    font-size: 11px;
+    line-height: 1.3;
+    color: #000;
+    background: #fff;
+}
+
+/* Header Styles */
+.thermal-header {
+    text-align: center;
+    margin-bottom: 8px;
+}
+
+.thermal-blessing {
+    display: block;
+    font-size: 10px;
+    color: #000;
+    margin-bottom: 2px;
+}
+
+.thermal-company-code {
+    display: block;
+    font-size: 12px;
+    font-weight: bold;
+    margin-bottom: 0;
+}
+
+.thermal-company-name {
+    font-size: 14px !important;
+    font-weight: bold !important;
+    margin: 2px 0 !important;
+    text-decoration: underline;
+}
+
+.thermal-tagline {
+    display: block;
+    font-size: 9px;
+    margin-bottom: 2px;
+}
+
+.thermal-contact {
+    display: block;
+    font-size: 9px;
+    margin-bottom: 0;
+}
+
+.thermal-phone {
+    display: block;
+    font-size: 10px;
+}
+
+/* Dividers */
+.thermal-divider {
+    margin: 6px 0 !important;
+    border-top: 1px dashed #000 !important;
+}
+
+.thermal-divider-sm {
+    margin: 4px 0 !important;
+    border-top: 1px dashed #ccc !important;
+}
+
+/* Section Styles */
+.thermal-section {
+    margin-bottom: 6px;
+}
+
+.thermal-row {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 2px;
+    font-size: 10px;
+}
+
+.thermal-row span:first-child {
+    flex: 0 0 auto;
+    margin-right: 8px;
+}
+
+.thermal-row span:last-child {
+    flex: 1;
+    text-align: right;
+    word-break: break-word;
+}
+
+/* Title Styles */
+.thermal-section-title {
+    text-align: center;
+    font-size: 12px !important;
+    font-weight: bold !important;
+    margin: 4px 0 !important;
+}
+
+.thermal-subtitle {
+    display: block;
+    font-size: 10px;
+    font-weight: bold;
+    margin-bottom: 3px;
+}
+
+/* Table Styles */
+.thermal-table {
+    margin: 4px 0;
+}
+
+.thermal-table-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 2px 0;
+    font-size: 10px;
+}
+
+.thermal-table-row.thermal-total {
+    border-top: 1px solid #000;
+    margin-top: 2px;
+    padding-top: 3px;
+    font-weight: bold;
+}
+
+.thermal-cell-label {
+    flex: 1;
+    text-align: left;
+}
+
+.thermal-cell-value {
+    flex: 0 0 auto;
+    text-align: right;
+    min-width: 60px;
+}
+
+/* Summary Styles */
+.thermal-summary {
+    margin: 6px 0;
+}
+
+.thermal-summary-text {
+    display: block;
+    font-size: 9px;
+    margin-bottom: 2px;
+    line-height: 1.4;
+}
+
+/* Signature */
+.thermal-signature {
+    text-align: right;
+    margin-top: 8px;
+    font-size: 10px;
+}
+
+/* Advance Return Text */
+.thermal-advance-text {
+    font-size: 10px;
+    text-align: justify;
+    line-height: 1.5;
+    margin: 6px 0;
+}
+
+/* Footer */
+.thermal-footer {
+    text-align: center;
+    margin-top: 8px;
+}
+
+.thermal-footer-text {
+    display: block;
+    font-size: 10px;
+    font-weight: bold;
+}
+
+/* Print-specific styles */
+@media print {
+    .thermal-receipt {
+        width: 80mm;
+        max-width: 80mm;
+        padding: 2mm;
+    }
+
+    @page {
+        size: 80mm auto;
+        margin: 0;
+    }
+
+    body {
+        margin: 0;
+        padding: 0;
+    }
+
+    /* Hide everything except thermal receipt when printing */
+    body * {
+        visibility: hidden;
+    }
+
+    .thermal-receipt,
+    .thermal-receipt * {
+        visibility: visible;
+    }
+
+    .thermal-receipt {
+        position: absolute;
+        left: 0;
+        top: 0;
+    }
+}
+
+/* Ant Design overrides for thermal print */
+.thermal-receipt .ant-typography {
+    margin-bottom: 0 !important;
+}
+
+.thermal-receipt .ant-divider {
+    margin: 4px 0 !important;
+}

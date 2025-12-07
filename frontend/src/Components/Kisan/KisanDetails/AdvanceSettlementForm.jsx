@@ -157,13 +157,18 @@ const Advancesettlementform = () => {
   };
   const isFormValid = () => {
     let isInvalid = false;
-    if (amount.length <= 0) {
-      setIsAmountValid('');
-      isInvalid = true;
-    } else if (Math.abs(kisan.balance) < amount) {
-      setIsAmountValid('AMOUNTEXCEEDBALANCE');
-      isInvalid = true;
+
+    // Skip amount validation in edit mode since amount field is disabled
+    if (type !== 'edit') {
+      if (amount.length <= 0) {
+        setIsAmountValid('');
+        isInvalid = true;
+      } else if (Math.abs(kisan.balance) < amount) {
+        setIsAmountValid('AMOUNTEXCEEDBALANCE');
+        isInvalid = true;
+      }
     }
+
     if (comment.length <= 0) {
       setIsCommentValid('');
       isInvalid = true;
@@ -453,7 +458,7 @@ const Advancesettlementform = () => {
             <Form
               form={form}
               layout="vertical"
-              onFinish={submit}
+              onFinish={type === 'add' ? submit : undefined}
               size="large"
               initialValues={{
                 amount: amount,
@@ -579,19 +584,26 @@ const Advancesettlementform = () => {
                       </Text>
                     }
                     name="amount"
-                    rules={[
-                      { required: true, message: intlA.formatMessage({ id: 'amountIsRequired' }) },
-                      {
-                        validator: (_, value) => {
-                          if (value && Math.abs(kisan.balance) < value) {
-                            return Promise.reject(
-                              new Error(`Amount should not exceed ${Math.abs(kisan.balance)}`)
-                            );
-                          }
-                          return Promise.resolve();
-                        },
-                      },
-                    ]}
+                    rules={
+                      type === 'edit'
+                        ? [] // No validation in edit mode since field is disabled
+                        : [
+                            {
+                              required: true,
+                              message: intlA.formatMessage({ id: 'amountIsRequired' }),
+                            },
+                            {
+                              validator: (_, value) => {
+                                if (value && Math.abs(kisan.balance) < value) {
+                                  return Promise.reject(
+                                    new Error(`Amount should not exceed ${Math.abs(kisan.balance)}`)
+                                  );
+                                }
+                                return Promise.resolve();
+                              },
+                            },
+                          ]
+                    }
                   >
                     <Input
                       disabled={type === 'edit'}
@@ -633,7 +645,8 @@ const Advancesettlementform = () => {
                 <Col>
                   <Button
                     type="primary"
-                    htmlType="submit"
+                    htmlType={type === 'add' ? 'submit' : 'button'}
+                    onClick={type === 'edit' ? handleEdit : undefined}
                     loading={isSubmitting}
                     icon={<SaveOutlined />}
                     size="large"

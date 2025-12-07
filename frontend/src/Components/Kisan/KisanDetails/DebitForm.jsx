@@ -155,10 +155,15 @@ const Debitform = () => {
   };
   const isFormValid = () => {
     let isInvalid = false;
-    if (amount.length <= 0) {
-      setIsAmountValid('');
-      isInvalid = true;
+
+    // Skip amount validation in edit mode since amount field is disabled
+    if (type !== 'edit') {
+      if (amount.length <= 0) {
+        setIsAmountValid('');
+        isInvalid = true;
+      }
     }
+
     if (comment.length <= 0) {
       setIsCommentValid('');
       isInvalid = true;
@@ -435,7 +440,7 @@ const Debitform = () => {
             <Form
               form={form}
               layout="vertical"
-              onFinish={submit}
+              onFinish={type === 'add' ? submit : undefined}
               size="large"
               initialValues={{
                 amount: amount,
@@ -561,17 +566,23 @@ const Debitform = () => {
                       </Text>
                     }
                     name="amount"
-                    rules={[
-                      { required: true, message: intlA.formatMessage({ id: 'amountSBGTZ' }) },
-                      {
-                        validator: (_, value) => {
-                          if (value && parseInt(value) <= 0) {
-                            return Promise.reject(new Error('Amount should be greater than zero'));
-                          }
-                          return Promise.resolve();
-                        },
-                      },
-                    ]}
+                    rules={
+                      type === 'edit'
+                        ? [] // No validation in edit mode since field is disabled
+                        : [
+                            { required: true, message: intlA.formatMessage({ id: 'amountSBGTZ' }) },
+                            {
+                              validator: (_, value) => {
+                                if (value && parseInt(value) <= 0) {
+                                  return Promise.reject(
+                                    new Error('Amount should be greater than zero')
+                                  );
+                                }
+                                return Promise.resolve();
+                              },
+                            },
+                          ]
+                    }
                   >
                     <Input
                       disabled={type === 'edit'}
@@ -614,7 +625,8 @@ const Debitform = () => {
                 <Col>
                   <Button
                     type="primary"
-                    htmlType="submit"
+                    htmlType={type === 'add' ? 'submit' : 'button'}
+                    onClick={type === 'edit' ? handleEdit : undefined}
                     loading={isSubmitting}
                     icon={<SaveOutlined />}
                     size="large"
