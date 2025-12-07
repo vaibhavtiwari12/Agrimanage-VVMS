@@ -657,9 +657,9 @@ const KisanLanding = () => {
                 searchType
                   ? intlA.formatMessage({ id: 'enterValue', defaultMessage: 'Enter value...' })
                   : intlA.formatMessage({
-                      id: 'selectSearchByToEnable',
-                      defaultMessage: "Select 'Search by' to enable this field",
-                    })
+                    id: 'selectSearchByToEnable',
+                    defaultMessage: "Select 'Search by' to enable this field",
+                  })
               }
               value={searchTerm}
               onChange={handleSearchTermChange}
@@ -776,7 +776,7 @@ const KisanLanding = () => {
                     }}
                   >
                     <span style={{ fontSize: 13, color: '#666' }}>
-                      <FormattedMessage id="sortBy" defaultMessage="Sort by:" />
+                      <FormattedMessage id="sortBy" defaultMessage="Sort by Outstanding:" />
                     </span>
                     <Select
                       value={
@@ -828,13 +828,13 @@ const KisanLanding = () => {
                       <Option value="balance_asc">
                         <FormattedMessage
                           id="advanceLowToHigh"
-                          defaultMessage="Advance: Low to High"
+                          defaultMessage="Low to High"
                         />
                       </Option>
                       <Option value="balance_desc">
                         <FormattedMessage
                           id="advanceHighToLow"
-                          defaultMessage="Advance: High to Low"
+                          defaultMessage="High to Low"
                         />
                       </Option>
                     </Select>

@@ -11,13 +11,17 @@
     "install-main": "npm install",
     "install-frontend": "cd ./frontend && npm install",
     "build-frontend": "cd ./frontend && npm run build",
-    "start-front-end": "cd ./frontend && NODE_OPTIONS=--openssl-legacy-provider npm start",
+    "start-front-end": "cd ./frontend && cross-env NODE_OPTIONS=--openssl-legacy-provider npm start",
+    "start-front-end:windows": "cd ./frontend && set NODE_OPTIONS=--openssl-legacy-provider && npm start",
+    "start-front-end:unix": "cd ./frontend && NODE_OPTIONS=--openssl-legacy-provider npm start",
     "install-backend": "cd ./backend && npm install",
     "build:prod": "cd ./frontend && npm run build ",
     "heroku-postbuild": "npm run install-main && npm run install-frontend && npm run install-backend && npm run build-frontend",
     "prod-build": "npm run install-main && npm run install-frontend && npm run install-backend && npm run build-frontend",
     "start": "cd backend && nodemon app.js",
     "dev": "concurrently -n 'Frontend,Backend' -c 'green,blue' \"npm:start-front-end\" \"npm:start\"",
+    "dev:windows": "concurrently -n 'Frontend,Backend' -c 'green,blue' \"npm:start-front-end:windows\" \"npm:start\"",
+    "dev:unix": "concurrently -n 'Frontend,Backend' -c 'green,blue' \"npm:start-front-end:unix\" \"npm:start\"",
     "prepare": "husky",
     "lint": "cd frontend && npm run lint",
     "lint:fix": "cd frontend && npm run lint -- --fix"
@@ -48,6 +52,7 @@
   },
   "devDependencies": {
     "concurrently": "^7.0.0",
+    "cross-env": "^10.1.0",
     "husky": "^9.1.7",
     "lint-staged": "^16.2.7",
     "prettier": "^3.7.4"
