@@ -29,52 +29,31 @@ jobs:
           node-version: '20'
           cache: 'npm'
 
-      # Step 3: Install dependencies and run linting
+      # Step 3: Install dependencies
       - name: 📦 Install Dependencies
         run: |
           npm ci
           cd frontend && npm ci
 
-      # Step 4: Run ESLint with auto-fix
-      - name: 🔍 Lint and Auto-Fix Code
-        run: |
-          echo "Running ESLint with auto-fix..."
-          cd frontend && npx eslint src --ext .js,.jsx --fix || true
-
-      # Step 5: Run Prettier formatting
-      - name: ✨ Format Code with Prettier
-        run: |
-          echo "Formatting code with Prettier..."
-          npx prettier --write "frontend/**/*.{js,jsx}" "backend/**/*.js" "*.{json,md}" || true
-
-      # Step 6: Check for remaining lint errors (warnings allowed)
-      - name: ❗ Check for Unfixable Lint Errors
+      # Step 4: Validate code quality (no auto-fix)
+      - name: 🔍 Validate Code Quality
         continue-on-error: true
         run: |
-          echo "Checking for remaining lint errors (warnings allowed)..."
-          cd frontend && npm run lint || echo "⚠️ Warnings found but continuing deployment"
+          echo "Checking code quality (warnings allowed)..."
+          cd frontend && npm run lint || echo "⚠️ Warnings found but continuing"
 
-      # Step 7: Commit auto-fixed changes (if any)
-      - name: 💾 Commit Auto-Fixed Changes
-        if: success()
-        run: |
-          git config --local user.email "github-actions[bot]@users.noreply.github.com"
-          git config --local user.name "github-actions[bot]"
-          git add -A
-          git diff --staged --quiet || git commit -m "style: auto-fix linting and formatting issues [skip ci]"
-
-      # Step 8: Set up Docker Buildx for multi-platform builds
+      # Step 5: Set up Docker Buildx for multi-platform builds
       - name: 🔧 Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
 
-      # Step 9: Login to Docker Hub
+      # Step 6: Login to Docker Hub
       - name: 🔑 Login to Docker Hub
         uses: docker/login-action@v3
         with:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_TOKEN }}
 
-      # Step 10: Generate tags
+      # Step 7: Generate tags
       - name: 🏷️ Generate Docker Tags
         id: meta
         run: |
@@ -85,7 +64,7 @@ jobs:
           echo "📅 Date Tag: ${DATE_TAG}"
           echo "🔖 Commit Tag: ${COMMIT_SHA}"
 
-      # Step 11: Build and Push Docker Image
+      # Step 8: Build and Push Docker Image
       - name: 🐳 Build and Push Docker Image
         uses: docker/build-push-action@v5
         with:
@@ -99,7 +78,7 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
-      # Step 12: Trigger Render Deployment
+      # Step 9: Trigger Render Deployment
       - name: 🚀 Deploy to Render
         if: success()
         run: |
@@ -107,7 +86,7 @@ jobs:
           curl -X POST "${{ secrets.RENDER_DEPLOY_HOOK }}"
           echo "✅ Deployment webhook triggered!"
 
-      # Step 13: Create GitHub Deployment
+      # Step 10: Create GitHub Deployment
       - name: 📊 Create Deployment Record
         if: success()
         run: |
@@ -125,7 +104,7 @@ jobs:
           echo "**⏰ Deployed at:** $(date -u +'%Y-%m-%d %H:%M:%S UTC')" >> $GITHUB_STEP_SUMMARY
           echo "**📝 Commit:** ${{ github.sha }}" >> $GITHUB_STEP_SUMMARY
 
-      # Step 14: Notify on Failure
+      # Step 11: Notify on Failure
       - name: ❌ Deployment Failed
         if: failure()
         run: |
