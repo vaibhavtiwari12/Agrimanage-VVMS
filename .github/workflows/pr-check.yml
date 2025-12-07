@@ -1,0 +1,90 @@
+name: PR Build Check
+
+# Run on pull requests to master
+on:
+  pull_request:
+    branches:
+      - master
+
+env:
+  DOCKER_USERNAME: tvaibhav1204
+  IMAGE_NAME: vvmsprod
+  PLATFORM: linux/amd64
+
+jobs:
+  build-test:
+    name: Build & Validate Docker Image
+    runs-on: ubuntu-latest
+
+    steps:
+      # Step 1: Checkout the PR code
+      - name: 📥 Checkout PR Code
+        uses: actions/checkout@v4
+
+      # Step 2: Set up Node.js for linting
+      - name: 🔧 Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      # Step 3: Install dependencies
+      - name: 📦 Install Dependencies
+        run: |
+          npm ci
+          cd frontend && npm ci
+
+      # Step 4: Run linting check
+      - name: 🔍 Lint Code
+        run: |
+          echo "Running ESLint checks..."
+          cd frontend && npm run lint
+
+      # Step 5: Check code formatting
+      - name: ✨ Check Prettier Formatting
+        run: |
+          echo "Checking code formatting..."
+          npx prettier --check "frontend/**/*.{js,jsx}" "backend/**/*.js" "*.{json,md}"
+
+      # Step 6: Set up Docker Buildx
+      - name: 🔧 Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      # Step 7: Build Docker Image (don't push)
+      - name: 🐳 Build Docker Image
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          platforms: ${{ env.PLATFORM }}
+          push: false
+          tags: ${{ env.DOCKER_USERNAME }}/${{ env.IMAGE_NAME }}:pr-${{ github.event.pull_request.number }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+      # Step 8: Report Success
+      - name: ✅ Build Successful
+        if: success()
+        run: |
+          echo "## ✅ Build Check Passed!" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**PR #${{ github.event.pull_request.number }}**: ${{ github.event.pull_request.title }}" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "Docker image built successfully for platform: \`${{ env.PLATFORM }}\`" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "✅ Linting passed" >> $GITHUB_STEP_SUMMARY
+          echo "✅ Formatting passed" >> $GITHUB_STEP_SUMMARY
+          echo "✅ Docker build passed" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "Ready to merge!" >> $GITHUB_STEP_SUMMARY
+
+      # Step 9: Report Failure
+      - name: ❌ Build Failed
+        if: failure()
+        run: |
+          echo "## ❌ Build Check Failed" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**PR #${{ github.event.pull_request.number }}**: ${{ github.event.pull_request.title }}" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "Docker build failed. Please check the logs above for details." >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "⚠️ Fix issues before merging." >> $GITHUB_STEP_SUMMARY

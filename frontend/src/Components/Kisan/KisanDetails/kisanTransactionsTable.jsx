@@ -1,37 +1,40 @@
-import React, { Fragment } from "react";
-import { useState } from "react";
-import { useEffect } from "react";
-import { Link } from "react-router-dom";
-import { Button, Table, Spinner } from "reactstrap";
-import { useReactToPrint } from "react-to-print";
-import Kisanreceipt from "./KisanReceipt";
-import { useRef } from "react";
-import { dateConverter, toFixed } from "../../../Utility/utility";
-import Kisancreditreceipt from "./KisanCreditReceipt";
-import { FormattedMessage } from "react-intl";
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { solid, regular, brands } from '@fortawesome/fontawesome-svg-core/import.macro'
-import { Tooltip } from 'reactstrap';
+import React, { useState, useEffect, useRef } from 'react';
+import { Link } from 'react-router-dom';
+import {
+  Table as AntdTable,
+  Button as AntdButton,
+  Tooltip as AntdTooltip,
+  Spin,
+  Divider as AntdDivider,
+  Modal as AntdModal,
+} from 'antd';
+import {
+  EditOutlined,
+  DeleteOutlined,
+  PrinterOutlined,
+  UnorderedListOutlined,
+} from '@ant-design/icons';
+import { dateConverter, toFixed } from '../../../Utility/utility';
+import Kisanreceipt from './KisanReceipt';
+import Kisancreditreceipt from './KisanCreditReceipt';
+import { FormattedMessage } from 'react-intl';
+import { useReactToPrint } from 'react-to-print';
+import './kisanDetailsClean.css';
+import { Shimmer, EllipsisText } from '../../Common';
 
-const Kisantransactionstable = ({ kisan, updateKisan }) => {
-  /* const [balances, setBalances] = useState([]); */
-  /* FOR TOOL TIP */
-  const [printToolTip, setPrintToolTip] = useState(false);
-  const [editToolTip, setEditTooltip] = useState(false);
-  const [detailsTooltip, setDetailsTooltip] = useState(false);
-  const [printCredit, setPrintCredit] = useState(false);
-  const [editAdvance, setEditAdvance] = useState(false);
-  const [advanceEntryPrint, setAdvanceEntryPrint] = useState(false);
-  /* const toggle = () => {
-    setTooltipOpen(!tooltipOpen);
-  }   */
+const Kisantransactionstable = ({
+  kisan,
+  updateKisan,
+  mobileTransactionView = 'table',
+  isMobileOrTablet = false,
+}) => {
   const [isLoading, setIsLoading] = useState(true);
-  const [isDeleting, setIsDeleting] = useState(false)
+  const [isDeleting, setIsDeleting] = useState(false);
   const [transaction, setTransaction] = useState({});
-
   const componentRef = useRef();
   const creditPrintRef = useRef();
-  const print = (currentTransaction) => {
+
+  const print = currentTransaction => {
     setTransaction({
       address: kisan.address,
       balance: kisan.balance,
@@ -43,7 +46,7 @@ const Kisantransactionstable = ({ kisan, updateKisan }) => {
       type: currentTransaction.type,
     });
   };
-  const printCreditEntry = (currentTransaction) => {
+  const printCreditEntry = currentTransaction => {
     setTransaction({
       address: kisan.address,
       balance: kisan.balance,
@@ -52,8 +55,7 @@ const Kisantransactionstable = ({ kisan, updateKisan }) => {
       phone: kisan.phone,
       txn_id: currentTransaction._id,
       txn_date: dateConverter(currentTransaction.date),
-      txn_previousBillSettlementAmount:
-        currentTransaction.previousBillSettlementAmount,
+      txn_previousBillSettlementAmount: currentTransaction.previousBillSettlementAmount,
       txn_itemType: currentTransaction.itemType,
       txn_numberofBags: currentTransaction.numberofBags,
       txn_totalWeight: currentTransaction.totalweight,
@@ -64,26 +66,11 @@ const Kisantransactionstable = ({ kisan, updateKisan }) => {
       txn_bhada: currentTransaction.bhada,
       txn_netTotal: currentTransaction.netTotal,
       txn_advanceSettlement: currentTransaction.advanceSettlement,
-      txn_carryForwardFromThisEntry:
-        currentTransaction.carryForwardFromThisEntry,
+      txn_carryForwardFromThisEntry: currentTransaction.carryForwardFromThisEntry,
       txn_paidToKisan: currentTransaction.paidToKisan,
     });
   };
-  useEffect(() => {
-    if (kisan && kisan.transactions) {
-      setIsLoading(false);
-      setIsDeleting(false);
-    }
-  }, [kisan])
-  useEffect(() => {
-    if (Object.keys(transaction).length > 0) {
-      if (transaction && transaction.type === "DEBIT") {
-        handlePrint();
-      } else {
-        handlePrintCreditEntry();
-      }
-    }
-  }, [transaction]);
+
   const handlePrint = useReactToPrint({
     content: () => componentRef.current,
   });
@@ -91,9 +78,26 @@ const Kisantransactionstable = ({ kisan, updateKisan }) => {
     content: () => creditPrintRef.current,
   });
 
+  useEffect(() => {
+    if (kisan !== null && kisan !== undefined) {
+      setIsLoading(false);
+    } else {
+      setIsLoading(true);
+    }
+  }, [kisan]);
+
+  useEffect(() => {
+    if (Object.keys(transaction).length > 0) {
+      if (transaction && transaction.type === 'DEBIT') {
+        handlePrint();
+      } else {
+        handlePrintCreditEntry();
+      }
+    }
+  }, [transaction]);
+
   const deleteTransaction = (txn, kisanId) => {
     setIsDeleting(true);
-    console.log("txn", txn)
     const formData = {
       kisanTxnId: txn._id,
       purchaserId: txn.purchaserId,
@@ -102,306 +106,584 @@ const Kisantransactionstable = ({ kisan, updateKisan }) => {
       inventoryTxnId: txn.inventoryTxnId,
     };
     fetch(`/kisan/DeleteTransacton/${kisanId}`, {
-      method: "POST",
+      method: 'POST',
       body: JSON.stringify(formData),
       headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
       },
     })
-      .then((res) => res.json())
-      .then((res) => {
-        console.log("Res", res);
-        updateKisan();
-      })
-      .catch((error) => {
-        console.log("is Here", error);
-        setIsDeleting(false);
-        throw new error("Somethign Went Wrong", error);
-      });
-  }
-
+      .then(res => res.json())
+      .then(() => updateKisan())
+      .catch(() => setIsDeleting(false));
+  };
   const deleteTransactionAdvanceSettlement = (txn, kisanId) => {
     setIsDeleting(true);
-    const formData = {
-      kisanId: kisanId,
-      transactionID: txn._id
-    };
+    const formData = { kisanId: kisanId, transactionID: txn._id };
     fetch(`/kisan/DeleteAdvanceSettlementTransaction`, {
-      method: "POST",
+      method: 'POST',
       body: JSON.stringify(formData),
       headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
       },
     })
-      .then((res) => res.json())
-      .then((res) => {
-        console.log("Res", res);
-        updateKisan();
-      })
-      .catch((error) => {
-        console.log("is Here", error);
-        setIsDeleting(false);
-        throw new error("Somethign Went Wrong", error);
-      });
-  }
+      .then(res => res.json())
+      .then(() => updateKisan())
+      .catch(() => setIsDeleting(false));
+  };
   const deleteTransactionDebit = (txn, kisanId) => {
     setIsDeleting(true);
-    console.log("is here")
-    const formData = {
-      kisanId: kisanId,
-      transactionID: txn._id
-    };
+    const formData = { kisanId: kisanId, transactionID: txn._id };
     fetch(`/kisan/DeleteDebitTransaction`, {
-      method: "POST",
+      method: 'POST',
       body: JSON.stringify(formData),
       headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
       },
     })
-      .then((res) => res.json())
-      .then((res) => {
-        console.log("Res", res);
-        updateKisan();
-      })
-      .catch((error) => {
-        console.log("is Here", error);
-        setIsDeleting(false);
-        throw new error("Somethign Went Wrong", error);
-      });
-  }
-  /*  useEffect(() => {
-    let sum = 0;
-    if (kisan && kisan.transactions) {
-      const tempbalances = kisan.transactions.reverse().map((transaction) => {
-        if (transaction.type === "DEBIT") {
-          return (sum = sum + transaction.transactionAmount);
-        } else {
-          return (sum = sum + parseInt(transaction.advanceSettlement));
-        }
-      });
-      setBalances(tempbalances.reverse());
-    }
-    console.log("balances", balances);
-  }, [kisan]); */
-  return (
-    <div>
-      {isLoading ?
-        <div className="text-center text-primary ">
-          <Spinner />
+      .then(res => res.json())
+      .then(() => updateKisan())
+      .catch(() => setIsDeleting(false));
+  };
+
+  // Helper: Show confirmation modal before delete
+  const showDeleteConfirm = (txn, kisanId, type) => {
+    AntdModal.confirm({
+      title: 'Are you sure you want to delete this transaction?',
+      content: (
+        <div style={{ marginTop: 12 }}>
+          <div>
+            <b>Date:</b> {dateConverter(txn.date)}
+          </div>
+          <div>
+            <b>Type:</b> {txn.type}
+          </div>
+          <div>
+            <b>Amount:</b> ₹
+            {toFixed(txn.transactionAmount || txn.advanceSettlement || txn.netTotal || 0)}
+          </div>
+          <div>
+            <b>Comment:</b> {txn.comment || '-'}
+          </div>
         </div>
-        :
-        <Table striped bordered responsive size="sm" className="shadow font-10">
-          <thead>
-            <tr className="text-center">
-              <th colSpan={3} className="bg-light">{" "}</th>
-              <th colSpan={1} className="table-primary text-gray"><FormattedMessage id="currencyWithBracket"/></th>
-              <th colSpan={5} className="text-gray table-success"><FormattedMessage id="currentBillTableRowSectionText"/></th>
-              <th colSpan={2} className="table-danger text-gray"><FormattedMessage id="overAllOutstandingTableRowSectionText"/></th>
-              <th colSpan={1} className="bg-light"></th>
-            </tr>
-            <tr className="text-center text-gray">
-              <th>{" "}#{" "}</th>
-              <th>
-                <FormattedMessage id="date" />
-              </th>
-              <th>
-                <FormattedMessage id="comment" />
-              </th>
-              <th>
-                <FormattedMessage id="advanceDebited" />
-              </th>
-              <th>
-                <FormattedMessage id="grossTotalWithCurrency" />
-              </th>
-              <th>
-                <FormattedMessage id="billTotal" />
-              </th>
-              <th>
-                <FormattedMessage id="advanceCredited" />
-              </th>
-              <th>
-                <FormattedMessage id="cashPaid" />
-              </th>
-              <th>
-                <FormattedMessage id="carryForwardFromThisBill" />
-              </th>
-              <th>
-                <FormattedMessage id="carryForward" />
-              </th>
-              <th>
-                <FormattedMessage id="balance" />
-              </th>
-              <th>
-                <FormattedMessage id="actions" />
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            {kisan &&
-              kisan.transactions &&
-              kisan.transactions
-                .sort((a, b) => new Date(b.date) - new Date(a.date))
-                .map((transaction, index) => {
-                  return (
-                    <tr className="text-center" key={index}>
-                      <th scope="row">{index + 1}</th>
-                      <td>{dateConverter(transaction.date)}</td>
-                      <td>{transaction.comment}</td>
-                      <td>
-                        {transaction.type === "DEBIT"
-                          ? toFixed(transaction.transactionAmount)
-                          : ""}
-                      </td>
-                      <td>{toFixed(transaction.grossTotal)}</td>
-                      <td>{toFixed(transaction.netTotal)}</td>
+      ),
+      okText: 'Delete',
+      okType: 'danger',
+      cancelText: 'Cancel',
+      centered: true,
+      onOk() {
+        if (type === 'DEBIT') deleteTransactionDebit(txn, kisanId);
+        else if (type === 'ADVANCESETTLEMENT') deleteTransactionAdvanceSettlement(txn, kisanId);
+        else deleteTransaction(txn, kisanId);
+      },
+    });
+  };
 
-                      <td>
-                        {transaction.type === "CREDIT"
-                          ? toFixed(transaction.advanceSettlement)
-                          : transaction.type === "ADVANCESETTLEMENT"
-                            ? toFixed(transaction.transactionAmount)
-                            : ""}
-                      </td>
+  const columns = [
+    {
+      title: '#',
+      dataIndex: 'index',
+      key: 'index',
+      render: (_, __, idx) => idx + 1,
+      align: 'center',
+    },
+    {
+      title: <FormattedMessage id="date" />,
+      dataIndex: 'date',
+      key: 'date',
+      align: 'center',
+      render: date => dateConverter(date),
+    },
+    {
+      title: <FormattedMessage id="comment" />,
+      dataIndex: 'comment',
+      key: 'comment',
+      align: 'center',
+    },
+    {
+      title: <FormattedMessage id="advanceDebited" />,
+      dataIndex: 'transactionAmount',
+      key: 'advanceDebited',
+      align: 'center',
+      render: (val, row) => (row.type === 'DEBIT' ? `₹${toFixed(val)}` : ''),
+    },
+    {
+      title: <FormattedMessage id="grossTotalWithCurrency" />,
+      dataIndex: 'grossTotal',
+      key: 'grossTotal',
+      align: 'center',
+      render: val => `₹${toFixed(val || 0)}`,
+    },
+    {
+      title: <FormattedMessage id="billTotal" />,
+      dataIndex: 'netTotal',
+      key: 'billTotal',
+      align: 'center',
+      render: val => `₹${toFixed(val || 0)}`,
+    },
+    {
+      title: <FormattedMessage id="advanceCredited" />,
+      dataIndex: 'advanceSettlement',
+      key: 'advanceCredited',
+      align: 'center',
+      render: (val, row) =>
+        row.type === 'CREDIT'
+          ? `₹${toFixed(val || 0)}`
+          : row.type === 'ADVANCESETTLEMENT'
+            ? `₹${toFixed(row.transactionAmount || 0)}`
+            : '',
+    },
+    {
+      title: <FormattedMessage id="cashPaid" />,
+      dataIndex: 'paidToKisan',
+      key: 'cashPaid',
+      align: 'center',
+      render: val =>
+        val > 0 ? (
+          <span className="cash-paid-green">₹{toFixed(val)}</span>
+        ) : (
+          <span>₹{toFixed(val || 0)}</span>
+        ),
+    },
+    {
+      title: <FormattedMessage id="carryForwardFromThisBill" />,
+      dataIndex: 'netTotal',
+      key: 'carryForwardFromThisBill',
+      align: 'center',
+      render: (val, row) =>
+        row.type === 'CREDIT' && row.netTotal > 0
+          ? `₹${toFixed((row.netTotal || 0) - (row.advanceSettlement || 0) - (row.paidToKisan || 0))}`
+          : 0,
+    },
+    {
+      title: <FormattedMessage id="carryForward" />,
+      dataIndex: 'carryForwardFromThisEntry',
+      key: 'carryForward',
+      align: 'center',
+      render: val => `₹${toFixed(val || 0)}`,
+    },
+    {
+      title: <FormattedMessage id="balance" />,
+      dataIndex: 'balanceAfterThisTransaction',
+      key: 'balance',
+      align: 'center',
+      render: val => (
+        <span className={val < 0 ? 'text-danger' : 'text-primary'}>{`₹${toFixed(val || 0)}`}</span>
+      ),
+    },
+    {
+      title: <FormattedMessage id="actions" />,
+      key: 'actions',
+      align: 'left',
+      render: (_, transaction, index) => {
+        if (transaction.type === 'DEBIT') {
+          return (
+            <div style={{ display: 'flex', gap: 8 }}>
+              <AntdTooltip title={<FormattedMessage id="editButtonText" defaultMessage="Edit" />}>
+                <Link
+                  className="link-no-decoration"
+                  to={`/kisanDebitForm/${kisan._id}/edit/${transaction._id}`}
+                >
+                  <AntdButton
+                    icon={<EditOutlined />}
+                    size="middle"
+                    type="default"
+                    ghost
+                    style={{ borderColor: '#faad14', color: '#faad14' }}
+                    className="edit-btn-debit"
+                  />
+                </Link>
+              </AntdTooltip>
+              <AntdTooltip title={<FormattedMessage id="printButtonText" defaultMessage="Print" />}>
+                <AntdButton
+                  icon={<PrinterOutlined />}
+                  style={{ borderColor: '#1890ff', color: '#1890ff' }}
+                  onClick={() => print(transaction)}
+                  size="middle"
+                  type="default"
+                />
+              </AntdTooltip>
+              {index === 0 &&
+                (isDeleting ? (
+                  <AntdButton danger loading size="middle" />
+                ) : (
+                  <AntdButton
+                    danger
+                    icon={<DeleteOutlined />}
+                    size="middle"
+                    onClick={() => showDeleteConfirm(transaction, kisan._id, 'DEBIT')}
+                  />
+                ))}
+            </div>
+          );
+        } else if (transaction.type === 'ADVANCESETTLEMENT') {
+          return (
+            <div style={{ display: 'flex', gap: 8 }}>
+              <AntdTooltip title={<FormattedMessage id="editButtonText" defaultMessage="Edit" />}>
+                <Link
+                  className="link-no-decoration"
+                  to={`/kisanAdvanceSettlement/${kisan._id}/edit/${transaction._id}`}
+                >
+                  <AntdButton
+                    icon={<EditOutlined />}
+                    size="middle"
+                    type="default"
+                    ghost
+                    style={{ borderColor: '#faad14', color: '#faad14' }}
+                    className="edit-btn-debit"
+                  />
+                </Link>
+              </AntdTooltip>
+              {index === 0 &&
+                (isDeleting ? (
+                  <AntdButton danger loading size="middle" />
+                ) : (
+                  <AntdButton
+                    danger
+                    icon={<DeleteOutlined />}
+                    size="middle"
+                    onClick={() => showDeleteConfirm(transaction, kisan._id, 'ADVANCESETTLEMENT')}
+                  />
+                ))}
+            </div>
+          );
+        } else {
+          return (
+            <div style={{ display: 'flex', gap: 8 }}>
+              <AntdTooltip title={<FormattedMessage id="editButtonText" defaultMessage="Edit" />}>
+                <Link
+                  className="link-no-decoration"
+                  to={`/kisanCreditForm/${kisan._id}/edit/${transaction._id}`}
+                >
+                  <AntdButton
+                    icon={<UnorderedListOutlined />}
+                    size="middle"
+                    type="default"
+                    ghost
+                    style={{ borderColor: '#faad14', color: '#faad14' }}
+                    className="edit-btn-credit"
+                  />
+                </Link>
+              </AntdTooltip>
+              <AntdTooltip title={<FormattedMessage id="printButtonText" defaultMessage="Print" />}>
+                <AntdButton
+                  icon={<PrinterOutlined />}
+                  style={{ borderColor: '#1890ff', color: '#1890ff' }}
+                  onClick={() => printCreditEntry(transaction)}
+                  size="middle"
+                  type="default"
+                />
+              </AntdTooltip>
+              {index === 0 &&
+                (isDeleting ? (
+                  <AntdButton danger loading size="middle" />
+                ) : (
+                  <AntdButton
+                    danger
+                    icon={<DeleteOutlined />}
+                    size="middle"
+                    onClick={() => showDeleteConfirm(transaction, kisan._id, 'CREDIT')}
+                  />
+                ))}
+            </div>
+          );
+        }
+      },
+    },
+  ];
 
-                      <td>{toFixed(transaction.paidToKisan)}</td>
-                      {transaction.type === "CREDIT" && transaction.netTotal > 0 ?
-                        <td>{toFixed(transaction.netTotal - transaction.advanceSettlement - transaction.paidToKisan )}</td> :
-                        <td>0</td>
-                      }
-                      <td>{toFixed(transaction.carryForwardFromThisEntry)}</td>
-                      {/*  <td>{balances[index] <0 ? <span className="text-danger">{balances[index]}</span> : <span className="text-success">{balances[index]}</span> }</td> */}
-                      <td>
-                        <span
-                          className={
-                            transaction.balanceAfterThisTransaction < 0
-                              ? "text-danger"
-                              : "text-primary"
-                          }
-                        >
-                          {toFixed(transaction.balanceAfterThisTransaction)}
-                        </span>
-                      </td>
-                      <td>
-                        {transaction.type === "DEBIT" ? (
-                          <div className="d-flex">
-                            <Button color="success" id="advanceEntryEdit" className="font-10">
-                              <Link
-                                className="link-no-decoration"
-                                to={`/kisanDebitForm/${kisan._id}/edit/${transaction._id}`}
-                              >
-                                {/* <FormattedMessage id="editButtonText" /> */}
-                                <FontAwesomeIcon icon={solid('pen-to-square')} className="text-white" />
-                              </Link>
-                              <Tooltip placement="left" isOpen={editAdvance} target="advanceEntryEdit" toggle={e => setEditAdvance(!editAdvance)}>
-                                Edit
-                              </Tooltip>
-                            </Button>
-                            <Button
-                              className="ms-2 font-10"
-                              color="primary"
-                              id="advanceEntryPrint"
-                              onClick={(e) => print(transaction)}
-                            >
-                              <Tooltip placement="top" isOpen={advanceEntryPrint} target="advanceEntryPrint" toggle={e => setAdvanceEntryPrint(!advanceEntryPrint)}>
-                                Print
-                              </Tooltip>
-                              {/* <FormattedMessage id="printButtonText" /> */}
-                              <FontAwesomeIcon icon={solid('print')} className="text-white" />
-                            </Button>
-                            {index === 0 &&
-                              transaction.type === "DEBIT" && <div>
-                                {isDeleting ?
-                                  <Button color="danger" className="ms-2 "><Spinner className="spinner-size-1" /></Button> :
-                                  <Button color="danger" className="ms-2" onClick={e => deleteTransactionDebit(transaction, kisan._id)}><FontAwesomeIcon icon={solid('trash')} className="text-white" /></Button>
-                                }
-                              </div>
-                            }
-                          </div>
-                        ) : transaction.type === "ADVANCESETTLEMENT" ? (
-                          <div className="d-flex">
-                            <Button color="success" id="edit">
-                              <Link
-                                className="link-no-decoration font-10"
-                                to={`/kisanAdvanceSettlement/${kisan._id}/edit/${transaction._id}`}
+  const dataSource =
+    kisan && kisan.transactions
+      ? kisan.transactions
+          .sort((a, b) => new Date(b.date) - new Date(a.date))
+          .map((txn, idx) => ({ ...txn, key: idx }))
+      : [];
 
-                              >
+  const customHeader = (
+    <thead>
+      <tr className="custom-header-row">
+        <th colSpan={3}></th>
+        <th colSpan={1} className="currency-header">
+          <FormattedMessage id="currencyWithBracket" defaultMessage="(₹)" />
+        </th>
+        <th colSpan={5} className="entered-amounts-header">
+          <FormattedMessage
+            id="enteredAmountsInBill"
+            defaultMessage="Entered Amounts In The Bill (₹)"
+          />
+        </th>
+        <th colSpan={2} className="outstanding-header">
+          <FormattedMessage
+            id="totalOutstandingAfterBill"
+            defaultMessage="Total Outstanding After Bill (₹)"
+          />
+        </th>
+      </tr>
+    </thead>
+  );
 
-                                {/* <FormattedMessage id="editButtonText" /> */}
-                                <FontAwesomeIcon icon={solid('pen-to-square')} className="text-white" />
-                              </Link>
-                              <Tooltip placement="left" isOpen={editToolTip} target="edit" toggle={e => setEditTooltip(!editToolTip)}>
-                                Edit
-                              </Tooltip>
-                            </Button>
+  // Helper: Render transaction as card for mobile
+  const renderTransactionCard = (txn, idx) => {
+    // Determine status based on balance
+    const status = txn.balanceAfterThisTransaction === 0 ? 'Clear' : 'Outstanding';
 
-                            <Button
-                              className="ms-2 font-10"
-                              color="primary"
-                              id="printAdvance"
-                              onClick={(e) => print(transaction)}
-                            >
-                              <Tooltip placement="top" isOpen={printToolTip} target="printAdvance" toggle={e => setPrintToolTip(!printToolTip)}>
-                                Print
-                              </Tooltip>
-                              <FontAwesomeIcon icon={solid('print')} className="text-white" />
-                            </Button>
-                            {index === 0 &&
-                              transaction.type === "ADVANCESETTLEMENT" && <div>
-                                {isDeleting ?
-                                  <Button color="danger" className="ms-2"><Spinner className="spinner-size-1" /></Button> :
-                                  <Button color="danger" className="ms-2" onClick={e => deleteTransactionAdvanceSettlement(transaction, kisan._id)}><FontAwesomeIcon icon={solid('trash')} className="text-white" /></Button>
-                                }
-                              </div>
-                            }
-                          </div>
-                        ) : (
-                          <div className="d-flex">
-                            <Button color="secondary" id="details" className="font-10">
-                              <Link
-                                className="link-no-decoration"
-                                to={`/kisanCreditForm/${kisan._id}/edit/${transaction._id}`}
-                              > <FontAwesomeIcon icon={solid('list-ul')} className="text-white" />
-                              </Link>
-                            </Button>
-                            {/* <Tooltip hideArrow={false} placement="left" isOpen={detailsTooltip} target="details" toggle={e => setDetailsTooltip(!detailsTooltip)}>
-                              Details
-                            </Tooltip> */}
-                            <Button
-                              className="ms-2 font-10"
-                              color="primary"
-                              id="printCredit"
-                              onClick={(e) => printCreditEntry(transaction)}
-                            >
-                              {/* <FormattedMessage id="printButtonText" /> */}
-                              <FontAwesomeIcon icon={solid('print')} className="text-white" />
-                              <Tooltip hideArrow={false} placement="top" isOpen={printCredit} target="printCredit" toggle={e => setPrintCredit(!printCredit)}>
-                                Print
-                              </Tooltip>
-                            </Button>
+    return (
+      <div className="kisan-transaction-card" key={txn._id || idx}>
+        <div className="kisan-transaction-card-row serial-row">
+          <span>
+            <span className="kisan-transaction-card-label">#</span>
+            {idx + 1}
+          </span>
+          <span
+            className={`kisan-transaction-status-badge ${txn.balanceAfterThisTransaction === 0 ? '' : 'outstanding'}`}
+          >
+            {status}
+          </span>
+        </div>
+        <div className="kisan-transaction-card-row">
+          <span className="kisan-transaction-card-label">
+            <FormattedMessage id="date" />
+          </span>{' '}
+          <span>{dateConverter(txn.date)}</span>
+        </div>
+        <div className="kisan-transaction-card-row">
+          <span className="kisan-transaction-card-label">
+            <FormattedMessage id="comment" />
+          </span>
+          <EllipsisText style={{ flex: 1 }} maxWidth="200px">
+            {txn.comment || '-'}
+          </EllipsisText>
+        </div>
+        <div className="kisan-transaction-card-row">
+          <span className="kisan-transaction-card-label">
+            <FormattedMessage id="advanceDebited" />
+          </span>{' '}
+          <span>{txn.type === 'DEBIT' ? `₹${toFixed(txn.transactionAmount)}` : ''}</span>
+        </div>
+        <div className="kisan-transaction-card-row">
+          <span className="kisan-transaction-card-label">
+            <FormattedMessage id="grossTotalWithCurrency" />
+          </span>{' '}
+          <span>{`₹${toFixed(txn.grossTotal || 0)}`}</span>
+        </div>
+        <div className="kisan-transaction-card-row">
+          <span className="kisan-transaction-card-label">
+            <FormattedMessage id="billTotal" />
+          </span>{' '}
+          <span>{`₹${toFixed(txn.netTotal || 0)}`}</span>
+        </div>
+        <div className="kisan-transaction-card-row">
+          <span className="kisan-transaction-card-label">
+            <FormattedMessage id="advanceCredited" />
+          </span>{' '}
+          <span>
+            {txn.type === 'CREDIT'
+              ? `₹${toFixed(txn.advanceSettlement || 0)}`
+              : txn.type === 'ADVANCESETTLEMENT'
+                ? `₹${toFixed(txn.transactionAmount || 0)}`
+                : ''}
+          </span>
+        </div>
+        <div className="kisan-transaction-card-row">
+          <span className="kisan-transaction-card-label">
+            <FormattedMessage id="cashPaid" />
+          </span>{' '}
+          <span>
+            {txn.paidToKisan > 0 ? (
+              <span className="cash-paid-green">₹{toFixed(txn.paidToKisan)}</span>
+            ) : (
+              <span>₹{toFixed(txn.paidToKisan || 0)}</span>
+            )}
+          </span>
+        </div>
+        <div className="kisan-transaction-card-row">
+          <span className="kisan-transaction-card-label">
+            <FormattedMessage id="carryForwardFromThisBill" />
+          </span>{' '}
+          <span>
+            {txn.type === 'CREDIT' && txn.netTotal > 0
+              ? `₹${toFixed((txn.netTotal || 0) - (txn.advanceSettlement || 0) - (txn.paidToKisan || 0))}`
+              : 0}
+          </span>
+        </div>
+        <div className="kisan-transaction-card-row">
+          <span className="kisan-transaction-card-label">
+            <FormattedMessage id="carryForward" />
+          </span>{' '}
+          <span>{`₹${toFixed(txn.carryForwardFromThisEntry || 0)}`}</span>
+        </div>
+        <div className="kisan-transaction-card-row">
+          <span className="kisan-transaction-card-label">
+            <FormattedMessage id="balance" />
+          </span>{' '}
+          <span
+            className={txn.balanceAfterThisTransaction < 0 ? 'text-danger' : 'text-primary'}
+          >{`₹${toFixed(txn.balanceAfterThisTransaction || 0)}`}</span>
+        </div>
+        <AntdDivider style={{ margin: '12px 0 10px 0' }} />
+        <div
+          className="kisan-transaction-card-actions"
+          style={{ marginTop: 14, display: 'flex', justifyContent: 'flex-end' }}
+        >
+          {columns[columns.length - 1].render(null, txn, idx)}
+        </div>
+      </div>
+    );
+  };
 
-                            {index === 0 && transaction.type === "CREDIT" && <div>
-                              {isDeleting ? <Button color="danger" className="ms-2" >
-                                <Spinner className="spinner-size-1" />
-                              </Button> :
-                                <Button color="danger" className="ms-2" onClick={e => deleteTransaction(transaction, kisan._id)}>
-                                  <FontAwesomeIcon icon={solid('trash')} className="text-white" />
-                                </Button>
-                              }
-                            </div>
-                            }
-                          </div>
-                        )}
-                      </td>
-                    </tr>
-                  );
-                })}
-          </tbody>
-        </Table>
-      }
+  return (
+    <div className="kisan-transactions-table-wrapper">
+      {isLoading ? (
+        <div className="kisan-transactions-table-shimmer">
+          {/* Desktop table shimmer */}
+          {!isMobileOrTablet && (
+            <div className="shimmer-table-container">
+              {/* Table header shimmer */}
+              <div className="shimmer-table-header">
+                <Shimmer width={40} height={16} />
+                <Shimmer width={80} height={16} />
+                <Shimmer width={120} height={16} />
+                <Shimmer width={90} height={16} />
+                <Shimmer width={80} height={16} />
+                <Shimmer width={80} height={16} />
+                <Shimmer width={80} height={16} />
+                <Shimmer width={90} height={16} />
+                <Shimmer width={80} height={16} />
+                <Shimmer width={100} height={16} />
+                <Shimmer width={80} height={16} />
+              </div>
 
+              {/* Date group shimmer */}
+              <div className="shimmer-date-group">
+                <Shimmer width={120} height={20} borderRadius={6} />
+              </div>
+
+              {/* Table rows shimmer */}
+              {[...Array(6)].map((_, idx) => (
+                <div key={idx} className="shimmer-table-row">
+                  <Shimmer width={30} height={16} />
+                  <Shimmer width={80} height={16} />
+                  <Shimmer width={100} height={16} />
+                  <Shimmer width={80} height={16} />
+                  <Shimmer width={70} height={16} />
+                  <Shimmer width={70} height={16} />
+                  <Shimmer width={70} height={16} />
+                  <Shimmer width={80} height={16} />
+                  <Shimmer width={60} height={16} borderRadius={12} />
+                  <Shimmer width={90} height={16} />
+                  <Shimmer width={60} height={32} borderRadius={6} />
+                </div>
+              ))}
+            </div>
+          )}
+
+          {/* Mobile card shimmer */}
+          {isMobileOrTablet && (
+            <div className="shimmer-cards-container">
+              {/* Date group shimmer */}
+              <div className="shimmer-date-group-mobile">
+                <Shimmer width={120} height={20} borderRadius={6} />
+              </div>
+
+              {/* Card shimmers */}
+              {[...Array(4)].map((_, idx) => (
+                <div key={idx} className="shimmer-card">
+                  <div className="shimmer-card-header">
+                    <Shimmer width={100} height={18} />
+                    <Shimmer width={60} height={16} borderRadius={12} />
+                  </div>
+                  <div className="shimmer-card-content">
+                    <div className="shimmer-card-row">
+                      <Shimmer width={60} height={14} />
+                      <Shimmer width={80} height={14} />
+                    </div>
+                    <div className="shimmer-card-row">
+                      <Shimmer width={70} height={14} />
+                      <Shimmer width={90} height={14} />
+                    </div>
+                    <div className="shimmer-card-row">
+                      <Shimmer width={80} height={14} />
+                      <Shimmer width={100} height={14} />
+                    </div>
+                  </div>
+                  <div className="shimmer-card-actions">
+                    <Shimmer width={60} height={28} borderRadius={6} />
+                    <Shimmer width={60} height={28} borderRadius={6} />
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+      ) : (
+        <>
+          {isMobileOrTablet ? (
+            <>
+              {mobileTransactionView === 'table' ? (
+                <div className="kisan-transactions-table-mobile">
+                  <AntdTable
+                    columns={columns}
+                    dataSource={dataSource}
+                    pagination={false}
+                    locale={{
+                      emptyText: (
+                        <FormattedMessage id="noRecordFound" defaultMessage="No record found" />
+                      ),
+                    }}
+                    size="small"
+                    components={{
+                      header: {
+                        wrapper: props => (
+                          <>
+                            {customHeader}
+                            {props.children}
+                          </>
+                        ),
+                      },
+                    }}
+                    scroll={{ x: 1200 }}
+                  />
+                </div>
+              ) : dataSource.length === 0 ? (
+                <div className="text-center text-primary">
+                  <FormattedMessage id="noRecordFound" defaultMessage="No record found" />
+                </div>
+              ) : (
+                <div className="kisan-transactions-table-mobile">
+                  {dataSource.map((txn, idx) => renderTransactionCard(txn, idx))}
+                </div>
+              )}
+            </>
+          ) : (
+            <div className="kisan-transactions-table-desktop">
+              <AntdTable
+                columns={columns}
+                dataSource={dataSource}
+                pagination={false}
+                locale={{
+                  emptyText: (
+                    <FormattedMessage id="noRecordFound" defaultMessage="No record found" />
+                  ),
+                }}
+                size="small"
+                components={{
+                  header: {
+                    wrapper: props => (
+                      <>
+                        {customHeader}
+                        {props.children}
+                      </>
+                    ),
+                  },
+                }}
+                scroll={{ x: 800 }}
+              />
+            </div>
+          )}
+        </>
+      )}
       <div className="hide-till-print">
         <Kisanreceipt data={transaction} ref={componentRef} />
       </div>

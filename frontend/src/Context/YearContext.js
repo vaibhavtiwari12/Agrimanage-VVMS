@@ -1,10 +1,12 @@
-const { createContext } = require("react")
+const { createContext } = require('react');
 
 const initialState = {
-    year: undefined,
-    onSetYear : () =>{}
-}
+  year: undefined,
+  onSetYear: () => {},
+  yearOptions: [],
+  isYearLoading: false,
+};
 
-const YearContext = createContext(initialState)
+const YearContext = createContext(initialState);
 
 export default YearContext;

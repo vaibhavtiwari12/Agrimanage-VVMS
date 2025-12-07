@@ -1,0 +1,81 @@
+.ant-menu-horizontal>.ant-menu-item-selected {
+  border-bottom: none !important;
+  background: transparent !important;
+  color: #1677ff !important;
+}
+
+.ant-menu-horizontal>.ant-menu-item-selected .anticon {
+  color: #1677ff !important;
+}
+
+.ant-menu-horizontal>.ant-menu-item {
+  border-bottom: none !important;
+}
+
+.ant-menu-horizontal>.ant-menu-item:after {
+  border-bottom: none !important;
+}
+
+/* Ant Design Menu item hover: light grey background, blue text/icon */
+.ant-menu-light .ant-menu-item:hover,
+.ant-menu-light .ant-menu-submenu-title:hover {
+  background-color: #f5f7fa !important;
+  color: #1890ff !important;
+}
+
+.ant-menu-light .ant-menu-item:hover .anticon,
+.ant-menu-light .ant-menu-submenu-title:hover .anticon {
+  color: #1890ff !important;
+}
+
+.ant-menu-light .ant-menu-item-selected {
+  color: #1890ff !important;
+}
+
+.ant-menu-light .ant-menu-item-selected .anticon {
+  color: #1890ff !important;
+}
+
+/* Force remove all transitions for instant hover effect */
+.ant-menu-item,
+.ant-menu-submenu-title,
+.ant-menu-item .anticon,
+.ant-menu-submenu-title .anticon,
+.ant-menu-item:after,
+.ant-menu-item:before,
+.ant-menu-submenu-title:after,
+.ant-menu-submenu-title:before,
+.ant-menu-item>a,
+.ant-menu-submenu-title>a,
+.ant-menu-item span,
+.ant-menu-submenu-title span {
+  transition: none !important;
+  -webkit-transition: none !important;
+  -moz-transition: none !important;
+  -o-transition: none !important;
+}
+
+.ant-menu-light .ant-menu-item,
+.ant-menu-light .ant-menu-submenu-title {
+  padding-top: 2px !important;
+  padding-bottom: 2px !important;
+  padding-left: 12px !important;
+  padding-right: 12px !important;
+  border-radius: 4px !important;
+  margin: 0 2px !important;
+}
+
+/* NavBar specific Avatar alignment */
+.ant-layout-header .ant-avatar {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  vertical-align: middle !important;
+}
+
+.ant-layout-header .ant-avatar-string {
+  position: relative !important;
+  transform: none !important;
+  line-height: 1 !important;
+  top: 0 !important;
+}

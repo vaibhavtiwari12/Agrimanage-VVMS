@@ -11,12 +11,28 @@
     "install-main": "npm install",
     "install-frontend": "cd ./frontend && npm install",
     "build-frontend": "cd ./frontend && npm run build",
-    "start-front-end": "cd ./frontend && npm start",
+    "start-front-end": "cd ./frontend && NODE_OPTIONS=--openssl-legacy-provider npm start",
     "install-backend": "cd ./backend && npm install",
     "build:prod": "cd ./frontend && npm run build ",
     "heroku-postbuild": "npm run install-main && npm run install-frontend && npm run install-backend && npm run build-frontend",
+    "prod-build": "npm run install-main && npm run install-frontend && npm run install-backend && npm run build-frontend",
     "start": "cd backend && nodemon app.js",
-    "dev": "concurrently -n 'Frontend,Backend' -c 'green,blue' \"npm:start-front-end\" \"npm:start\""
+    "dev": "concurrently -n 'Frontend,Backend' -c 'green,blue' \"npm:start-front-end\" \"npm:start\"",
+    "prepare": "husky",
+    "lint": "cd frontend && npm run lint",
+    "lint:fix": "cd frontend && npm run lint -- --fix"
+  },
+  "lint-staged": {
+    "frontend/**/*.{js,jsx}": [
+      "cd frontend && eslint --fix",
+      "prettier --write"
+    ],
+    "backend/**/*.js": [
+      "prettier --write"
+    ],
+    "*.{json,md,yml,yaml}": [
+      "prettier --write"
+    ]
   },
   "author": "",
   "license": "ISC",
@@ -31,6 +47,9 @@
     "shx": "^0.3.3"
   },
   "devDependencies": {
-    "concurrently": "^7.0.0"
+    "concurrently": "^7.0.0",
+    "husky": "^9.1.7",
+    "lint-staged": "^16.2.7",
+    "prettier": "^3.7.4"
   }
 }

@@ -1,0 +1,18 @@
+.print-card {
+    box-shadow: none !important;
+    border: none !important;
+    outline: none !important;
+}
+
+@media print {
+
+    .print-card,
+    .print-card .ant-card,
+    .ant-card.print-card {
+        box-shadow: none !important;
+        border: none !important;
+        outline: none !important;
+        margin: 0 !important;
+        padding: 24px !important;
+    }
+}

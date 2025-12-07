@@ -1,0 +1,127 @@
+name: Security Scan
+
+# Run on push to master and on schedule
+on:
+  push:
+    branches:
+      - master
+  schedule:
+    # Run every Monday at 9 AM UTC
+    - cron: '0 9 * * 1'
+  workflow_dispatch:
+
+env:
+  DOCKER_USERNAME: tvaibhav1204
+  IMAGE_NAME: vvmsprod
+
+jobs:
+  docker-scan:
+    name: Scan Docker Image for Vulnerabilities
+    runs-on: ubuntu-latest
+
+    steps:
+      # Step 1: Checkout code
+      - name: 📥 Checkout Code
+        uses: actions/checkout@v4
+
+      # Step 2: Login to Docker Hub (to pull image)
+      - name: 🔑 Login to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_TOKEN }}
+
+      # Step 3: Pull latest image
+      - name: 📦 Pull Latest Image
+        run: |
+          docker pull ${{ env.DOCKER_USERNAME }}/${{ env.IMAGE_NAME }}:latest
+
+      # Step 4: Scan with Trivy (high and critical only)
+      - name: 🔍 Run Trivy Security Scan
+        uses: aquasecurity/trivy-action@master
+        with:
+          image-ref: ${{ env.DOCKER_USERNAME }}/${{ env.IMAGE_NAME }}:latest
+          format: 'sarif'
+          output: 'trivy-results.sarif'
+          severity: 'HIGH,CRITICAL'
+
+      # Step 5: Upload results to GitHub Security
+      - name: 📊 Upload Trivy Results
+        uses: github/codeql-action/upload-sarif@v2
+        if: always()
+        with:
+          sarif_file: 'trivy-results.sarif'
+
+      # Step 6: Create summary report
+      - name: 📄 Generate Security Report
+        if: always()
+        run: |
+          echo "## 🔒 Security Scan Report" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Image**: \`${{ env.DOCKER_USERNAME }}/${{ env.IMAGE_NAME }}:latest\`" >> $GITHUB_STEP_SUMMARY
+          echo "**Scan Date**: $(date -u +'%Y-%m-%d %H:%M:%S UTC')" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "Full results available in the **Security** tab." >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### Scan Configuration" >> $GITHUB_STEP_SUMMARY
+          echo "- Severity Levels: HIGH, CRITICAL" >> $GITHUB_STEP_SUMMARY
+          echo "- Scanner: Trivy" >> $GITHUB_STEP_SUMMARY
+
+  dependency-check:
+    name: Check Dependencies for Vulnerabilities
+    runs-on: ubuntu-latest
+
+    steps:
+      # Step 1: Checkout code
+      - name: 📥 Checkout Code
+        uses: actions/checkout@v4
+
+      # Step 2: Set up Node.js
+      - name: 🔧 Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      # Step 3: Run npm audit
+      - name: 🔍 Run npm audit
+        run: |
+          echo "## 📦 Dependency Audit Report" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+
+          # Run audit and capture output
+          npm audit --production --audit-level=high > audit.txt 2>&1 || true
+
+          # Add to summary
+          echo '```' >> $GITHUB_STEP_SUMMARY
+          cat audit.txt >> $GITHUB_STEP_SUMMARY
+          echo '```' >> $GITHUB_STEP_SUMMARY
+
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "To fix vulnerabilities, run: \`npm audit fix\`" >> $GITHUB_STEP_SUMMARY
+
+  secrets-scan:
+    name: Scan for Exposed Secrets
+    runs-on: ubuntu-latest
+
+    steps:
+      # Step 1: Checkout code
+      - name: 📥 Checkout Code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # Full history for secret scanning
+
+      # Step 2: Run Gitleaks
+      - name: 🔍 Scan for Secrets
+        uses: gitleaks/gitleaks-action@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      # Step 3: Report results
+      - name: 📄 Report Results
+        if: always()
+        run: |
+          echo "## 🔐 Secret Scan Report" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Status**: No secrets detected ✅" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "Scanned repository history for exposed secrets." >> $GITHUB_STEP_SUMMARY

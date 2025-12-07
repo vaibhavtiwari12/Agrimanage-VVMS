@@ -1,4 +1,4 @@
-const mongoose = require("mongoose");
+const mongoose = require('mongoose');
 
 const Schema = mongoose.Schema;
 const ObjectId = Schema.ObjectId;
@@ -14,7 +14,9 @@ const KisanSchema = new Schema({
   balance: Number,
   carryForwardAmount: Number,
   kisanCommodity: String,
+  identificationType: String,
+  identificationValue: String,
   transactions: [],
 });
 
-module.exports = KisanSchema
+module.exports = KisanSchema;

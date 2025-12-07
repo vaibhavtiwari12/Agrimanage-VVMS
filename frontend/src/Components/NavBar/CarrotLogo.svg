@@ -1,0 +1,15 @@
+<svg width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <circle cx="14" cy="14" r="13" fill="#fff" stroke="#ff9800" stroke-width="1.5"/>
+  <ellipse cx="14" cy="16" rx="4" ry="7" fill="url(#carrotGradient)" stroke="#ff9800" stroke-width="1.1"/>
+  <line x1="14" y1="11.5" x2="14" y2="20.5" stroke="#fff" stroke-width="0.8"/>
+  <line x1="12.5" y1="14.5" x2="15.5" y2="14.5" stroke="#fff" stroke-width="0.7"/>
+  <path d="M14 7.5 C13.2 6, 12 5.5, 11 7" stroke="#388e3c" stroke-width="1.1" fill="none"/>
+  <path d="M14 7.5 C14.8 6, 16 5.5, 17 7" stroke="#388e3c" stroke-width="1.1" fill="none"/>
+  <path d="M14 7.5 C14 6, 14 4.5, 14 3.5" stroke="#388e3c" stroke-width="1.1" fill="none"/>
+  <defs>
+    <linearGradient id="carrotGradient" x1="10" y1="9" x2="18" y2="23" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#ffb347"/>
+      <stop offset="1" stop-color="#ff9800"/>
+    </linearGradient>
+  </defs>
+</svg>

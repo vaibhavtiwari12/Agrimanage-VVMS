@@ -1,55 +1,135 @@
-import React from "react";
-import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
-import { Doughnut, Pie } from "react-chartjs-2";
+import React from 'react';
+import {
+  Chart as ChartJS,
+  CategoryScale,
+  LinearScale,
+  BarElement,
+  Title,
+  Tooltip,
+  Legend,
+} from 'chart.js';
+import { Bar } from 'react-chartjs-2';
 
-const TopBuyingPurchaser = ({purchasers}) => {
-  ChartJS.register(ArcElement, Tooltip, Legend);
-   const options = {
-        
+const TopBuyingPurchaser = ({ purchasers }) => {
+  ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
+
+  // Sort by sum in descending order and take top 20
+  const sortedPurchasers = purchasers ? purchasers.sort((a, b) => b.sum - a.sum).slice(0, 20) : [];
+
+  const options = {
+    responsive: true,
+    maintainAspectRatio: false,
     plugins: {
       legend: {
-        position: 'top',
+        display: false,
       },
       title: {
-        display: true,
-        text: '',
+        display: false,
       },
-      legend: {
-        display: false
-     }
+      tooltip: {
+        callbacks: {
+          label: function (context) {
+            return 'Purchase: ₹' + context.parsed.y.toLocaleString();
+          },
+        },
+      },
+    },
+    scales: {
+      x: {
+        grid: {
+          display: false,
+        },
+        ticks: {
+          maxRotation: 45,
+          minRotation: 45,
+          font: {
+            size: 10,
+          },
+        },
+      },
+      y: {
+        beginAtZero: true,
+        grid: {
+          color: '#f0f0f0',
+        },
+        ticks: {
+          callback: function (value) {
+            return '₹' + value / 1000 + 'K';
+          },
+        },
+      },
     },
   };
-   const data = {
-      labels: purchasers.map(phr=>phr.purchaser_name),
-      datasets: [
-         {
-            label: "Outstanding",
-            data: purchasers.map(phr=>phr.sum),
-            backgroundColor: [
-               "rgba(255, 99, 132, 0.2)",
-               "rgba(54, 162, 235, 0.2)",
-               "rgba(255, 206, 86, 0.2)",
-               "rgba(75, 192, 192, 0.2)",
-               "rgba(153, 102, 255, 0.2)",
-               "rgba(255, 159, 64, 0.2)",
-            ],
-            borderColor: [
-               "rgba(255, 99, 132, 1)",
-               "rgba(54, 162, 235, 1)",
-               "rgba(255, 206, 86, 1)",
-               "rgba(75, 192, 192, 1)",
-               "rgba(153, 102, 255, 1)",
-               "rgba(255, 159, 64, 1)",
-            ],
-            borderWidth: 1,
-         },
-      ],
-   };
-   return (
-      <div>
-          <Doughnut data={data} options={options}/>
-      </div>
-   );
+
+  const data = {
+    labels: sortedPurchasers.map(purchaser =>
+      purchaser.purchaser_name.length > 12
+        ? purchaser.purchaser_name.substring(0, 12) + '...'
+        : purchaser.purchaser_name
+    ),
+    datasets: [
+      {
+        label: 'Purchase Amount',
+        data: sortedPurchasers.map(purchaser => purchaser.sum),
+        backgroundColor: [
+          'rgba(82, 196, 26, 0.8)', // Ant Design Green
+          'rgba(24, 144, 255, 0.8)', // Ant Design Blue
+          'rgba(250, 173, 20, 0.8)', // Ant Design Orange
+          'rgba(114, 46, 209, 0.8)', // Ant Design Purple
+          'rgba(19, 194, 194, 0.8)', // Ant Design Cyan
+          'rgba(255, 77, 79, 0.8)', // Ant Design Red
+          'rgba(250, 84, 28, 0.8)', // Ant Design Red-Orange
+          'rgba(245, 34, 45, 0.8)', // Ant Design Volcano
+          'rgba(82, 196, 26, 0.6)', // Light Green
+          'rgba(24, 144, 255, 0.6)', // Light Blue
+          'rgba(250, 173, 20, 0.6)', // Light Orange
+          'rgba(114, 46, 209, 0.6)', // Light Purple
+          'rgba(19, 194, 194, 0.6)', // Light Cyan
+          'rgba(255, 77, 79, 0.6)', // Light Red
+          'rgba(250, 84, 28, 0.6)', // Light Red-Orange
+          'rgba(245, 34, 45, 0.6)', // Light Volcano
+          'rgba(82, 196, 26, 0.4)', // Lighter Green
+          'rgba(24, 144, 255, 0.4)', // Lighter Blue
+          'rgba(250, 173, 20, 0.4)', // Lighter Orange
+          'rgba(114, 46, 209, 0.4)', // Lighter Purple
+        ],
+        borderColor: [
+          '#52c41a', // Ant Design Green
+          '#1890ff', // Ant Design Blue
+          '#faad14', // Ant Design Orange
+          '#722ed1', // Ant Design Purple
+          '#13c2c2', // Ant Design Cyan
+          '#ff4d4f', // Ant Design Red
+          '#fa541c', // Ant Design Red-Orange
+          '#f5222d', // Ant Design Volcano
+          '#52c41a', // Green (repeat)
+          '#1890ff', // Blue (repeat)
+          '#faad14', // Orange (repeat)
+          '#722ed1', // Purple (repeat)
+          '#13c2c2', // Cyan (repeat)
+          '#ff4d4f', // Red (repeat)
+          '#fa541c', // Red-Orange (repeat)
+          '#f5222d', // Volcano (repeat)
+          '#52c41a', // Green (repeat)
+          '#1890ff', // Blue (repeat)
+          '#faad14', // Orange (repeat)
+          '#722ed1', // Purple (repeat)
+        ],
+        borderWidth: 0,
+        borderRadius: {
+          topLeft: 4,
+          topRight: 4,
+        },
+        borderSkipped: false,
+      },
+    ],
+  };
+
+  return (
+    <div style={{ height: '100%', width: '100%' }}>
+      <Bar data={data} options={options} />
+    </div>
+  );
 };
 
 export default TopBuyingPurchaser;

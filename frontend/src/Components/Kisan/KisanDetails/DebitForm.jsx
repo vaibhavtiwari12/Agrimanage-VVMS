@@ -1,388 +1,668 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from 'react';
 import {
   Form,
-  FormGroup,
-  Label,
   Input,
   Button,
-  FormFeedback,
   Alert,
-  BreadcrumbItem,
   Breadcrumb,
-  Spinner
-} from "reactstrap";
+  Spin,
+  DatePicker,
+  message,
+  Switch,
+  Card,
+  Row,
+  Col,
+  Typography,
+  Space,
+  Divider,
+} from 'antd';
+import { Link, useHistory, useParams } from 'react-router-dom';
+import { formatDate, getKisanByID, getTodaysFormattedDate } from '../../../Utility/utility';
+import { FormShimmer } from '../../Common';
+import Kisanmoneysummary from './KisanMoneySummary';
+import { FormattedMessage, useIntl } from 'react-intl';
+import dayjs from 'dayjs';
+import {
+  CalendarOutlined,
+  DollarOutlined,
+  CommentOutlined,
+  SaveOutlined,
+  ReloadOutlined,
+  MinusCircleOutlined,
+  UserOutlined,
+  PhoneOutlined,
+  HomeOutlined,
+  InfoCircleOutlined,
+} from '@ant-design/icons';
 
-import { useState } from "react";
-import { Link, useHistory, useParams } from "react-router-dom";
-import { formatDate, getKisanByID, getTodaysFormattedDate } from "../../../Utility/utility";
-import Kisanmoneysummary from "./KisanMoneySummary";
-import { FormattedMessage } from "react-intl";
-import "../../../Utility/creditFormSwitch.css"
-
+const { Title, Text } = Typography;
+const { TextArea } = Input;
 
 const Debitform = () => {
   const { id, type, transactionNumber } = useParams();
-  const [comment, setComment] = useState("");
-  const [amount, setAmount] = useState("");
-  const [isCommentValid, setIsCommentValid] = useState("PRISTINE");
-  const [isAmountValid, setIsAmountValid] = useState("PRISTINE");
+  const [form] = Form.useForm();
+  const intlA = useIntl();
+  const [comment, setComment] = useState('');
+  const [amount, setAmount] = useState('');
+  const [isCommentValid, setIsCommentValid] = useState('PRISTINE');
+  const [isAmountValid, setIsAmountValid] = useState('PRISTINE');
   const [kisan, setKisan] = useState({});
   const [hasError, setHasError] = useState(false);
   const [showAlert, setShowAlert] = useState(false);
-  const [backDate, setBackDate] = useState("");
-  const [creationDate, setCreationDate] = useState("");
+  const [backDate, setBackDate] = useState('');
+  const [creationDate, setCreationDate] = useState('');
   const [billDate, setBillDate] = useState(formatDate(new Date()));
   const [isDateEditable, setIsDateEditable] = useState(false);
-  const [isBillDateValid, setIsBillDateValid] = useState("PRISTINE");
+  const [isBillDateValid, setIsBillDateValid] = useState('PRISTINE');
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+  const history = useHistory();
+
+  // Check if device is mobile or tablet - make it responsive
+  const [isMobileOrTablet, setIsMobileOrTablet] = useState(window.innerWidth <= 900);
+
+  // Handle window resize for responsive behavior
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobileOrTablet(window.innerWidth <= 900);
+    };
+
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   useEffect(() => {
     try {
       console.log(id, type, transactionNumber);
       const fetchData = async () => {
         setKisan(await getKisanByID(id));
+        setIsLoading(false);
       };
       fetchData();
     } catch (e) {
-      throw new Error("Something Went Wrong ", e);
+      setIsLoading(false);
+      throw new Error('Something Went Wrong ', e);
     }
   }, []);
 
   useEffect(() => {
     if (!isDateEditable) {
-       billDateChange({ target: { value: getTodaysFormattedDate() } })
+      billDateChange(getTodaysFormattedDate());
     }
-    if(isDateEditable){
-      setBillDate(formatDate(new Date(),1))
+    if (isDateEditable) {
+      setBillDate(formatDate(new Date(), 1));
     }
- }, [isDateEditable]);
+  }, [isDateEditable]);
+
   useEffect(() => {
     if (transactionNumber && Object.keys(kisan).length > 0) {
-      const transactionToedit = kisan.transactions.filter(
-        (transac) => transac._id === transactionNumber.toString()
+      const transactionToedit = kisan.transactions?.filter(
+        transac => transac._id === transactionNumber.toString()
       )[0];
-
-      console.log("transactionToedit", transactionToedit);
-      setAmount(transactionToedit.transactionAmount);
-      setComment(transactionToedit.comment);
-      if (transactionToedit.backDate) {
-        setCreationDate(transactionToedit.creationDate)
-        setBackDate(transactionToedit.backDate)
-     }
-     setBillDate(formatDate(transactionToedit.date))
+      if (transactionToedit) {
+        setAmount(transactionToedit.transactionAmount);
+        setComment(transactionToedit.comment);
+        if (transactionToedit.backDate) {
+          setCreationDate(transactionToedit.creationDate);
+          setBackDate(transactionToedit.backDate);
+        }
+        setBillDate(formatDate(transactionToedit.date));
+      }
     }
-  }, [kisan]);
-  const billDateChange = (e) => {
-    if (type === "edit") {
-       setBillDate(e.target.value);
-       setIsBillDateValid("");
+  }, [kisan, transactionNumber]);
+
+  const billDateChange = value => {
+    if (type === 'edit') {
+      setBillDate(value);
+      setIsBillDateValid('');
     } else {
-       if (e.target.value !== getTodaysFormattedDate()) {
-          let hasError = false;
-          //Check if Kisan has transactions after this date.
-          if (hasError === false) {
-             if (kisan.transactions && kisan.transactions.length > 0) {
-                const latestKisanTransactionDate = getLatestKisanTransactionDate();
-                if (new Date(latestKisanTransactionDate) > new Date(e.target.value)) {
-                   setIsBillDateValid("HASKISANTRANSACTIONPOSTTHISDATE");
-                   setBillDate(e.target.value);
-                }else {
-                   setBillDate(e.target.value);
-                   setIsBillDateValid("");
-                }
-             } else {
-                setBillDate(e.target.value);
-                setIsBillDateValid("");
-             }
+      if (value !== getTodaysFormattedDate()) {
+        let hasError = false;
+        if (hasError === false) {
+          if (kisan.transactions && kisan.transactions.length > 0) {
+            const latestKisanTransactionDate = getLatestKisanTransactionDate();
+            if (new Date(latestKisanTransactionDate) > new Date(value)) {
+              setIsBillDateValid('HASKISANTRANSACTIONPOSTTHISDATE');
+              setBillDate(value);
+            } else {
+              setBillDate(value);
+              setIsBillDateValid('');
+            }
+          } else {
+            setBillDate(value);
+            setIsBillDateValid('');
           }
-       }
-       if (e.target.value === getTodaysFormattedDate()) {
-          setBillDate(e.target.value);
-          setIsBillDateValid("");
-       }
+        }
+      }
+      if (value === getTodaysFormattedDate()) {
+        setBillDate(value);
+        setIsBillDateValid('');
+      }
     }
- };
- const getLatestKisanTransactionDate = () => {
-    let lastTransactionIndex = kisan.transactions.length - 1
-    let lastTransaction = kisan.transactions[lastTransactionIndex]
-    let lastTransactionDate = lastTransaction.date;
-    let jsdateString = new Date(lastTransactionDate)
-    let kisanLatestTransactionDate = jsdateString.toISOString().split('T')[0]
-    return kisanLatestTransactionDate;
- }
+  };
 
- const handleEditDateEnabler = () => {
-    setIsDateEditable((isDateEditable) => !isDateEditable);
- };
+  const getLatestKisanTransactionDate = () => {
+    let lastTransactionIndex = kisan.transactions.length - 1;
+    let lastTransaction = kisan.transactions[lastTransactionIndex];
+    let lastTransactionDate = lastTransaction.date;
+    let jsdateString = new Date(lastTransactionDate);
+    let kisanLatestTransactionDate = jsdateString.toISOString().split('T')[0];
+    return kisanLatestTransactionDate;
+  };
+
+  const handleEditDateEnabler = checked => {
+    setIsDateEditable(checked);
+  };
   const isFormValid = () => {
     let isInvalid = false;
-    if (comment.length <= 0) {
-      setIsCommentValid("");
-      isInvalid = true;
-    }
     if (amount.length <= 0) {
-      setIsAmountValid("");
+      setIsAmountValid('');
       isInvalid = true;
     }
-    if (isBillDateValid !== "" && isBillDateValid !== "PRISTINE") {
+    if (comment.length <= 0) {
+      setIsCommentValid('');
       isInvalid = true;
-   }
-
+    }
+    if (isBillDateValid !== '' && isBillDateValid !== 'PRISTINE') {
+      isInvalid = true;
+    }
     return isInvalid ? false : true;
   };
-  const history = useHistory();
-  const commentChange = (e) => {
+
+  const commentChange = e => {
     setComment(e.target.value);
-    setIsCommentValid("");
+    setIsCommentValid('');
   };
-  const amountChange = (e) => {
+
+  const amountChange = e => {
     setAmount(e.target.value);
-    setIsAmountValid("");
+    setIsAmountValid('');
   };
 
   const clear = () => {
-    setAmount("");
-    setComment("");
-
+    form.resetFields();
+    setAmount('');
+    setComment('');
     setHasError(false);
-    setIsCommentValid("PRISTINE");
-    setIsAmountValid("PRISTINE");
-    setIsBillDateValid("PRISTINE")
+    setIsCommentValid('PRISTINE');
+    setIsAmountValid('PRISTINE');
+    setIsBillDateValid('PRISTINE');
   };
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const submit = (e) => {
-    e.preventDefault();
-    if (isFormValid()) {
-      setIsSubmitting(true)
+
+  const submit = async values => {
+    setIsSubmitting(true);
+    try {
       const formData = {
         transaction: {
           balanceAfterThisTransaction: kisan.balance + (amount - amount * 2),
           transactionAmount: amount - amount * 2,
-          type: "DEBIT",
-          comment,
+          type: 'DEBIT',
+          comment: values.comment || comment,
         },
       };
-      if ((isBillDateValid === "" || isBillDateValid === "PRISTINE") && billDate !== getTodaysFormattedDate() && isDateEditable) {
-        const backDateHours = new Date().getHours()
-        const backDateMinutes = new Date().getMinutes()
-        const backDateSeconds = new Date().getSeconds()
-        formData.transaction["backDateHours"] = backDateHours;
-        formData.transaction["backDateMinutes"] = backDateMinutes;
-        formData.transaction["backDateSeconds"] = backDateSeconds;
-        formData.transaction["backDate"] = billDate;
-     }
-      fetch(`/kisan/AddTransaction/${id}`, {
-        method: "POST",
+      if (
+        (isBillDateValid === '' || isBillDateValid === 'PRISTINE') &&
+        billDate !== getTodaysFormattedDate() &&
+        isDateEditable
+      ) {
+        const backDateHours = new Date().getHours();
+        const backDateMinutes = new Date().getMinutes();
+        const backDateSeconds = new Date().getSeconds();
+        formData.transaction['backDateHours'] = backDateHours;
+        formData.transaction['backDateMinutes'] = backDateMinutes;
+        formData.transaction['backDateSeconds'] = backDateSeconds;
+        formData.transaction['backDate'] = billDate;
+      }
+
+      const response = await fetch(`/kisan/AddTransaction/${id}`, {
+        method: 'POST',
         body: JSON.stringify(formData),
         headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json",
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
         },
-      })
-      .then((res) => res.json())
-      .then((res) => {
-        handleAlert();
-        clear();
-        setIsSubmitting(false)
-      })
-      .catch((error) => {
-          setIsSubmitting(false)
-          throw new error("Somethign Went Wrong", error);
-        });
-    } else {
-      setHasError(true);
-    }
-  };
+      });
 
-  const handleAlert = () => {
-    setShowAlert(true);
-    setTimeout(() => {
-      setShowAlert(false);
-      history.push(`/kisanDetails/${id}`);
-    }, 2000);
+      if (response.ok) {
+        message.success(
+          type === 'add'
+            ? intlA.formatMessage({ id: 'entryAddSuccessMsg' })
+            : intlA.formatMessage({ id: 'entryEditSuccessMsg' })
+        );
+        clear();
+        setTimeout(() => {
+          history.push(`/kisanDetails/${id}`);
+        }, 1000);
+      } else {
+        message.error('Failed to process transaction');
+      }
+    } catch (error) {
+      message.error('Something went wrong');
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const handleEdit = () => {
     if (isFormValid()) {
-      setIsSubmitting(true)
+      setIsSubmitting(true);
       const formData = {
         transactionNumber,
         comment,
       };
       fetch(`/kisan/editTransaction/${id}`, {
-        method: "POST",
+        method: 'POST',
         body: JSON.stringify(formData),
         headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json",
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
         },
       })
-        .then((res) => res.json())
-        .then((res) => {
-          handleAlert();
+        .then(res => res.json())
+        .then(res => {
+          message.success('Entry updated successfully');
           clear();
-          setIsSubmitting(false)
+          setTimeout(() => {
+            history.push(`/kisanDetails/${id}`);
+          }, 1000);
+          setIsSubmitting(false);
         })
-        .catch((error) => {
-          setIsSubmitting(false)
-          throw new error("Somethign Went Wrong", error);
+        .catch(error => {
+          setIsSubmitting(false);
+          message.error('Something Went Wrong');
         });
     } else {
       setHasError(true);
     }
   };
 
-
   return (
-    <div className="mt-3 font-10">
-      <Breadcrumb className="ps-3 mt-2">
-        <BreadcrumbItem>
-          <Link className="link-no-decoration-black text-primary" to="/">
-            Home
-          </Link>
-        </BreadcrumbItem>
-        <BreadcrumbItem>
-          <Link className="link-no-decoration-black text-primary" to="/kisan">
-            Kisan
-          </Link>
-        </BreadcrumbItem>
-        <BreadcrumbItem>
-          <Link className="link-no-decoration-black text-primary" to={`/kisanDetails/${kisan._id}`}>
-          Details
-          </Link>
-        </BreadcrumbItem>
-        <BreadcrumbItem active>Debit Form</BreadcrumbItem>
-      </Breadcrumb>
-      <h2 className="text-center text-secondary mt-3 font-15"><FormattedMessage id="giveAdvanceKisanButtonText"/></h2>
-      <div>
-        <div>
-          <Kisanmoneysummary kisan={kisan} />
-        </div>
-        <div></div>
-      </div>
-      <Form onSubmit={(e) => submit(e)} className="p-3">
-        {/*  {hasError && <Alert color="danger"> FORM HAS AN ERROR </Alert>} */}
-        <h2 className="text-center text-secondary mt-3 font-15"><FormattedMessage id="advanceDetails"/></h2>
-        <div className="shadow p-3 mb-3">
-                     <div>
-                           {type === "edit" && backDate !== "" &&
-                              <div className="text pt-2">
-                                 <h3 className="text-dark font-15"><FormattedMessage id="backDatedEntryMsg" /></h3>
-                                 <div className="text-secondary">
-                                    <FormattedMessage id="actualBillCreationDateMsg" />{" : "} <span className="text-primary">{formatDate(creationDate).split("-").reverse().join("-")}</span>
-                                 </div>
-                              </div>}
-                           {type === "edit" && backDate === "" &&
-                              <div className="text pt-2">
-                                 <h3 className="text-dark font-15"><FormattedMessage id="billDateSectionTitle" /></h3>
-                              </div>}
-                           {type !== "edit" && <div className="switch-container d-flex">
-                              <h3 className="text-dark font-15"><FormattedMessage id="backDatedEntryMsg" /> ?{"  "}</h3>
-                              <div className="flex-fill d-flex justify-content-end">
-                                 <label className="toggle-switch">
-                                    {"  "}<input
-                                       type="checkbox"
-                                       name="toggleSwitch"
-                                       className="toggle-switch__checkbox"
-                                       id="myToggleSwitch"
-                                       onChange={handleEditDateEnabler}
-                                       checked={isDateEditable}
-                                    />
-                                    <span className="toggle-switch__label">
-                                       <span className="toggle-switch__inner"></span>
-                                    </span>
-                                 </label>
-                              </div>
-                           </div>
-                           }
-                           <FormGroup className="mt-2">
-                        {<Label for="billDate">
-                           <FormattedMessage id="entryDateLabel" />
-                        </Label>}
-                        <Input
-                           invalid={isBillDateValid !== "PRISTINE" && isBillDateValid !== "" ? true : false}
-                           name="billDate"
-                           type="date"
-                           value={billDate}
-                           max={formatDate(new Date(), 1)}
-                           disabled={!isDateEditable}
-                           onChange={(e) => billDateChange(e)}
-                        />{" "}
-                        <FormFeedback>
-                           {
-                              isBillDateValid === "HASPURCHASERTRANSACTIONPOSTTHISDATE" ? <FormattedMessage id="purchaserHasTxnAfterThisDateMsg" /> :
-                                 isBillDateValid === "HASKISANTRANSACTIONPOSTTHISDATE" ? <FormattedMessage id="kisanHasTxnAfterThisDateMsgForEntry" /> : "invalid"
-                           }
-                        </FormFeedback>
-                     </FormGroup>
-                        </div>
-                  </div>
-                  <div className="shadow p-3 mb-3">
-        <FormGroup className="mt-2">
-          <Label for="amount"> <FormattedMessage id="advanceDebited" />{" "}<FormattedMessage id="currencyWithBracket" /></Label>
-          <Input
-            disabled={type === "edit" ? true : false}
-            invalid={amount <= 0 && isAmountValid === ""}
-            name="amount"
-            type="number"
-            value={amount.toString()}
-            onWheel={(e) => e.target.blur()}
-            onChange={(e) => amountChange(e)}
-          />
-          <FormFeedback> <FormattedMessage id="amountSBGTZ"/></FormFeedback>
-        </FormGroup>
-        <FormGroup className="mt-2">
-          <Label for="comment"> <FormattedMessage id="comment"/></Label>
-          <Input
-            invalid={comment.length <= 0 && isCommentValid === ""}
-            name="comment"
-            type="text"
-            value={comment}
-            onWheel={(e) => e.target.blur()}
-            onChange={(e) => commentChange(e)}
-          />
-          <FormFeedback> <FormattedMessage id="commentIsRequired"/></FormFeedback>
-        </FormGroup>
-                    
-                    </div>       
-        {type === "add" ? (
-          <React.Fragment>
-            <Button type="submit" color="primary" className="mt-3" disabled={isSubmitting}>
-            {isSubmitting &&( <span><Spinner className="spinner-size-1"/> &nbsp;</span> )}<FormattedMessage id="createEntryButtonText" />
-            </Button>
-            <Button
-              type="reset"
-              color="danger"
-              className="ms-1 mt-3"
-              onClick={clear}
-            >
-              <FormattedMessage id="resetButtonText"/>
-            </Button>
-          </React.Fragment>
-        ) : (
-          <Button
-            type="button"
-            color="primary"
-            className="mt-3"
-            onClick={handleEdit}
-            disabled={isSubmitting}
+    <div style={{ padding: '24px 12px 32px 12px' }}>
+      {isLoading ? (
+        <FormShimmer />
+      ) : (
+        <>
+          {/* Breadcrumb */}
+          <Breadcrumb style={{ marginBottom: 16 }}>
+            <Breadcrumb.Item>
+              <Link to="/" style={{ color: '#1677ff' }}>
+                <FormattedMessage id="home" defaultMessage="Home" />
+              </Link>
+            </Breadcrumb.Item>
+            <Breadcrumb.Item>
+              <Link to="/kisan" style={{ color: '#1677ff' }}>
+                <FormattedMessage id="kisan" defaultMessage="Kisan" />
+              </Link>
+            </Breadcrumb.Item>
+            <Breadcrumb.Item>
+              <Link to={`/kisanDetails/${kisan._id}`} style={{ color: '#1677ff' }}>
+                <FormattedMessage id="details" defaultMessage="Details" />
+              </Link>
+            </Breadcrumb.Item>
+            <Breadcrumb.Item>
+              <FormattedMessage id="debitForm" defaultMessage="Debit Form" />
+            </Breadcrumb.Item>
+          </Breadcrumb>
+
+          {/* Header Card - Similar to AdvanceSettlementForm */}
+          <Card
+            className="mobile-consistent-card"
+            style={{
+              marginBottom: 24,
+              borderRadius: 12,
+              background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+              color: '#fff',
+              border: 'none',
+              boxShadow: '0 4px 16px rgba(33, 150, 243, 0.3)',
+            }}
           >
-            {isSubmitting &&( <span><Spinner className="spinner-size-1"/> &nbsp;</span> )}<FormattedMessage id="editButtonText"/>
-          </Button>
-        )}
-        {showAlert ? (
-            type === "add" ? (
-              <Alert className="mt-4">
-                  <FormattedMessage id="entryAddSuccessMsg" />
-              </Alert>
-            ) : (
-              <Alert className="mt-4">
-                  <FormattedMessage id="entryEditSuccessMsg" />
-              </Alert>
-            )
-        ) : (
-            ""
-        )}
-      </Form>
+            <Row align="middle" gutter={24}>
+              <Col>
+                <div
+                  style={{
+                    background: 'rgba(255, 255, 255, 0.2)',
+                    padding: window.innerWidth <= 768 ? 12 : 20,
+                    borderRadius: 12,
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                  }}
+                >
+                  <MinusCircleOutlined
+                    style={{ fontSize: window.innerWidth <= 768 ? 18 : 24, color: '#fff' }}
+                  />
+                </div>
+              </Col>
+              <Col flex={1} className="mobile-header-text">
+                <Title
+                  level={window.innerWidth <= 768 ? 4 : 2}
+                  style={{
+                    margin: 0,
+                    fontSize: window.innerWidth <= 768 ? 16 : 24,
+                    fontWeight: 600,
+                    color: '#fff',
+                  }}
+                >
+                  <FormattedMessage
+                    id="giveAdvanceKisanButtonText"
+                    defaultMessage="Give Advance to Farmer"
+                  />
+                </Title>
+                <Text
+                  style={{
+                    fontSize: window.innerWidth <= 768 ? 12 : 16,
+                    marginTop: 8,
+                    color: 'rgba(255, 255, 255, 0.9)',
+                  }}
+                >
+                  {type === 'edit'
+                    ? 'Edit debit transaction'
+                    : 'Create new advance payment for farmer'}
+                </Text>
+              </Col>
+            </Row>
+          </Card>
+
+          {/* Farmer Information Card - Similar to AdvanceSettlementForm */}
+          <Card
+            style={{
+              borderRadius: 12,
+              marginBottom: 24,
+              boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
+            }}
+            title={
+              <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                <UserOutlined style={{ fontSize: 20, color: '#1677ff' }} />
+                <span style={{ fontWeight: 700, fontSize: 18 }}>
+                  <FormattedMessage id="farmerInformation" defaultMessage="Farmer Information" />
+                </span>
+              </div>
+            }
+          >
+            <Row gutter={[24, 16]}>
+              <Col xs={24} sm={12} lg={6}>
+                <div>
+                  <div style={{ color: '#666', fontSize: 14, marginBottom: 4 }}>
+                    <FormattedMessage id="fullName" defaultMessage="Full Name" />
+                  </div>
+                  <div style={{ fontSize: 16, fontWeight: 500, color: '#1677ff' }}>
+                    {kisan.name || '-'}
+                  </div>
+                </div>
+              </Col>
+              <Col xs={24} sm={12} lg={6}>
+                <div>
+                  <div style={{ color: '#666', fontSize: 14, marginBottom: 4 }}>
+                    <FormattedMessage id="fatherNameLabel" defaultMessage="Father's Name" />
+                  </div>
+                  <div style={{ fontSize: 16, fontWeight: 500 }}>{kisan.fatherName || '-'}</div>
+                </div>
+              </Col>
+              <Col xs={24} sm={12} lg={6}>
+                <div>
+                  <div style={{ color: '#666', fontSize: 14, marginBottom: 4 }}>
+                    <FormattedMessage id="phoneNumber" defaultMessage="Phone Number" />
+                  </div>
+                  <div style={{ fontSize: 16, fontWeight: 500 }}>{kisan.phone || '-'}</div>
+                </div>
+              </Col>
+              <Col xs={24} sm={12} lg={6}>
+                <div>
+                  <div style={{ color: '#666', fontSize: 14, marginBottom: 4 }}>
+                    <FormattedMessage id="currentBalance" defaultMessage="Current Balance" />
+                  </div>
+                  <div
+                    style={{
+                      fontSize: 16,
+                      fontWeight: 600,
+                      color: kisan.balance < 0 ? '#ff4d4f' : '#52c41a',
+                    }}
+                  >
+                    ₹{(kisan.balance || 0).toLocaleString('en-IN')}
+                  </div>
+                </div>
+              </Col>
+            </Row>
+          </Card>
+
+          {/* Form Card - Similar to AdvanceSettlementForm */}
+          <Card
+            style={{
+              borderRadius: 12,
+              boxShadow: '0 4px 12px rgba(0,0,0,0.1)',
+            }}
+          >
+            <Form
+              form={form}
+              layout="vertical"
+              onFinish={submit}
+              size="large"
+              initialValues={{
+                amount: amount,
+                comment: comment,
+              }}
+            >
+              <Row gutter={[16, 16]}>
+                {/* Date Section */}
+                <Col xs={24}>
+                  <Card
+                    size="small"
+                    style={{ backgroundColor: '#f8f9fa', border: '1px solid #e9ecef' }}
+                    title={
+                      <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                        <CalendarOutlined style={{ color: '#1677ff' }} />
+                        <span style={{ fontSize: 16 }}>
+                          {type === 'edit' && backDate !== '' ? (
+                            <FormattedMessage
+                              id="backDatedEntryMsg"
+                              defaultMessage="Back Dated Entry"
+                            />
+                          ) : type === 'edit' && backDate === '' ? (
+                            <FormattedMessage
+                              id="billDateSectionTitle"
+                              defaultMessage="Bill Date"
+                            />
+                          ) : (
+                            <FormattedMessage id="entryDateSection" defaultMessage="Entry Date" />
+                          )}
+                        </span>
+                      </div>
+                    }
+                  >
+                    {type === 'edit' && backDate !== '' && (
+                      <div
+                        style={{
+                          marginBottom: 16,
+                          padding: 12,
+                          background: '#e6f4ff',
+                          borderRadius: 6,
+                        }}
+                      >
+                        <div style={{ color: '#666', fontSize: 14, marginBottom: 4 }}>
+                          <FormattedMessage
+                            id="actualBillCreationDateMsg"
+                            defaultMessage="Actual Bill Creation Date"
+                          />
+                        </div>
+                        <div style={{ color: '#1677ff', fontWeight: 500 }}>
+                          {formatDate(creationDate).split('-').reverse().join('-')}
+                        </div>
+                      </div>
+                    )}
+
+                    {type !== 'edit' && (
+                      <div
+                        style={{
+                          display: 'flex',
+                          justifyContent: 'space-between',
+                          alignItems: 'center',
+                          marginBottom: 16,
+                        }}
+                      >
+                        <Text strong>
+                          <FormattedMessage
+                            id="backDatedEntryMsg"
+                            defaultMessage="Back Dated Entry"
+                          />
+                          ?
+                        </Text>
+                        <Switch
+                          checked={isDateEditable}
+                          onChange={handleEditDateEnabler}
+                          checkedChildren="Yes"
+                          unCheckedChildren="No"
+                        />
+                      </div>
+                    )}
+
+                    <Form.Item
+                      label={
+                        <Text strong>
+                          <FormattedMessage id="entryDateLabel" defaultMessage="Entry Date" />
+                        </Text>
+                      }
+                      validateStatus={
+                        isBillDateValid !== 'PRISTINE' && isBillDateValid !== '' ? 'error' : ''
+                      }
+                      help={
+                        isBillDateValid === 'HASPURCHASERTRANSACTIONPOSTTHISDATE' ? (
+                          <FormattedMessage
+                            id="purchaserHasTxnAfterThisDateMsg"
+                            defaultMessage="Purchaser has transaction after this date"
+                          />
+                        ) : isBillDateValid === 'HASKISANTRANSACTIONPOSTTHISDATE' ? (
+                          <FormattedMessage
+                            id="kisanHasTxnAfterThisDateMsgForEntry"
+                            defaultMessage="Kisan has transaction after this date"
+                          />
+                        ) : null
+                      }
+                    >
+                      <DatePicker
+                        value={billDate ? dayjs(billDate, 'YYYY-MM-DD') : null}
+                        format="YYYY-MM-DD"
+                        disabled={!isDateEditable && type !== 'edit'}
+                        onChange={(date, dateString) => billDateChange(dateString)}
+                        style={{ width: '100%' }}
+                        disabledDate={current => current && current.isAfter(dayjs(), 'day')}
+                        allowClear={false}
+                      />
+                    </Form.Item>
+                  </Card>
+                </Col>
+
+                {/* Amount Field */}
+                <Col xs={24} sm={12}>
+                  <Form.Item
+                    label={
+                      <Text strong>
+                        <FormattedMessage id="advanceDebited" defaultMessage="Advance Debited" />{' '}
+                        (₹)
+                      </Text>
+                    }
+                    name="amount"
+                    rules={[
+                      { required: true, message: intlA.formatMessage({ id: 'amountSBGTZ' }) },
+                      {
+                        validator: (_, value) => {
+                          if (value && parseInt(value) <= 0) {
+                            return Promise.reject(new Error('Amount should be greater than zero'));
+                          }
+                          return Promise.resolve();
+                        },
+                      },
+                    ]}
+                  >
+                    <Input
+                      disabled={type === 'edit'}
+                      type="number"
+                      placeholder="Enter amount"
+                      prefix={<DollarOutlined style={{ color: '#bfbfbf' }} />}
+                      onChange={amountChange}
+                      value={amount}
+                    />
+                  </Form.Item>
+                </Col>
+
+                {/* Comment Field */}
+                <Col xs={24} sm={12}>
+                  <Form.Item
+                    label={
+                      <Text strong>
+                        <FormattedMessage id="comment" defaultMessage="Comment" />
+                      </Text>
+                    }
+                    name="comment"
+                    rules={[
+                      { required: true, message: intlA.formatMessage({ id: 'commentIsRequired' }) },
+                    ]}
+                  >
+                    <Input
+                      placeholder="Enter comment"
+                      prefix={<CommentOutlined style={{ color: '#bfbfbf' }} />}
+                      onChange={commentChange}
+                      value={comment}
+                    />
+                  </Form.Item>
+                </Col>
+              </Row>
+
+              <Divider />
+
+              {/* Action Buttons - Similar to AdvanceSettlementForm */}
+              <Row gutter={16} justify="start">
+                <Col>
+                  <Button
+                    type="primary"
+                    htmlType="submit"
+                    loading={isSubmitting}
+                    icon={<SaveOutlined />}
+                    size="large"
+                    style={{ minWidth: 120 }}
+                  >
+                    {type === 'add' ? (
+                      <FormattedMessage id="createEntryButtonText" defaultMessage="Create Entry" />
+                    ) : (
+                      <FormattedMessage id="editButtonText" defaultMessage="Update Entry" />
+                    )}
+                  </Button>
+                </Col>
+                <Col>
+                  <Button
+                    type="default"
+                    onClick={clear}
+                    icon={<ReloadOutlined />}
+                    size="large"
+                    style={{ minWidth: 100 }}
+                  >
+                    <FormattedMessage id="resetButtonText" defaultMessage="Reset" />
+                  </Button>
+                </Col>
+              </Row>
+
+              {/* Info Note - Similar to AdvanceSettlementForm */}
+              <div
+                style={{
+                  marginTop: 24,
+                  padding: 16,
+                  background: '#f0f8ff',
+                  borderRadius: 8,
+                  borderLeft: '4px solid #1890ff',
+                }}
+              >
+                <Space>
+                  <InfoCircleOutlined style={{ color: '#1890ff' }} />
+                  <Text type="secondary">
+                    {type === 'edit'
+                      ? 'You are editing an existing debit transaction.'
+                      : 'This will create an advance payment to the farmer and update their balance accordingly.'}
+                  </Text>
+                </Space>
+              </div>
+            </Form>
+          </Card>
+        </>
+      )}
     </div>
   );
 };

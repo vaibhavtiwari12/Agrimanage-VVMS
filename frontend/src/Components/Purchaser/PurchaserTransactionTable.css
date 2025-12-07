@@ -1,0 +1,405 @@
+/* Purchaser Transaction Table Styles - Professional Theme */
+
+.purchaser-transaction-table-wrapper {
+    margin: 16px 0;
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+}
+
+/* Date separator styling - More subtle and professional */
+.purchaser-date-separator {
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    border: 1px solid #dee2e6;
+    border-radius: 6px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    transition: all 0.2s ease;
+}
+
+.purchaser-date-separator:hover {
+    background: linear-gradient(135deg, #f1f3f4 0%, #e1e5e9 100%);
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+}
+
+/* Date separator row in table - Professional gray theme */
+.purchaser-date-separator-row {
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%) !important;
+    border-top: 2px solid #dee2e6 !important;
+}
+
+.purchaser-date-separator-row:hover {
+    background: linear-gradient(135deg, #f1f3f4 0%, #e1e5e9 100%) !important;
+}
+
+.purchaser-date-separator-cell {
+    border: none !important;
+    padding: 16px !important;
+    font-weight: 600;
+}
+
+.purchaser-date-separator-row td {
+    border-bottom: 1px solid #dee2e6 !important;
+}
+
+/* Table styling adjustments - Clean and professional */
+.ant-table-thead>tr>th {
+    background-color: #fff !important;
+    font-weight: 600;
+    color: #343a40;
+    border-bottom: 2px solid #dee2e6;
+    padding: 16px 12px !important;
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.ant-table-tbody>tr>td {
+    padding: 12px !important;
+    border-bottom: 1px solid #f1f3f4;
+    vertical-align: middle;
+    font-size: 14px;
+}
+
+/* Regular row hover effect */
+.ant-table-tbody>tr:hover>td {
+    background-color: #f8f9fa !important;
+}
+
+/* Table group border styling */
+.purchaser-transaction-group {
+    border: 1px solid #dee2e6;
+    border-radius: 8px;
+    margin-bottom: 24px;
+    overflow: hidden;
+    background: #fff;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04);
+}
+
+.purchaser-transaction-group .ant-table-container {
+    border: none;
+}
+
+.purchaser-transaction-group .ant-table-tbody>tr:last-child>td {
+    border-bottom: none;
+}
+
+/* Professional mobile card styling */
+.purchaser-transaction-card {
+    background: #fff;
+    border: 1px solid #dee2e6;
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 16px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04);
+    transition: all 0.2s ease;
+}
+
+.purchaser-transaction-card:hover {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    border-color: #adb5bd;
+    transform: translateY(-1px);
+}
+
+.purchaser-transaction-card-title {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid #e9ecef;
+}
+
+.purchaser-transaction-card-content {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px 20px;
+    font-size: 14px;
+}
+
+.purchaser-transaction-card-field {
+    display: flex;
+    flex-direction: column;
+}
+
+.purchaser-transaction-card-label {
+    font-weight: 600;
+    color: #6c757d;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 4px;
+}
+
+.purchaser-transaction-card-value {
+    color: #343a40;
+    font-weight: 500;
+    font-size: 14px;
+}
+
+/* Professional balance styling */
+.balance-positive {
+    color: #28a745;
+    font-weight: 600;
+}
+
+.balance-negative {
+    color: #dc3545;
+    font-weight: 600;
+}
+
+/* Status indicators - Bright with status dots like Kisan landing */
+.transaction-status-badge {
+    padding: 4px 10px;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    border: 1px solid;
+    position: relative;
+}
+
+.transaction-status-badge::before {
+    content: '';
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    display: inline-block;
+}
+
+.transaction-status-badge.payment {
+    background-color: #f6ffed;
+    color: #389e0d;
+    border-color: rgba(82, 196, 26, 0.3);
+}
+
+.transaction-status-badge.payment::before {
+    background-color: #52c41a;
+}
+
+.transaction-status-badge.purchase {
+    background-color: #e6f7ff;
+    color: #0958d9;
+    border-color: rgba(22, 119, 255, 0.3);
+}
+
+.transaction-status-badge.purchase::before {
+    background-color: #1677ff;
+}
+
+/* Responsive adjustments */
+@media (max-width: 1024px) {
+
+    /* Ensure proper spacing on tablets */
+    .purchaser-transaction-table-wrapper {
+        margin: 8px 0;
+    }
+
+    .purchaser-date-separator {
+        margin: 12px 8px 16px 8px;
+    }
+}
+
+@media (max-width: 768px) {
+
+    /* Mobile-specific adjustments */
+    .purchaser-transaction-card-content {
+        grid-template-columns: 1fr;
+        gap: 12px;
+    }
+
+    .purchaser-date-separator {
+        padding: 12px;
+        font-size: 13px;
+        margin: 8px 4px 16px 4px;
+    }
+
+    .purchaser-transaction-card {
+        padding: 16px;
+        margin: 0 4px 16px 4px;
+    }
+
+    .purchaser-transaction-card-title {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 8px;
+    }
+
+    .purchaser-transaction-card-title span:first-child {
+        width: 100%;
+    }
+
+    /* Adjust table for mobile when table view is selected */
+    .ant-table-tbody>tr>td {
+        padding: 8px 4px !important;
+        font-size: 12px;
+    }
+
+    .ant-table-thead>tr>th {
+        padding: 12px 4px !important;
+        font-size: 11px;
+    }
+
+    /* Mobile table scroll enhancement */
+    .ant-table-wrapper {
+        overflow-x: auto;
+    }
+
+    .ant-table-body {
+        overflow-x: auto;
+    }
+}
+
+/* Print styles */
+@media print {
+
+    .purchaser-date-separator,
+    .purchaser-transaction-card {
+        box-shadow: none !important;
+        border: 1px solid #dee2e6 !important;
+    }
+}
+
+/* Loading shimmer styles */
+.purchaser-transaction-shimmer {
+    padding: 20px;
+    background: #fff;
+    border-radius: 8px;
+    min-height: 400px;
+}
+
+/* Desktop table shimmer */
+.shimmer-table-container {
+    width: 100%;
+}
+
+.shimmer-table-header {
+    display: flex;
+    gap: 16px;
+    align-items: center;
+    padding: 16px 0;
+    border-bottom: 2px solid #f1f3f4;
+    margin-bottom: 16px;
+}
+
+.shimmer-date-group {
+    display: flex;
+    align-items: center;
+    padding: 12px 0;
+    margin: 16px 0 8px 0;
+    border-bottom: 1px solid #e8e8e8;
+}
+
+.shimmer-table-row {
+    display: flex;
+    gap: 16px;
+    align-items: center;
+    padding: 12px 0;
+    border-bottom: 1px solid #f8f9fa;
+}
+
+.shimmer-table-row:last-child {
+    border-bottom: none;
+}
+
+/* Mobile card shimmer */
+.shimmer-cards-container {
+    width: 100%;
+}
+
+.shimmer-date-group-mobile {
+    display: flex;
+    align-items: center;
+    padding: 12px 0;
+    margin: 16px 0 8px 0;
+    border-bottom: 1px solid #e8e8e8;
+}
+
+.shimmer-card {
+    background: #fff;
+    border: 1px solid #f0f0f0;
+    border-radius: 8px;
+    padding: 16px;
+    margin-bottom: 12px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.shimmer-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid #f5f5f5;
+}
+
+.shimmer-card-content {
+    margin-bottom: 12px;
+}
+
+.shimmer-card-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+}
+
+.shimmer-card-row:last-child {
+    margin-bottom: 0;
+}
+
+.shimmer-card-actions {
+    display: flex;
+    gap: 8px;
+    justify-content: center;
+    padding-top: 8px;
+    border-top: 1px solid #f5f5f5;
+}
+
+/* Responsive shimmer adjustments */
+@media (max-width: 768px) {
+    .purchaser-transaction-shimmer {
+        padding: 12px;
+    }
+
+    .shimmer-card {
+        padding: 12px;
+        margin-bottom: 8px;
+    }
+}
+
+/* Action buttons styling */
+.ant-btn-text.ant-btn-dangerous {
+    color: #dc3545;
+}
+
+.ant-btn-text.ant-btn-dangerous:hover {
+    background-color: #f8d7da;
+    border-color: #f5c6cb;
+}
+
+/* Subtle print button styling */
+.ant-btn-text:hover {
+    background-color: #f5f5f5;
+    border-color: #d9d9d9;
+}
+
+/* Centered actions column */
+.ant-table-thead>tr>th[class*="actions"] {
+    text-align: center;
+}
+
+/* Link styling */
+a {
+    color: #007bff;
+    text-decoration: none;
+    transition: color 0.2s ease;
+}
+
+a:hover {
+    color: #0056b3;
+    text-decoration: underline;
+}

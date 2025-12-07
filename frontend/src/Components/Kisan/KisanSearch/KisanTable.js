@@ -1,29 +1,37 @@
-import { Table } from "reactstrap";
-import { Link } from "react-router-dom";
-import { FormattedMessage } from "react-intl";
+import { Table } from 'reactstrap';
+import { Link } from 'react-router-dom';
+import { FormattedMessage } from 'react-intl';
 const KisanTable = ({ kisans, term, type }) => {
   return (
     <div>
-      <Table striped size="sm" className="mt-3 font-10" responsive >
+      <Table striped size="sm" className="mt-3 font-10" responsive>
         <thead>
           <tr>
             <th>#</th>
-            <th><FormattedMessage id="name"/></th>
-            <th><FormattedMessage id="fatherName"/></th>
-            <th><FormattedMessage id="commodity"/></th>
-            <th><FormattedMessage id="phone"/></th>
-            <th><FormattedMessage id="balance"/></th>
+            <th>
+              <FormattedMessage id="name" />
+            </th>
+            <th>
+              <FormattedMessage id="fatherName" />
+            </th>
+            <th>
+              <FormattedMessage id="commodity" />
+            </th>
+            <th>
+              <FormattedMessage id="phone" />
+            </th>
+            <th>
+              <FormattedMessage id="balance" />
+            </th>
           </tr>
         </thead>
         <tbody>
           {kisans
-            .filter((kisan) => {
-              if (type.toLowerCase() === "name") {
+            .filter(kisan => {
+              if (type.toLowerCase() === 'name') {
                 return kisan.name.toLowerCase().includes(term.toLowerCase());
-              } else if (type.toLowerCase() === "fathername") {
-                return kisan.fatherName
-                  .toLowerCase()
-                  .includes(term.toLowerCase());
+              } else if (type.toLowerCase() === 'fathername') {
+                return kisan.fatherName.toLowerCase().includes(term.toLowerCase());
               } else {
                 return kisan.phone.toString().includes(term);
               }

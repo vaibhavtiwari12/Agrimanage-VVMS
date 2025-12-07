@@ -1,5 +1,5 @@
-const { createDBConnection, closeConnection } = require("./mongoConnector");
-const Kisan = require("../Schema/kisanSchema");
+const { ensureConnection } = require('./mongoConnector');
+const Kisan = require('../Schema/kisanSchema');
 
 /* IMPORTANT
     RDBMS       VS      MONGO
@@ -10,17 +10,17 @@ const Kisan = require("../Schema/kisanSchema");
 
 */
 const controller = async (type, data) => {
-  //Creating MONGO Connection
-  await createDBConnection();
+  //Ensure MONGO Connection
+  await ensureConnection();
 
   //All Operation in Mongo
   switch (type) {
-    case "Get": {
+    case 'Get': {
       // Find Request
       const posts = await Kisan.find();
       return posts;
     }
-    case "Add": {
+    case 'Add': {
       //Adding data
       return await data.save();
     }
@@ -39,6 +39,5 @@ const controller = async (type, data) => {
             return deletedData;
         } */
   }
-  await closeConnection();
 };
 module.exports = { controller };

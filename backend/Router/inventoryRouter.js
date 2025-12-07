@@ -1,22 +1,39 @@
-const express = require("express");
-const { controller } = require("../Mongo/inventoryController");
-const Inventory = require("../Schema/inventorySchema");
-const mongoose = require("mongoose");
-const { getInventoryModel } = require("../Model/model");
+const express = require('express');
+const { controller } = require('../Mongo/inventoryController');
+const Inventory = require('../Schema/inventorySchema');
+const mongoose = require('mongoose');
+const { getInventoryModel } = require('../Model/model');
 
 const InventoryRouter = express.Router();
 
-InventoryRouter.get("/get", async (req, res) => {
-  const allInventory = await controller("Get");
+InventoryRouter.get('/get', async (req, res) => {
+  const allInventory = await controller('Get');
   res.json(allInventory);
 });
 
-InventoryRouter.get("/getByID/:id", async (req, res) => {
-  const allInventory = await controller("FindByID", req.params.id);
+InventoryRouter.get('/transactions/:inventoryId', async (req, res) => {
+  try {
+    const { inventoryId } = req.params;
+    const { page = 1, pageSize = 10 } = req.query;
+
+    const paginatedData = await controller('GetPaginatedTransactions', {
+      inventoryId,
+      page: parseInt(page),
+      pageSize: parseInt(pageSize),
+    });
+
+    res.json(paginatedData);
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
+});
+
+InventoryRouter.get('/getByID/:id', async (req, res) => {
+  const allInventory = await controller('FindByID', req.params.id);
   res.json(allInventory);
 });
 
-InventoryRouter.post("/add", async (req, res) => {
+InventoryRouter.post('/add', async (req, res) => {
   const Inventory = getInventoryModel();
   const newItem = new Inventory({
     itemName: req.body.name,
@@ -25,7 +42,7 @@ InventoryRouter.post("/add", async (req, res) => {
     totalBags: 0,
     transactions: [],
   });
-  const addedInventory = await controller("Add", newItem);
+  const addedInventory = await controller('Add', newItem);
   res.json(addedInventory);
 });
 /* 

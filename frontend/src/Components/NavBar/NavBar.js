@@ -1,145 +1,297 @@
-import { useContext, useEffect, useState } from "react";
-import { Link } from "react-router-dom";
-import { FormattedMessage } from "react-intl";
+import { useContext, useEffect, useState } from 'react';
+import { Link, useLocation } from 'react-router-dom';
+import { FormattedMessage } from 'react-intl';
+import { Layout, Menu, Dropdown, Button, Switch, Drawer, Avatar, Typography, Space } from 'antd';
 import {
-  ButtonDropdown,
-  DropdownToggle,
-  DropdownMenu,
-  DropdownItem,
-} from "reactstrap";
-import {
-  Navbar,
-  NavbarBrand,
-  NavbarToggler,
-  Collapse,
-  Nav,
-  NavItem,
-  NavLink,
-} from "reactstrap";
-import logo from "./particleBG.svg";
-import '../../toggleSwitchNav.css'
-import YearContext from "../../Context/YearContext";
-import { getYearValue } from "../../Utility/utility";
-const NavBar = ({ isAuthenticated, logout, changelanguage }) => {
-  const [dropdownOpen, setDropdownOpen] = useState(false);
+  GlobalOutlined,
+  MenuOutlined,
+  CloseOutlined,
+  ShoppingCartOutlined,
+  UserSwitchOutlined,
+  BarChartOutlined,
+  AppstoreOutlined,
+  CalendarOutlined,
+  LogoutOutlined,
+} from '@ant-design/icons';
+import YearContext from '../../Context/YearContext';
+import './NavBar.css';
+import VeggiesLogo from './VeggiesLogo.svg';
+
+const { Header } = Layout;
+const { Text, Title } = Typography;
+
+const NavBar = ({ isAuthenticated, logout, changelanguage, year: yearProp }) => {
   const [isLanguageEnglish, setIsLanguageEnglish] = useState(true);
-  const [collapsed, setCollapsed] = useState(true);
-  const year = useContext(YearContext).year
-  const toggleNavbar = () => {
-    setCollapsed(!collapsed);
-  };
+  // Use year from prop if available, else fallback to context
+  const yearFromContext = useContext(YearContext).year;
+  const year = yearProp !== undefined ? yearProp : yearFromContext;
+  const location = useLocation();
+  const [isMobile, setIsMobile] = useState(window.innerWidth <= 900);
+  const [drawerVisible, setDrawerVisible] = useState(false);
+
+  useEffect(() => {
+    const handleResize = () => setIsMobile(window.innerWidth <= 900);
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
   const handleLogOut = () => {
     logout();
   };
 
-  const toggelDropDown = () => {
-    setDropdownOpen(!dropdownOpen);
+  const handleLanguageChange = checked => {
+    setIsLanguageEnglish(checked);
   };
 
-  const handleLanguageChange = () => {
-    setIsLanguageEnglish((isLanguageEnglish) => !isLanguageEnglish);
-  };
-  const collapse = () => {
-    setCollapsed(true)
-  }
   useEffect(() => {
     changelanguage(isLanguageEnglish);
   }, [isLanguageEnglish]);
 
-  return (
-    <div>
-      <Navbar color="primary" dark expand="md" light className="p-3">
-        <Link className="nav-brand link-no-decoration text-white custom-logo-design" to="/">
-          <img className="logo" src={logo} alt="MahrajVegetables" />
+  const userMenu = (
+    <Menu>
+      <Menu.Item key="logout" icon={<LogoutOutlined />} onClick={handleLogOut}>
+        <FormattedMessage id="logout" />
+      </Menu.Item>
+    </Menu>
+  );
+
+  const userDropdownButton = (
+    <Dropdown overlay={userMenu} trigger={['click']}>
+      <Button
+        type="text"
+        style={{ padding: 0, height: 'auto', background: 'none', boxShadow: 'none' }}
+      >
+        <Space>
+          <Text style={{ color: '#222', fontWeight: 500, fontSize: isMobile ? 14 : 16 }}>
+            <FormattedMessage id="hello" />,{' '}
+            <span style={{ fontWeight: 700, textTransform: 'capitalize' }}>
+              {window.sessionStorage.getItem('userName')}
+            </span>
+          </Text>
+        </Space>
+      </Button>
+    </Dropdown>
+  );
+
+  const navMenu = (
+    <Menu
+      mode={isMobile ? 'inline' : 'horizontal'}
+      selectedKeys={[location.pathname]}
+      theme="light"
+      style={{
+        borderBottom: 'none',
+        background: 'transparent',
+        fontWeight: 500,
+        fontSize: isMobile ? 14 : 14,
+        boxShadow: 'none',
+        outline: 'none',
+        flex: 1,
+      }}
+      onClick={() => isMobile && setDrawerVisible(false)}
+      tabIndex={-1} // Prevent focus outline
+    >
+      <Menu.Item key="/purchaser" icon={<ShoppingCartOutlined />}>
+        <Link to="/purchaser" style={{ textDecoration: 'none', color: 'inherit' }}>
+          <FormattedMessage id="purchaser" />
         </Link>
-        <Link
-              className="nav-item ps-3 link-no-decoration text-white d-md-none"
-              onClick={collapse} to="/yearSelector"
-            >
-              <div> {year && <p><FormattedMessage id="yearTitle"/>-{getYearValue(year)}</p>}</div>
+      </Menu.Item>
+      <Menu.Item key="/kisan" icon={<UserSwitchOutlined />}>
+        <Link to="/kisan" style={{ textDecoration: 'none', color: 'inherit' }}>
+          <FormattedMessage id="kisan" />
         </Link>
-        <NavbarToggler onClick={toggleNavbar} className="mr-2" /> 
-        <Collapse className="mt-md-3" isOpen={!collapsed} navbar>
-          <Nav className="" navbar>
-            <Link
-              className="nav-item ps-3 link-no-decoration text-white"
-              onClick={collapse} to="/purchaser"
-            >
-              <FormattedMessage id="purchaser" />
-            </Link>
-            <Link
-              className="nav-item ps-3 link-no-decoration text-white"
-              onClick={collapse} to="/kisan"
-            >
-              <FormattedMessage id="kisan" />
-            </Link>
-            <Link
-              className="nav-item ps-3 link-no-decoration text-white"
-              onClick={collapse} to="/Report"
-            >
-              <FormattedMessage id="report" />
-            </Link>
-            <Link
-              className="nav-item ps-3 link-no-decoration text-white"
-              onClick={collapse} to="/inventory"
-            >
-              <FormattedMessage id="inventory" />
-            </Link>
-            <Link
-              className="nav-item ps-3 link-no-decoration text-white"
-              onClick={collapse} to="/yearSelector"
-            >
-              <div> {year && <p><FormattedMessage id="yearTitle"/>-{getYearValue(year)}</p>}</div>
-            </Link>
-          </Nav>
-          <Nav className="d-flex justify-content-end flex-fill mb-3" navbar>
-            {isAuthenticated === "TRUE" ? (
-              <div className="text-white greeting-container font-10">
-                <ButtonDropdown
-                  color="primary"
-                  isOpen={dropdownOpen}
-                  toggle={toggelDropDown}
-                >
-                  <DropdownToggle color="primary" caret>
-                    <span className="capitalize">
-                      <FormattedMessage id="hello" />{" "}
-                      {window.sessionStorage.getItem("userName")}
-                    </span>
-                  </DropdownToggle>
-                  <DropdownMenu>
-                    <DropdownItem onClick={handleLogOut}>
-                      <FormattedMessage id="logout" />
-                    </DropdownItem>
-                  </DropdownMenu>
-                </ButtonDropdown>
-              </div>
+      </Menu.Item>
+      <Menu.Item key="/Report" icon={<BarChartOutlined />}>
+        <Link to="/Report" style={{ textDecoration: 'none', color: 'inherit' }}>
+          <FormattedMessage id="report" />
+        </Link>
+      </Menu.Item>
+      <Menu.Item key="/inventory" icon={<AppstoreOutlined />}>
+        <Link to="/inventory" style={{ textDecoration: 'none', color: 'inherit' }}>
+          <FormattedMessage id="inventory" />
+        </Link>
+      </Menu.Item>
+      {isAuthenticated === 'TRUE' && (
+        <Menu.Item key="/yearSelector" icon={<CalendarOutlined />}>
+          <Link to="/yearSelector" style={{ textDecoration: 'none', color: 'inherit' }}>
+            {year ? (
+              <span>
+                <FormattedMessage id="yearTitle" />-{year}
+              </span>
             ) : (
-              <Link
-                className="signin-nav ps-3 link-no-decoration text-white font-10"
-                to="/Login"
-              >
-                Sign In
-              </Link>
+              <span>
+                <FormattedMessage id="selectYearTitle" />
+              </span>
             )}
-            <div className="switch-container">
-              <label className="toggle-switch">
-                <input
-                  type="checkbox"
-                  name="toggleSwitch"
-                  className="toggle-switch__checkbox"
-                  id="myToggleSwitch"
-                  onChange={handleLanguageChange}
-                  checked={isLanguageEnglish}
-                />
-                <span className="toggle-switch__label">
-                  <span className="toggle-switch__inner_navbar"></span>
-                </span>
-              </label>
+          </Link>
+        </Menu.Item>
+      )}
+    </Menu>
+  );
+
+  return (
+    <Header
+      style={{
+        background: '#fff',
+        padding: 0,
+        boxShadow: '0 1px 0 #f0f0f0',
+        height: 72,
+        display: 'flex',
+        alignItems: 'center',
+      }}
+    >
+      <div
+        style={{
+          width: '100%',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          margin: '0 1.5rem',
+        }}
+      >
+        <div style={{ display: 'flex', alignItems: 'center', gap: 12, minWidth: 0, flex: 1 }}>
+          <Link
+            to="/"
+            style={{ display: 'flex', alignItems: 'center', gap: 12, textDecoration: 'none' }}
+          >
+            <Avatar
+              style={{
+                background: '#fff',
+                fontWeight: 700,
+                fontSize: 16,
+                cursor: 'pointer',
+                boxShadow: '0 2px 8px #e6f4ff',
+                border: '2.5px solid #ff9800',
+                padding: 0,
+              }}
+              size={36}
+            >
+              <img
+                src={VeggiesLogo}
+                alt="Logo"
+                style={{ width: 28, height: 28, display: 'block' }}
+              />
+            </Avatar>
+            <span
+              style={{
+                fontWeight: 700,
+                fontSize: isMobile ? 16 : 18,
+                color: '#222',
+                whiteSpace: 'nowrap',
+                letterSpacing: 0.5,
+                cursor: 'pointer',
+              }}
+            >
+              AgriManage
+            </span>
+          </Link>
+          {/* Nav menu immediately next to logo/avatar */}
+          {!isMobile && navMenu}
+        </div>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
+          {isMobile && (
+            <Button
+              type="text"
+              icon={<MenuOutlined style={{ color: '#222', fontSize: 22 }} />}
+              onClick={() => setDrawerVisible(true)}
+              style={{ marginRight: 8 }}
+            />
+          )}
+          {/* Desktop: show user dropdown and language switch */}
+          {!isMobile &&
+            (isAuthenticated === 'TRUE' ? (
+              userDropdownButton
+            ) : (
+              <Button type="default" style={{ fontWeight: 500, fontSize: 13 }}>
+                <Link to="/Login">Sign In</Link>
+              </Button>
+            ))}
+          {/* Language toggle avatar */}
+          {!isMobile && (
+            <div style={{ display: 'flex', alignItems: 'center', marginLeft: 8 }}>
+              <Avatar
+                style={{
+                  backgroundColor: isLanguageEnglish ? '#1890ff' : '#ff6b35',
+                  color: '#fff',
+                  fontWeight: 'bold',
+                  cursor: 'pointer',
+                  transition: 'all 0.3s ease',
+                  fontSize: '12px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                }}
+                size={32}
+                onClick={() => handleLanguageChange(!isLanguageEnglish)}
+              >
+                {isLanguageEnglish ? 'EN' : 'HI'}
+              </Avatar>
             </div>
-          </Nav>
-        </Collapse>
-      </Navbar>
-    </div>
+          )}
+        </div>
+      </div>
+      <Drawer
+        title={
+          <span style={{ color: '#4e8cff', fontWeight: 700 }}>
+            Menu{' '}
+            <Button
+              type="text"
+              icon={<CloseOutlined />}
+              onClick={() => setDrawerVisible(false)}
+              style={{ float: 'right' }}
+            />
+          </span>
+        }
+        placement="right"
+        closable={false}
+        onClose={() => setDrawerVisible(false)}
+        visible={drawerVisible}
+        bodyStyle={{ padding: 0 }}
+        width={260}
+      >
+        {isMobile && (
+          <div
+            style={{
+              padding: '16px 24px',
+              borderBottom: '1px solid #f0f0f0',
+              display: 'flex',
+              justifyContent: 'space-between',
+              gap: 12,
+            }}
+          >
+            {isAuthenticated === 'TRUE' ? (
+              userDropdownButton
+            ) : (
+              <Button type="default" style={{ fontWeight: 500, width: '100%' }}>
+                <Link to="/Login" onClick={() => setDrawerVisible(false)}>
+                  Sign In
+                </Link>
+              </Button>
+            )}
+            <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+              {/* Language toggle avatar in Drawer */}
+              <Avatar
+                style={{
+                  backgroundColor: isLanguageEnglish ? '#1890ff' : '#ff6b35',
+                  color: '#fff',
+                  fontWeight: 'bold',
+                  cursor: 'pointer',
+                  transition: 'all 0.3s ease',
+                  fontSize: '12px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                }}
+                size={32}
+                onClick={() => handleLanguageChange(!isLanguageEnglish)}
+              >
+                {isLanguageEnglish ? 'EN' : 'HI'}
+              </Avatar>
+            </div>
+          </div>
+        )}
+        {navMenu}
+      </Drawer>
+    </Header>
   );
 };
 

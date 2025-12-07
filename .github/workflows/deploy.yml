@@ -1,0 +1,135 @@
+name: Build and Deploy to Render
+
+# Trigger on push to master branch or manual workflow dispatch
+on:
+  push:
+    branches:
+      - master
+  workflow_dispatch: # Allows manual trigger from GitHub Actions UI
+
+env:
+  DOCKER_USERNAME: tvaibhav1204
+  IMAGE_NAME: vvmsprod
+  PLATFORM: linux/amd64
+
+jobs:
+  build-and-deploy:
+    name: Build Docker Image & Deploy
+    runs-on: ubuntu-latest
+
+    steps:
+      # Step 1: Checkout the repository
+      - name: 📥 Checkout Code
+        uses: actions/checkout@v4
+
+      # Step 2: Set up Node.js for linting
+      - name: 🔧 Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      # Step 3: Install dependencies and run linting
+      - name: 📦 Install Dependencies
+        run: |
+          npm ci
+          cd frontend && npm ci
+
+      # Step 4: Run ESLint with auto-fix
+      - name: 🔍 Lint and Auto-Fix Code
+        run: |
+          echo "Running ESLint with auto-fix..."
+          cd frontend && npx eslint src --ext .js,.jsx --fix || true
+
+      # Step 5: Run Prettier formatting
+      - name: ✨ Format Code with Prettier
+        run: |
+          echo "Formatting code with Prettier..."
+          npx prettier --write "frontend/**/*.{js,jsx}" "backend/**/*.js" "*.{json,md}" || true
+
+      # Step 6: Check for remaining lint errors
+      - name: ❗ Check for Unfixable Lint Errors
+        run: |
+          echo "Checking for remaining lint errors..."
+          cd frontend && npm run lint
+
+      # Step 7: Commit auto-fixed changes (if any)
+      - name: 💾 Commit Auto-Fixed Changes
+        if: success()
+        run: |
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          git add -A
+          git diff --staged --quiet || git commit -m "style: auto-fix linting and formatting issues [skip ci]"
+
+      # Step 8: Set up Docker Buildx for multi-platform builds
+      - name: 🔧 Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      # Step 9: Login to Docker Hub
+      - name: 🔑 Login to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_TOKEN }}
+
+      # Step 10: Generate tags
+      - name: 🏷️ Generate Docker Tags
+        id: meta
+        run: |
+          DATE_TAG=$(date +%Y%m%d-%H%M%S)
+          COMMIT_SHA=$(echo ${{ github.sha }} | cut -c1-7)
+          echo "DATE_TAG=${DATE_TAG}" >> $GITHUB_OUTPUT
+          echo "COMMIT_TAG=${COMMIT_SHA}" >> $GITHUB_OUTPUT
+          echo "📅 Date Tag: ${DATE_TAG}"
+          echo "🔖 Commit Tag: ${COMMIT_SHA}"
+
+      # Step 11: Build and Push Docker Image
+      - name: 🐳 Build and Push Docker Image
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          platforms: ${{ env.PLATFORM }}
+          push: true
+          tags: |
+            ${{ env.DOCKER_USERNAME }}/${{ env.IMAGE_NAME }}:latest
+            ${{ env.DOCKER_USERNAME }}/${{ env.IMAGE_NAME }}:${{ steps.meta.outputs.DATE_TAG }}
+            ${{ env.DOCKER_USERNAME }}/${{ env.IMAGE_NAME }}:${{ steps.meta.outputs.COMMIT_TAG }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+      # Step 12: Trigger Render Deployment
+      - name: 🚀 Deploy to Render
+        if: success()
+        run: |
+          echo "🚀 Triggering Render deployment..."
+          curl -X POST "${{ secrets.RENDER_DEPLOY_HOOK }}"
+          echo "✅ Deployment webhook triggered!"
+
+      # Step 13: Create GitHub Deployment
+      - name: 📊 Create Deployment Record
+        if: success()
+        run: |
+          echo "## 🎉 Deployment Successful!" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**📦 Docker Images:**" >> $GITHUB_STEP_SUMMARY
+          echo "- \`${{ env.DOCKER_USERNAME }}/${{ env.IMAGE_NAME }}:latest\`" >> $GITHUB_STEP_SUMMARY
+          echo "- \`${{ env.DOCKER_USERNAME }}/${{ env.IMAGE_NAME }}:${{ steps.meta.outputs.DATE_TAG }}\`" >> $GITHUB_STEP_SUMMARY
+          echo "- \`${{ env.DOCKER_USERNAME }}/${{ env.IMAGE_NAME }}:${{ steps.meta.outputs.COMMIT_TAG }}\`" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**🔗 Links:**" >> $GITHUB_STEP_SUMMARY
+          echo "- [Docker Hub](https://hub.docker.com/r/${{ env.DOCKER_USERNAME }}/${{ env.IMAGE_NAME }})" >> $GITHUB_STEP_SUMMARY
+          echo "- [Render Dashboard](https://dashboard.render.com)" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**⏰ Deployed at:** $(date -u +'%Y-%m-%d %H:%M:%S UTC')" >> $GITHUB_STEP_SUMMARY
+          echo "**📝 Commit:** ${{ github.sha }}" >> $GITHUB_STEP_SUMMARY
+
+      # Step 14: Notify on Failure
+      - name: ❌ Deployment Failed
+        if: failure()
+        run: |
+          echo "## ❌ Deployment Failed" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "Check the logs above for error details." >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Commit:** ${{ github.sha }}" >> $GITHUB_STEP_SUMMARY

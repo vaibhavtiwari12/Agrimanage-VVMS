@@ -1,154 +1,148 @@
-import React, { useEffect } from "react";
-import { useState } from "react";
-import { Table } from "reactstrap";
+import React, { useEffect, useState } from 'react';
+import { Card, Typography, Divider, Table, Descriptions, Row, Col } from 'antd';
+
+const { Title, Text } = Typography;
 
 const PurchaserBill = React.forwardRef((props, ref) => {
-   console.log("PORPS ", props);
-   const [purchaser, setPurchaser] = useState({});
-   const [debitSum, setDebitSum] = useState(0);
-   const [creditSum, setCreditSum] = useState(0);
-   useEffect(() => {
-      setPurchaser(props.data);
-   }, [props.data]);
-   return (
-      <div ref={ref} className="mt-3 ms-5 me-5 mb-3">
-         <h6 className="text-center text-success">|| श्री गुरु कृपा ||</h6>
-         <h1 className="text-center text-danger text-shadow-im">IM</h1>
-         <h1 className="text-center text-danger text-shadow-im underline m-2">
-            <u className="company-heading">महाराज वेजिटेबल कंपनी</u>
-         </h1>
-         <h5 className="text-center text-success">
-            धनिया, टमाटर, मटर एवं सब्जी के आढ़ती{" "}
-         </h5>
-         <hr />
-         <h6 className="text-center text-danger">
-            <b>दु. न. 35 कृषि उपज मंडी, जबलपुर (म. प्र.) | मो. 9300933117</b>
-         </h6>
-         <hr />
-         <div className="ps-1">
-            <Table size="sm" borderless>
-               <tbody>
-                  <tr>
-                     <th>नाम</th>
-                     <td>{props.data.name}</td>
-                     <th>बिल क्रमांक </th>
-                     <td>{props.data.billId}</td>
-                  </tr>
-                  <tr>
-                     <th>कंपनी का नाम</th>
-                     <td>{props.data.companyName}</td>
-                     <th>दिनांक </th>
-                     <td>{props.data.date}</td>
-                  </tr>
-                  <tr>
-                     <th>पता</th>
-                     <td>{props.data.address}</td>
-                  </tr>
-                  <tr>
-                     <th>फ़ोन </th>
-                     <td>{props.data.phone}</td>
-                  </tr>
-               </tbody>
-            </Table>
-         </div>
-         <hr />
-         <div>
-            <Table size="sm" borderless>
-               <tbody>
-                  <tr>
-                     <td className="fill-row">
-                        <b>पुराना बचा बैलेंस</b>
-                     </td>
-                     <td className="text-end">
-                        <b>{props.data.oldBalance}</b>
-                     </td>
-                  </tr>
-               </tbody>
-            </Table>
-            <hr />
-            <b>खरीदी का बेयौरा </b> दिनांक : {props.data.date}
-            <Table bordered className="mt-2">
-               <thead>
-                  <tr className="text-end">
-                     <th>नग/बोरा</th>
-                     <th>कुल वजन</th>
-                     <th>रेट</th>
-                     <th>
-                        <b>टोटल</b>
-                     </th>
-                  </tr>
-               </thead>
-               <tbody>
-                  {props.data.transaction &&
-                     props.data.transaction.map((txn) => {
-                        if (txn.type === "DEBIT") {
-                           return (
-                              <tr key={txn._id} className="text-end">
-                                 <td>{txn.numberofBags}</td>
-                                 <td>{txn.totalweight}</td>
-                                 <td>{txn.rate}</td>
-                                 <td>{txn.transactionAmount}</td>
-                              </tr>
-                           );
-                        }
-                     })}
-                  <tr>
-                     <td colSpan={3} className="text-end">
-                        <b>कुल योग</b>
-                     </td>
-                     <td colSpan={1} className="text-end">
-                        <b>{props.data.debitSum}</b>
-                     </td>
-                  </tr>
-               </tbody>
-            </Table>
-         </div>
-         <hr />
-         <div>
-            <Table>
-               <tbody>
-                  <tr>
-                     <td className="fill-row">
-                        <b>
-                           खरीदी का कुल योग + पुराना बचा बैलेंस (कुल देनदारी)
-                        </b>
-                     </td>
-                     <td className="text-end">
-                        <b>
-                           {Math.abs(props.data.debitSum -
-                              props.data.debitSum * 2 +
-                              props.data.oldBalance)}
-                        </b>
-                     </td>
-                  </tr>
-                  <tr>
-                     <td className="fill-row">
-                        <b>कैश जमा किया गया (-)</b>
-                     </td>
-                     <td className="text-end">
-                        <b>{props.data.creditSum}</b>
-                     </td>
-                  </tr>
-                  <tr>
-                     <td className="fill-row p-2">
-                        <b>आज तक की कुल बाक़ाया देनदारी </b>
-                     </td>
-                     <td className="text-end">
-                        <b>
-                           {Math.abs (props.data.debitSum -
-                              props.data.debitSum * 2 + props.data.oldBalance +
-                              props.data.creditSum)}
-                        </b>
-                     </td>
-                  </tr>
-               </tbody>
-            </Table>
-            <div className="text-end pt-4">
-               <span>हस्ताक्षर</span>
-            </div>
-         </div>
+  console.log('PROPS ', props);
+  const [purchaser, setPurchaser] = useState({});
+
+  useEffect(() => {
+    setPurchaser(props.data);
+  }, [props.data]);
+
+  // Table columns for purchase details
+  const purchaseColumns = [
+    { title: 'नग/बोरा', dataIndex: 'bags', key: 'bags', align: 'right' },
+    { title: 'कुल वजन', dataIndex: 'weight', key: 'weight', align: 'right' },
+    { title: 'रेट', dataIndex: 'rate', key: 'rate', align: 'right' },
+    { title: 'टोटल', dataIndex: 'total', key: 'total', align: 'right' },
+  ];
+
+  // Prepare purchase data
+  const purchaseData = props.data.transaction
+    ? props.data.transaction
+        .filter(txn => txn.type === 'DEBIT')
+        .map((txn, index) => ({
+          key: index,
+          bags: txn.numberofBags,
+          weight: txn.totalweight,
+          rate: txn.rate,
+          total: txn.transactionAmount,
+        }))
+    : [];
+
+  return (
+    <Card ref={ref} className="print-card" style={{ margin: '24px auto' }}>
+      {/* Header  */}
+      <div style={{ textAlign: 'center' }}>
+        <Text strong style={{ color: '#389e0d', marginBottom: 0, display: 'block' }}>
+          || श्री गुरु कृपा ||
+        </Text>
+        <Title level={5} style={{ color: '#e53935', marginBottom: 0 }}>
+          IM
+        </Title>
+        <Title level={2} style={{ color: '#e53935', margin: '0px 0 8px 0' }}>
+          <u>महाराज वेजिटेबल कंपनी</u>
+        </Title>
+        <Text style={{ color: '#389e0d' }}>धनिया, टमाटर, मटर एवं सब्जी के आढ़ती</Text>
+        <br />
+        <Text strong style={{ color: '#e53935' }}>
+          दु. न. 35 कृषि उपज मंडी, जबलपुर (म. प्र.) | मो. 9300933117
+        </Text>
       </div>
-   );
+      <Divider style={{ marginBottom: '5px' }} />
+
+      {/* Purchaser Details */}
+      <Row gutter={16} style={{ margin: '5px 0' }}>
+        <Col xs={24} sm={14} md={14} lg={14} xl={14}>
+          <Descriptions column={1} size="small" bordered={false} style={{ margin: '5px 0' }}>
+            <Descriptions.Item label="नाम">{props.data.name}</Descriptions.Item>
+            <Descriptions.Item label="कंपनी का नाम">{props.data.companyName}</Descriptions.Item>
+            <Descriptions.Item label="पता">{props.data.address}</Descriptions.Item>
+            <Descriptions.Item label="फ़ोन">{props.data.phone}</Descriptions.Item>
+          </Descriptions>
+        </Col>
+        <Col xs={24} sm={10} md={10} lg={10} xl={10} style={{ textAlign: 'right' }}>
+          <Descriptions column={1} size="small" bordered={false} style={{ margin: '5px 0' }}>
+            <Descriptions.Item label="बिल क्र.">{props.data.billId}</Descriptions.Item>
+            <Descriptions.Item label="दिनांक">{props.data.date}</Descriptions.Item>
+          </Descriptions>
+        </Col>
+      </Row>
+      <Divider style={{ marginTop: '5px' }} />
+
+      {/* Old Balance */}
+      <Row justify="space-between" style={{ marginBottom: 8 }}>
+        <Col>
+          <Text strong>पुराना बचा बैलेंस</Text>
+        </Col>
+        <Col>
+          <Text strong>₹ {props.data.oldBalance}</Text>
+        </Col>
+      </Row>
+      <Divider style={{ margin: '8px 0' }} />
+
+      {/* Purchase Details */}
+      <Title level={5} style={{ textAlign: 'center', margin: '0' }}>
+        ** खरीदी का बिल **
+      </Title>
+      <Divider style={{ margin: '0' }} />
+      <Text strong>खरीदी का बेयौरा - दिनांक: {props.data.date}</Text>
+      <Table
+        columns={purchaseColumns}
+        dataSource={purchaseData}
+        pagination={false}
+        size="small"
+        style={{ margin: '8px 0' }}
+        bordered
+        summary={() => (
+          <Table.Summary>
+            <Table.Summary.Row style={{ backgroundColor: '#fafafa' }}>
+              <Table.Summary.Cell colSpan={3} align="right">
+                <Text strong>कुल योग</Text>
+              </Table.Summary.Cell>
+              <Table.Summary.Cell align="right">
+                <Text strong>₹ {props.data.debitSum}</Text>
+              </Table.Summary.Cell>
+            </Table.Summary.Row>
+          </Table.Summary>
+        )}
+      />
+
+      <Divider style={{ margin: '8px 0' }} />
+
+      {/* Financial Summary */}
+      <Text strong>वित्तीय सारांश</Text>
+      <Descriptions column={1} size="small" bordered style={{ marginBottom: 8 }}>
+        <Descriptions.Item label="खरीदी का कुल योग + पुराना बचा बैलेंस (कुल देनदारी) (₹)">
+          {Math.abs(props.data.debitSum - props.data.debitSum * 2 + props.data.oldBalance)}
+        </Descriptions.Item>
+        <Descriptions.Item label="कैश जमा किया गया (-) (₹)">
+          {props.data.creditSum}
+        </Descriptions.Item>
+        <Descriptions.Item label="आज तक की कुल बाक़ाया देनदारी (₹)">
+          <Text strong style={{ color: '#e53935' }}>
+            {Math.abs(
+              props.data.debitSum -
+                props.data.debitSum * 2 +
+                props.data.oldBalance +
+                props.data.creditSum
+            )}
+          </Text>
+        </Descriptions.Item>
+      </Descriptions>
+
+      <Divider />
+
+      {/* Signature */}
+      <Row justify="end">
+        <Col>
+          <Text strong>हस्ताक्षर</Text>
+        </Col>
+      </Row>
+    </Card>
+  );
 });
 
 export default PurchaserBill;

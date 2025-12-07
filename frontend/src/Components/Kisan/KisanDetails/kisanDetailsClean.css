@@ -1,0 +1,1324 @@
+@media (max-width: 900px) {
+  /* ==============================================
+     MOBILE CONSISTENCY STYLES - COMPREHENSIVE
+     ============================================== */
+
+  /* Mobile container and page layout */
+  .mobile-container-padding {
+    padding: 12px 8px !important;
+    min-height: 100vh;
+  }
+
+  /* Universal card styling for consistent mobile layout */
+  .ant-card {
+    margin-left: 8px !important;
+    margin-right: 8px !important;
+    margin-bottom: 16px !important;
+    border-radius: 12px !important;
+    border: 1px solid #f0f0f0 !important;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06) !important;
+  }
+
+  /* Consistent card body padding across all cards */
+  .ant-card-body {
+    padding: 16px 12px !important;
+  }
+
+  /* Consistent card header styling */
+  .ant-card-head {
+    padding: 12px 16px !important;
+    border-radius: 12px 12px 0 0 !important;
+  }
+
+  /* Universal form field spacing */
+  .ant-form-item {
+    margin-bottom: 16px !important;
+  }
+
+  /* Consistent row spacing */
+  .ant-row {
+    margin-left: -8px !important;
+    margin-right: -8px !important;
+    margin-bottom: 8px !important;
+  }
+
+  /* Consistent column padding */
+  /* .ant-col {
+    padding-left: 8px !important;
+    padding-right: 8px !important;
+  } */
+
+  /* Bill Details heading consistent styling */
+  .bill-details-heading-mobile {
+    text-align: left !important;
+    margin-bottom: 24px !important;
+    padding: 0 8px !important;
+  }
+
+  .bill-details-heading-mobile .ant-typography {
+    font-size: 18px !important;
+    font-weight: 600 !important;
+  }
+
+  .bill-details-heading-mobile>div {
+    justify-content: flex-start !important;
+  }
+
+  /* Universal mobile button styling */
+  .mobile-action-buttons {
+    text-align: left !important;
+    margin-top: 24px !important;
+    padding: 16px 12px !important;
+    background: #f8f9fa !important;
+    border-radius: 12px !important;
+    border: 1px solid #e9ecef !important;
+    margin-left: 8px !important;
+    margin-right: 8px !important;
+  }
+
+  .mobile-action-buttons .ant-btn {
+    height: 44px !important;
+    font-size: 14px !important;
+    font-weight: 500 !important;
+    padding: 8px 20px !important;
+    min-width: 120px !important;
+    border-radius: 6px !important;
+  }
+
+  .mobile-action-buttons .ant-space {
+    gap: 8px !important;
+  }
+
+  /* Override any inline button styles in mobile */
+  .mobile-action-buttons .ant-btn[style*="height: 48px"] {
+    height: 44px !important;
+  }
+
+  .mobile-action-buttons .ant-btn[style*="fontSize: 16px"] {
+    font-size: 14px !important;
+  }
+
+  .mobile-action-buttons .ant-btn[style*="minWidth: 180px"] {
+    min-width: 120px !important;
+    max-width: 160px !important;
+  }
+
+  /* Bill total summary consistent styling */
+  .bill-total-summary {
+    margin-bottom: 16px !important;
+    margin-top: 16px !important;
+    margin-left: 8px !important;
+    margin-right: 8px !important;
+    padding: 16px !important;
+    background: #f8f9fa !important;
+    border-radius: 8px !important;
+    border: 1px solid #e9ecef !important;
+  }
+
+  /* Fix inconsistent margins for bill total elements in cards */
+  .gradient-header-green .ant-typography.ant-typography-h5,
+  .gradient-header-red .ant-typography.ant-typography-h5 {
+    margin-bottom: 0 !important;
+    margin-top: 16px !important;
+  }
+
+  /* Ensure consistent spacing for standalone bill total titles */
+  .gradient-header-green>.ant-card-body>.ant-typography.ant-typography-h5:last-child,
+  .gradient-header-red>.ant-card-body>div:last-child .ant-typography.ant-typography-h5 {
+    margin-top: 16px !important;
+    margin-bottom: 16px !important;
+    padding: 12px 8px !important;
+  }
+
+  /* Payment settlement section consistent spacing */
+  .payment-settlement-heading {
+    margin-bottom: 16px !important;
+  }
+
+  /* Typography adjustments for better mobile readability */
+  .ant-typography h1,
+  .ant-typography h2,
+  .ant-typography h3,
+  .ant-typography h4,
+  .ant-typography h5 {
+    font-size: 16px !important;
+    font-weight: 600 !important;
+    line-height: 1.4 !important;
+  }
+
+  /* Card title mobile responsiveness - allow inline styles to take precedence */
+  .ant-card-head-title span {
+    font-size: inherit !important;
+    font-weight: inherit !important;
+  }
+
+  /* Hide specific text elements on mobile */
+  .mobile-hide-text {
+    display: none !important;
+  }
+
+  /* Nested cards optimization for mobile */
+  .ant-card .ant-card {
+    margin: 0 !important;
+    border-radius: 8px !important;
+  }
+
+  .ant-card .ant-card .ant-card-body {
+    padding: 12px !important;
+  }
+
+  /* Account Summary nested cards specific optimization */
+  .mobile-consistent-card .ant-card {
+    margin-bottom: 0 !important;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+  }
+
+  /* Reduce nested card shadows for cleaner mobile appearance */
+  .ant-card .ant-card {
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04) !important;
+  }
+
+  /* Mobile nested card class for Account Summary cards */
+  .mobile-nested-card {
+    margin: 0 !important;
+  }
+
+  .mobile-nested-card .ant-card-body {
+    padding: 12px 8px !important;
+  }
+
+  /* Account Summary row specific mobile optimization */
+  .mobile-account-summary-row {
+    margin-left: -6px !important;
+    margin-right: -6px !important;
+  }
+
+  .mobile-account-summary-row>.ant-col {
+    padding-left: 6px !important;
+    padding-right: 6px !important;
+  }
+
+  /* Mobile card values and labels optimization */
+  .mobile-card-value {
+    font-size: 22px !important;
+  }
+
+  .mobile-card-label {
+    font-size: 14px !important;
+  }
+
+  /* Form label consistency */
+  .ant-form-item-label>label {
+    font-size: 14px !important;
+    font-weight: 500 !important;
+    color: #2c3e50 !important;
+  }
+
+  /* Input field consistency - minimal changes */
+  .ant-input,
+  .ant-input-number,
+  .ant-select-selector,
+  .ant-picker-input input,
+  .ant-input-number-input {
+    font-size: 15px !important;
+  }
+
+  /* Text area consistency - minimal changes */
+  .ant-input {
+    min-height: 32px !important;
+  }
+
+  /* Back dated toggle mobile visibility */
+  .back-dated-toggle-mobile {
+    display: flex !important;
+    align-items: center !important;
+    gap: 12px !important;
+    margin-bottom: 16px !important;
+    padding: 0 !important;
+    justify-content: space-between;
+  }
+
+
+  /* Breadcrumb mobile styling */
+  .ant-breadcrumb {
+    margin-bottom: 20px !important;
+    padding: 12px 8px !important;
+    font-size: 14px !important;
+  }
+
+  /* Alert styling consistency - minimal override */
+  .ant-alert {
+    margin-top: 16px !important;
+    margin-left: 8px !important;
+    margin-right: 8px !important;
+  }
+
+  /* Loading spinner container */
+  .ant-spin-container {
+    padding: 8px !important;
+  }
+}
+
+/* Desktop mode - buttons left aligned */
+.mobile-action-buttons {
+  text-align: left !important;
+}
+
+@media (max-width: 900px) {
+  .back-dated-toggle-mobile {
+    display: flex !important;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 10px;
+  }
+}
+
+/* Clean minimal styles for KisanDetails - Only necessary custom styles */
+
+/* Custom styling for transaction table */
+.cash-paid-green {
+  color: #52c41a !important;
+  font-weight: 600;
+}
+
+.text-danger {
+  color: #ff4d4f !important;
+}
+
+.text-primary {
+  color: #1677ff !important;
+}
+
+.link-no-decoration {
+  text-decoration: none !important;
+  color: inherit !important;
+}
+
+/* Custom header styles for transaction table */
+.custom-header-row th {
+  text-align: center !important;
+  font-weight: 600 !important;
+  font-size: 15px !important;
+  border: 1px solid #d9d9d9 !important;
+  background: #fafafa !important;
+}
+
+.currency-header {
+  background: #e6f7ff !important;
+  color: #1677ff !important;
+}
+
+.entered-amounts-header {
+  background: #fffbe6 !important;
+  color: #faad14 !important;
+}
+
+.outstanding-header {
+  background: #fff1f0 !important;
+  color: #ff4d4f !important;
+}
+
+/* Mobile card view for transactions */
+.kisan-transaction-card {
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+  margin-bottom: 16px;
+  padding: 24px;
+  /* Increased padding for broader appearance */
+  border: 1px solid #e8e8e8;
+  transition: all 0.2s ease;
+  width: 100%;
+  /* Ensure cards take full width */
+  box-sizing: border-box;
+  /* Include padding and border in width calculation */
+}
+
+.kisan-transaction-card:hover {
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+  border-color: #1677ff;
+}
+
+.kisan-transaction-card-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+  padding: 4px 0;
+}
+
+.kisan-transaction-card-row:last-child {
+  margin-bottom: 0;
+  padding-top: 8px;
+  border-top: 1px solid #f0f0f0;
+}
+
+.kisan-transaction-card-label {
+  font-weight: 600;
+  color: #666;
+  margin-right: 8px;
+  min-width: 120px;
+  flex-shrink: 0;
+  font-size: 16px;
+}
+
+.kisan-transaction-card-row span:last-child {
+  font-weight: 500;
+  color: #262626;
+  text-align: right;
+}
+
+/* Status badge styling for transaction cards */
+.kisan-transaction-status-badge {
+  color: #52c41a;
+  font-weight: 600;
+  font-size: 13px;
+  background: #f6ffed;
+  padding: 2px 8px;
+  border-radius: 4px;
+  border: 1px solid rgba(82, 196, 26, 0.2);
+  white-space: nowrap;
+}
+
+.kisan-transaction-status-badge.outstanding {
+  color: #ff4d4f;
+  background: #fff1f0;
+  border-color: rgba(255, 77, 79, 0.2);
+}
+
+/* Ensure serial number row has proper spacing for status */
+.kisan-transaction-card-row .serial-with-status {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+/* Special styling for the first row (serial number row) */
+.kisan-transaction-card-row.serial-row {
+  justify-content: space-between;
+  /* Push # to left and status to right */
+  align-items: center;
+  margin-bottom: 12px;
+  /* Add a bit more space after the serial row */
+}
+
+.kisan-transaction-card-row.serial-row .kisan-transaction-card-label {
+  margin-right: 2px;
+  /* Minimal margin so # and number are very close */
+  min-width: auto;
+  /* Don't enforce minimum width for # symbol */
+  font-weight: 700;
+  /* Make the # symbol and number bold */
+  color: #1677ff;
+  /* Give it a nice blue color */
+}
+
+/* Style the serial number span */
+.kisan-transaction-card-row.serial-row>span:first-child {
+  font-weight: 700;
+  color: #1677ff;
+  font-size: 17px;
+}
+
+/* Spacing adjustments for consistent layout */
+.ant-card+.ant-card {
+  margin-top: 16px !important;
+}
+
+/* Consistent margins for all cards regardless of device */
+.kisan-details-container .ant-card {
+  margin-bottom: 0 !important;
+}
+
+/* Improved view toggle button styling */
+.ant-btn-group {
+  margin-right: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.ant-btn-group .ant-btn {
+  border-radius: 0 !important;
+  font-weight: 500;
+}
+
+.ant-btn-group .ant-btn:first-child {
+  border-top-left-radius: 6px !important;
+  border-bottom-left-radius: 6px !important;
+}
+
+.ant-btn-group .ant-btn:last-child {
+  border-top-right-radius: 6px !important;
+  border-bottom-right-radius: 6px !important;
+}
+
+/* Mobile view toggle container */
+.mobile-view-toggle {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 16px;
+  padding: 0 16px;
+}
+
+/* Responsive adjustments for mobile devices - consistent spacing */
+@media (max-width: 900px) {
+
+  /* Maintain consistent card spacing on mobile */
+  .ant-card {
+    margin-bottom: 0 !important;
+  }
+
+  /* Mobile responsive grid adjustments */
+  .ant-row {
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+  }
+
+  /* Ensure proper column spacing on mobile */
+  /* .ant-col {
+    padding-left: 15px !important;
+    padding-right: 15px !important;
+  } */
+
+  /* Ensure buttons are properly sized on mobile */
+  .ant-btn-block {
+    width: 100% !important;
+    margin-bottom: 6px !important;
+  }
+
+  /* Mobile transaction card adjustments */
+  .kisan-transaction-card {
+    padding: 20px;
+    /* Optimal padding for mobile - slightly less than desktop for balance */
+    margin-bottom: 12px;
+  }
+
+  .kisan-transaction-card-row {
+    margin-bottom: 6px;
+  }
+
+  .kisan-transaction-card-label {
+    min-width: 100px;
+    font-size: 16px;
+  }
+
+  /* Prevent any horizontal overflow at the page level */
+  body,
+  html {
+    overflow-x: hidden;
+  }
+
+  /* Ensure main container doesn't exceed viewport width */
+  .kisan-details-container {
+    max-width: 100vw;
+    overflow-x: hidden;
+  }
+}
+
+/* Custom styling for Ant Design Statistic component value colors */
+.ant-statistic-content-value {
+  font-weight: 700 !important;
+}
+
+/* Print/Export Table Styles */
+.print-table {
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 2px 12px #e0e0e0;
+  background: #fff;
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.print-table th {
+  background: linear-gradient(90deg, #e53935 0%, #ffb300 100%);
+  color: #fff;
+  border: 1px solid #aaa;
+  padding: 8px;
+  font-size: 13px;
+}
+
+.print-table td {
+  border: 1px solid #aaa;
+  padding: 8px;
+  font-size: 12px;
+}
+
+.print-row-even {
+  background: #fff8f6;
+}
+
+.print-row-odd {
+  background: #fbe9e7;
+}
+
+.print-company {
+  font-weight: 700;
+  font-size: 1.2em;
+  margin-bottom: 0.5em;
+  text-align: center;
+  color: #e53935;
+  letter-spacing: 1px;
+  text-shadow: 0 1px 4px #f8bbd0;
+}
+
+.print-title {
+  font-size: 1em;
+  font-weight: 600;
+  margin-bottom: 0.7em;
+  text-align: center;
+  color: #222;
+}
+
+.print-sub {
+  color: #888;
+  font-size: 0.95em;
+  margin-bottom: 1.2em;
+  text-align: center;
+}
+
+/* Ensure transaction table has proper responsive behavior */
+.kisan-transactions-table-wrapper {
+  width: 100%;
+  /* Remove overflow-x to prevent double scrollbars - let Ant Table handle its own scrolling */
+}
+
+/* Prevent body-level horizontal scrolling on small screens */
+.kisan-transactions-table-wrapper .ant-table-container {
+  overflow-x: auto;
+  overflow-y: visible;
+}
+
+/* Ensure the table wrapper doesn't add extra margins or padding that could cause scrolling */
+.kisan-transactions-table-desktop,
+.kisan-transactions-table-mobile {
+  width: 100%;
+  overflow: visible;
+}
+
+/* Specific mobile table scrolling improvements */
+@media (max-width: 900px) {
+  .kisan-transactions-table-mobile {
+    overflow-x: auto !important;
+    -webkit-overflow-scrolling: touch;
+    /* Smooth scrolling on iOS */
+    width: 100%;
+    max-width: 100vw;
+    /* Ensure it doesn't exceed viewport */
+  }
+
+  /* Ensure parent card doesn't restrict scrolling */
+  .kisan-transactions-table-mobile .ant-card {
+    overflow: visible !important;
+  }
+
+  /* Make sure the table has enough space */
+  .kisan-transactions-table-mobile .ant-table {
+    width: 1200px !important;
+    /* Force minimum width */
+  }
+}
+
+/* Additional mobile improvements for view toggle and spacing */
+@media (max-width: 900px) {
+
+  /* Mobile view toggle styling */
+  .ant-btn-group .ant-btn {
+    padding: 4px 12px;
+    height: 32px;
+    font-size: 16px;
+  }
+
+  /* Improve transaction card spacing on mobile */
+  .kisan-transaction-card {
+    margin: 0 0 12px 0;
+    /* Remove left/right margins to make cards full width */
+    padding: 24px;
+    /* Increased padding even more for broader appearance */
+  }
+
+  /* Ensure mobile cards container has proper spacing */
+  .kisan-transactions-table-mobile {
+    margin: 0;
+    /* Remove negative margin since cards no longer have side margins */
+    padding: 0 4px;
+    /* Minimal padding to make cards appear even broader */
+  }
+
+  /* Ensure proper card extra content alignment on mobile */
+  .ant-card-extra {
+    margin-left: 8px !important;
+  }
+
+  /* Ensure card titles are visible and properly sized for mobile */
+  .ant-card-head-title {
+    font-size: 16px !important;
+    font-weight: 600 !important;
+    line-height: 1.4 !important;
+    color: #2c3e50 !important;
+  }
+
+  /* Allow custom inline styles to override card title defaults */
+  .ant-card-head-title div,
+  .ant-card-head-title span {
+    font-size: inherit !important;
+    font-weight: inherit !important;
+    color: inherit !important;
+  }
+
+  /* Better mobile button group appearance */
+  .ant-btn-group {
+    margin-right: 0;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.12);
+  }
+
+  /* Prevent transaction history card from causing horizontal overflow */
+  .ant-card {
+    max-width: 100%;
+    overflow: hidden;
+  }
+
+  /* Exception: Special card body padding for transaction cards in mobile view */
+  .kisan-transactions-table-mobile .ant-card-body {
+    padding: 8px 4px;
+    /* Minimal padding for transaction history card body */
+    overflow-x: auto !important;
+    /* Allow horizontal scrolling in card body */
+  }
+
+  /* Ensure table container doesn't exceed card bounds */
+  .ant-card-body {
+    padding: 16px 12px;
+    overflow: hidden;
+  }
+}
+
+.kisan-transactions-table-wrapper .ant-table {
+  min-width: 800px;
+  font-size: 14px;
+}
+
+/* Desktop table font sizes */
+.kisan-transactions-table-desktop .ant-table-thead>tr>th,
+.kisan-transactions-table-desktop .ant-table-tbody>tr>td {
+  font-size: 14px;
+  padding: 8px 12px;
+}
+
+@media (max-width: 900px) {
+  .kisan-transactions-table-wrapper .ant-table {
+    min-width: 1200px;
+    /* Significantly increased to ensure all columns are visible */
+  }
+
+  .kisan-transactions-table-wrapper .ant-table-thead>tr>th,
+  .kisan-transactions-table-wrapper .ant-table-tbody>tr>td {
+    font-size: 14px;
+    padding: 4px 2px;
+    /* Further reduced padding to fit more content */
+    white-space: nowrap;
+    /* Prevent text wrapping */
+    min-width: 80px;
+    /* Ensure minimum column width */
+  }
+
+  /* Ensure mobile table container allows proper horizontal scrolling */
+  .kisan-transactions-table-mobile {
+    overflow-x: auto !important;
+    /* Force horizontal scrolling */
+    width: 100%;
+    -webkit-overflow-scrolling: touch;
+    /* Smooth scrolling on iOS */
+  }
+
+  /* Ensure the table wrapper allows full horizontal scrolling */
+  .kisan-transactions-table-mobile .ant-table-container {
+    overflow-x: auto !important;
+    overflow-y: visible;
+  }
+
+  /* Remove sticky positioning to allow normal scrolling */
+  .kisan-transactions-table-mobile .ant-table-tbody td,
+  .kisan-transactions-table-mobile .ant-table-thead th {
+    position: static;
+    background: inherit;
+    box-shadow: none;
+  }
+}
+
+/* Custom button styles for action buttons */
+.kisan-action-button-primary {
+  background: #1677ff !important;
+  border-color: #1677ff !important;
+}
+
+.kisan-action-button-warning {
+  background: #faad14 !important;
+  border-color: #faad14 !important;
+}
+
+.kisan-action-button-success {
+  background: #52c41a !important;
+  border-color: #52c41a !important;
+}
+
+/* Ensure proper card spacing */
+.kisan-detail-card {
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Tag styling for better consistency */
+.kisan-detail-tag {
+  border-radius: 8px;
+  padding: 4px 12px;
+  font-weight: 600;
+}
+
+/* Fix extra padding on first and last summary cards in desktop */
+@media (min-width: 901px) {
+
+  /* Target summary statistics cards specifically */
+  .kisan-summary-stats-row .ant-col:first-child {
+    padding-left: 0 !important;
+  }
+
+  /* Remove extra right padding from last summary statistic card only */
+  .kisan-summary-stats-row .ant-col:last-child {
+    padding-right: 0 !important;
+  }
+}
+
+/* Loading shimmer styles for KisanTransactionTable */
+.kisan-transactions-table-shimmer {
+  padding: 20px;
+  background: #fff;
+  border-radius: 8px;
+  min-height: 400px;
+}
+
+/* Desktop table shimmer */
+.shimmer-table-container {
+  width: 100%;
+}
+
+.shimmer-table-header {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+  padding: 16px 0;
+  border-bottom: 2px solid #f1f3f4;
+  margin-bottom: 16px;
+}
+
+.shimmer-date-group {
+  display: flex;
+  align-items: center;
+  padding: 12px 0;
+  margin: 16px 0 8px 0;
+  border-bottom: 1px solid #e8e8e8;
+}
+
+.shimmer-table-row {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+  padding: 12px 0;
+  border-bottom: 1px solid #f8f9fa;
+}
+
+.shimmer-table-row:last-child {
+  border-bottom: none;
+}
+
+/* Mobile card shimmer */
+.shimmer-cards-container {
+  width: 100%;
+}
+
+.shimmer-date-group-mobile {
+  display: flex;
+  align-items: center;
+  padding: 12px 0;
+  margin: 16px 0 8px 0;
+  border-bottom: 1px solid #e8e8e8;
+}
+
+.shimmer-card {
+  background: #fff;
+  border: 1px solid #f0f0f0;
+  border-radius: 8px;
+  padding: 16px;
+  margin-bottom: 12px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.shimmer-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid #f5f5f5;
+}
+
+.shimmer-card-content {
+  margin-bottom: 12px;
+}
+
+.shimmer-card-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.shimmer-card-row:last-child {
+  margin-bottom: 0;
+}
+
+.shimmer-card-actions {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+  padding-top: 8px;
+  border-top: 1px solid #f5f5f5;
+}
+
+/* Responsive shimmer adjustments for Kisan */
+@media (max-width: 768px) {
+  .kisan-transactions-table-shimmer {
+    padding: 12px;
+  }
+
+  .shimmer-card {
+    padding: 12px;
+    margin-bottom: 8px;
+  }
+}
+
+/* Gradient header styles for card sections */
+.gradient-header-blue .ant-card-head {
+  background: linear-gradient(90deg, #1677ff 0%, #69c0ff 100%) !important;
+  color: #fff !important;
+  border-bottom: none !important;
+}
+
+.gradient-header-blue .ant-card-head .ant-card-head-title {
+  color: #fff !important;
+}
+
+.gradient-header-orange .ant-card-head {
+  background: linear-gradient(90deg, #fa8c16 0%, #ffc53d 100%) !important;
+  color: #fff !important;
+  border-bottom: none !important;
+}
+
+.gradient-header-orange .ant-card-head .ant-card-head-title {
+  color: #fff !important;
+}
+
+
+.gradient-header-green .ant-card-head {
+  background: linear-gradient(90deg, #52c41a 0%, #95de64 100%) !important;
+  color: #fff !important;
+  border-bottom: none !important;
+}
+
+/* Mobile adjustments for card paddings, margins, and font size */
+@media (max-width: 900px) {
+  /* ==============================================
+     GRADIENT HEADER CARDS MOBILE CONSISTENCY
+     ============================================== */
+
+  /* Universal gradient header card body padding */
+  .gradient-header-blue .ant-card-body,
+  .gradient-header-orange .ant-card-body,
+  .gradient-header-green .ant-card-body,
+  .gradient-header-red .ant-card-body,
+  .gradient-header-purple .ant-card-body,
+  .gradient-header-cyan .ant-card-body,
+  .gradient-header-gold .ant-card-body,
+  .gradient-header-gray .ant-card-body {
+    padding: 16px 12px !important;
+  }
+
+  /* Universal gradient header row spacing */
+  .gradient-header-blue .ant-row,
+  .gradient-header-orange .ant-row,
+  .gradient-header-green .ant-row,
+  .gradient-header-red .ant-row,
+  .gradient-header-purple .ant-row,
+  .gradient-header-cyan .ant-row,
+  .gradient-header-gold .ant-row,
+  .gradient-header-gray .ant-row {
+    margin-left: -8px !important;
+    margin-right: -8px !important;
+    margin-bottom: 12px !important;
+  }
+
+  /* Universal gradient header column padding */
+  .gradient-header-blue .ant-col,
+  .gradient-header-orange .ant-col,
+  .gradient-header-green .ant-col,
+  .gradient-header-red .ant-col,
+  .gradient-header-purple .ant-col,
+  .gradient-header-cyan .ant-col,
+  .gradient-header-gold .ant-col,
+  .gradient-header-gray .ant-col {
+    padding-left: 8px !important;
+    padding-right: 8px !important;
+  }
+
+  /* Universal gradient header form item spacing */
+  .gradient-header-blue .ant-form-item,
+  .gradient-header-orange .ant-form-item,
+  .gradient-header-green .ant-form-item,
+  .gradient-header-red .ant-form-item,
+  .gradient-header-purple .ant-form-item,
+  .gradient-header-cyan .ant-form-item,
+  .gradient-header-gold .ant-form-item,
+  .gradient-header-gray .ant-form-item {
+    margin-bottom: 16px !important;
+  }
+
+  /* Universal form control styling within gradient cards */
+  .gradient-header-blue .ant-input,
+  .gradient-header-blue .ant-input-number,
+  .gradient-header-blue .ant-select-selector,
+  .gradient-header-blue .ant-picker-input input,
+  .gradient-header-orange .ant-input,
+  .gradient-header-orange .ant-input-number,
+  .gradient-header-orange .ant-select-selector,
+  .gradient-header-orange .ant-picker-input input,
+  .gradient-header-green .ant-input,
+  .gradient-header-green .ant-input-number,
+  .gradient-header-green .ant-select-selector,
+  .gradient-header-green .ant-picker-input input,
+  .gradient-header-red .ant-input,
+  .gradient-header-red .ant-input-number,
+  .gradient-header-red .ant-select-selector,
+  .gradient-header-red .ant-picker-input input,
+  .gradient-header-purple .ant-input,
+  .gradient-header-purple .ant-input-number,
+  .gradient-header-purple .ant-select-selector,
+  .gradient-header-purple .ant-picker-input input,
+  .gradient-header-cyan .ant-input,
+  .gradient-header-cyan .ant-input-number,
+  .gradient-header-cyan .ant-select-selector,
+  .gradient-header-cyan .ant-picker-input input,
+  .gradient-header-gold .ant-input,
+  .gradient-header-gold .ant-input-number,
+  .gradient-header-gold .ant-select-selector,
+  .gradient-header-gold .ant-picker-input input,
+  .gradient-header-gray .ant-input,
+  .gradient-header-gray .ant-input-number,
+  .gradient-header-gray .ant-select-selector,
+  .gradient-header-gray .ant-picker-input input {
+    width: 100% !important;
+    font-size: 15px !important;
+  }
+
+  /* Text area specific styling - only height adjustment */
+  .gradient-header-gray .ant-input[rows] {
+    min-height: 100px !important;
+    height: auto !important;
+  }
+
+  /* Universal typography within gradient cards */
+  .gradient-header-blue .ant-form-item-label>label,
+  .gradient-header-orange .ant-form-item-label>label,
+  .gradient-header-green .ant-form-item-label>label,
+  .gradient-header-red .ant-form-item-label>label,
+  .gradient-header-purple .ant-form-item-label>label,
+  .gradient-header-cyan .ant-form-item-label>label,
+  .gradient-header-gold .ant-form-item-label>label,
+  .gradient-header-gray .ant-form-item-label>label {
+    font-size: 14px !important;
+    font-weight: 500 !important;
+    color: #2c3e50 !important;
+  }
+
+  /* Card title consistency in gradient headers */
+  .gradient-header-blue .ant-card-head-title,
+  .gradient-header-orange .ant-card-head-title,
+  .gradient-header-green .ant-card-head-title,
+  .gradient-header-red .ant-card-head-title,
+  .gradient-header-purple .ant-card-head-title,
+  .gradient-header-cyan .ant-card-head-title,
+  .gradient-header-gold .ant-card-head-title,
+  .gradient-header-gray .ant-card-head-title {
+    font-size: 16px !important;
+    font-weight: 600 !important;
+    color: #fff !important;
+  }
+
+  /* ==============================================
+     SPECIAL SECTIONS MOBILE CONSISTENCY
+     ============================================== */
+
+  /* Divider mobile styling */
+  .ant-divider {
+    margin: 16px 0 !important;
+    border-color: #e9ecef !important;
+  }
+
+  /* Warning/Info boxes mobile styling */
+  .ant-card-body>div[style*="background: #fff7e6"],
+  .ant-card-body>div[style*="background: #fff2e8"],
+  .ant-card-body>div[style*="background: #f6f6f6"] {
+    margin: 16px 8px !important;
+    padding: 12px 16px !important;
+    border-radius: 8px !important;
+    font-size: 14px !important;
+  }
+
+  /* Bill total badge styling */
+  div[style*="background: #f8f9fa"][style*="border: 1px solid #52c41a"],
+  div[style*="background: #f6f6f6"][style*="border: 1px solid #d9d9d9"] {
+    margin: 12px 8px !important;
+    padding: 8px 12px !important;
+    border-radius: 16px !important;
+    font-size: 13px !important;
+  }
+
+  /* Bill total title mobile margin */
+  .bill-total-title-mobile-mr {
+    margin-right: 8px !important;
+  }
+
+  /* Mobile specific tag styling - minimal override */
+  .ant-tag {
+    padding: 4px 8px !important;
+    font-size: 13px !important;
+    font-weight: 500 !important;
+  }
+
+  /* Switch component mobile styling */
+  .ant-switch {
+    min-width: 44px !important;
+    height: 22px !important;
+  }
+
+  /* Select dropdown mobile styling - minimal override */
+  .ant-select-dropdown {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15) !important;
+  }
+
+  /* DatePicker mobile styling - minimal override */
+  .ant-picker-dropdown {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15) !important;
+  }
+
+  /* Icon styling consistency */
+  .anticon {
+    font-size: 16px !important;
+  }
+
+  /* Text consistency */
+  .ant-typography-caption {
+    font-size: 12px !important;
+    color: #666 !important;
+  }
+
+  /* Button icon alignment */
+  .ant-btn .anticon+span,
+  .ant-btn span+.anticon {
+    margin-left: 6px !important;
+  }
+
+  /* Spinner mobile styling */
+  .ant-spin {
+    font-size: 16px !important;
+  }
+
+  /* Progress bar mobile styling */
+  .ant-progress {
+    margin: 8px 0 !important;
+  }
+
+  /* ==============================================
+     MAIN CONTAINER AND OVERRIDES - MINIMAL
+     ============================================== */
+
+  /* Override any inline styles for consistent mobile layout - spacing only */
+  div[style*="padding: 24px"] {
+    padding: 12px 8px !important;
+  }
+
+  div[style*="marginBottom: 24"] {
+    margin-bottom: 16px !important;
+  }
+
+  div[style*="marginTop: 40"] {
+    margin-top: 24px !important;
+  }
+
+  /* Ensure consistent spacing for all Card components */
+  .ant-card[style*="marginBottom: 24"] {
+    margin-bottom: 16px !important;
+  }
+
+  /* Consistent margin for info boxes */
+  div[style*="marginBottom: 24"][style*="padding: 16px"] {
+    margin-bottom: 16px !important;
+    margin-left: 8px !important;
+    margin-right: 8px !important;
+    padding: 12px !important;
+  }
+}
+
+.gradient-header-green .ant-card-head .ant-card-head-title {
+  color: #fff !important;
+}
+
+.gradient-header-red .ant-card-head {
+  background: linear-gradient(90deg, #ff4d4f 0%, #ff7875 100%) !important;
+  color: #fff !important;
+  border-bottom: none !important;
+}
+
+.gradient-header-red .ant-card-head .ant-card-head-title {
+  color: #fff !important;
+}
+
+.gradient-header-purple .ant-card-head {
+  background: linear-gradient(90deg, #722ed1 0%, #b37feb 100%) !important;
+  color: #fff !important;
+  border-bottom: none !important;
+}
+
+.gradient-header-purple .ant-card-head .ant-card-head-title {
+  color: #fff !important;
+}
+
+.gradient-header-cyan .ant-card-head {
+  background: linear-gradient(90deg, #13c2c2 0%, #5cdbd3 100%) !important;
+  color: #fff !important;
+  border-bottom: none !important;
+}
+
+.gradient-header-cyan .ant-card-head .ant-card-head-title {
+  color: #fff !important;
+}
+
+.gradient-header-gold .ant-card-head {
+  background: linear-gradient(90deg, #faad14 0%, #ffd666 100%) !important;
+  color: #fff !important;
+  border-bottom: none !important;
+}
+
+.gradient-header-gold .ant-card-head .ant-card-head-title {
+  color: #fff !important;
+}
+
+.gradient-header-gray .ant-card-head {
+  background: linear-gradient(90deg, #8c8c8c 0%, #bfbfbf 100%) !important;
+  color: #fff !important;
+  border-bottom: none !important;
+}
+
+.gradient-header-gray .ant-card-head .ant-card-head-title {
+  color: #fff !important;
+}
+
+/* ==============================================
+   MOBILE CONSISTENCY UTILITY CLASSES
+   ============================================== */
+
+/* Mobile container class for consistent padding */
+.mobile-consistent-container {
+  padding: 12px 8px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* Mobile card wrapper for consistent spacing */
+.mobile-consistent-card {
+  margin: 0 8px 16px 8px;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+}
+
+/* Mobile section spacing */
+.mobile-section-spacing {
+  margin-bottom: 16px;
+  padding: 0 8px;
+}
+
+/* Mobile responsive helper classes */
+@media (max-width: 900px) {
+  .hide-on-mobile {
+    display: none !important;
+  }
+
+  .show-on-mobile {
+    display: block !important;
+  }
+
+  .mobile-text-left {
+    text-align: left !important;
+  }
+
+  .mobile-full-width {
+    width: 100% !important;
+  }
+
+  .mobile-center {
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+  }
+
+  /* Consistent mobile button size */
+  .mobile-btn-consistent {
+    height: 40px !important;
+    font-size: 14px !important;
+    font-weight: 500 !important;
+    padding: 4px 16px !important;
+    border-radius: 6px !important;
+    min-width: 120px !important;
+  }
+
+  /* Consistent mobile input size - respect Ant Design defaults */
+  .mobile-input-consistent {
+    font-size: 15px !important;
+  }
+
+  /* Mobile specific button container responsive styling */
+  .mobile-action-buttons .ant-space-item {
+    flex: 0 1 auto !important;
+  }
+
+  .mobile-action-buttons .ant-space-horizontal {
+    flex-wrap: wrap !important;
+    justify-content: flex-start !important;
+  }
+
+  /* Ensure buttons don't exceed mobile screen width */
+  .mobile-action-buttons {
+    overflow: hidden !important;
+  }
+
+  .mobile-action-buttons .ant-space {
+    width: 100% !important;
+    flex-wrap: wrap !important;
+  }
+
+  /* Mobile-only right alignment for header text */
+  .mobile-header-text {
+    text-align: right !important;
+  }
+
+  .mobile-header-text .ant-typography {
+    text-align: right !important;
+  }
+
+  .mobile-header-text span {
+    text-align: right !important;
+    display: block !important;
+  }
+}

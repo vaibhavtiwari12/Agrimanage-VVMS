@@ -1,0 +1,27 @@
+<svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Carrot -->
+  <ellipse cx="10" cy="20" rx="3" ry="6" fill="url(#carrotGradient)" stroke="#ff9800" stroke-width="1"/>
+  <line x1="10" y1="15" x2="10" y2="25" stroke="#fff" stroke-width="0.7"/>
+  <path d="M10 14 C9 12, 8 11, 7.5 13" stroke="#388e3c" stroke-width="0.9" fill="none"/>
+  <path d="M10 14 C11 12, 12 11, 12.5 13" stroke="#388e3c" stroke-width="0.9" fill="none"/>
+  <!-- Tomato -->
+  <circle cx="22" cy="21" r="4" fill="url(#tomatoGradient)" stroke="#d32f2f" stroke-width="1"/>
+  <path d="M22 17.5 L22 19.5" stroke="#388e3c" stroke-width="0.8"/>
+  <path d="M22 17.5 C21.5 18, 21 18, 21 19" stroke="#388e3c" stroke-width="0.7" fill="none"/>
+  <path d="M22 17.5 C22.5 18, 23 18, 23 19" stroke="#388e3c" stroke-width="0.7" fill="none"/>
+  <!-- Pea pod -->
+  <ellipse cx="16" cy="10" rx="6" ry="2" fill="#81c784" stroke="#388e3c" stroke-width="1"/>
+  <circle cx="13.5" cy="10" r="0.7" fill="#43a047"/>
+  <circle cx="16" cy="10" r="0.7" fill="#43a047"/>
+  <circle cx="18.5" cy="10" r="0.7" fill="#43a047"/>
+  <defs>
+    <linearGradient id="carrotGradient" x1="7" y1="14" x2="13" y2="26" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#ffb347"/>
+      <stop offset="1" stop-color="#ff9800"/>
+    </linearGradient>
+    <linearGradient id="tomatoGradient" x1="18" y1="17" x2="26" y2="25" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#ff5252"/>
+      <stop offset="1" stop-color="#d32f2f"/>
+    </linearGradient>
+  </defs>
+</svg>

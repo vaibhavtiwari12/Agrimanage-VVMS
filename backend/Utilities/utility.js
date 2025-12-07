@@ -1,242 +1,220 @@
-const { createDBConnection, closeConnection } = require("../Mongo/mongoConnector");
+const { createDBConnection, closeConnection } = require('../Mongo/mongoConnector');
 //const inventorySchema = require("../Schema/inventorySchema");
 //const Kisan = require("../Schema/kisanSchema");
 //const Purchaser = require("../Schema/purchaserSchema");
 //const dashboard = require("../Schema/dashboardSchema");
-const { getKisanModel, getPurchaserModel, getInventoryModel } = require("../Model/model");
-const todaysDate = new Date()
+const { getKisanModel, getPurchaserModel, getInventoryModel } = require('../Model/model');
+const todaysDate = new Date();
 const monthToNumberMapping = {
-   "01": {
-      name: `Jan ${todaysDate.getFullYear()}`,
-      number: "01",
-      sequencePriority: 6
-   },
-   "02": {
-      name: `Feb ${todaysDate.getFullYear()}`,
-      number: "02",
-      sequencePriority: 7
-   },
-   "03": {
-      name: `Mar ${todaysDate.getFullYear()}`,
-      number: "03",
-      sequencePriority: 8
-   },
-   "04": {
-      name: `Apr ${todaysDate.getFullYear()}`,
-      number: "04",
-      sequencePriority: 7
-   },
-   "05": {
-      name: `May ${todaysDate.getFullYear()}`,
-      number: "01",
-      sequencePriority: 10
-   },
-   "06": {
-      name: `Jun ${todaysDate.getFullYear()}`,
-      number: "01",
-      sequencePriority: 11
-   },
-   "07": {
-      name: `Jul ${todaysDate.getFullYear()}`,
-      number: "01",
-      sequencePriority: 12
-   },
-   "08": {
-      name: `Aug ${todaysDate.getFullYear() - 1 }`,
-      number: "01",
-      sequencePriority: 1
-   },
-   "09": {
-      name: `Sep ${todaysDate.getFullYear() - 1}`,
-      number: "01",
-      sequencePriority: 2
-   },
-   10: {
-      name: `Oct ${todaysDate.getFullYear() - 1}`,
-      number: "01",
-      sequencePriority: 3
-   },
-   11: {
-      name: `Nov ${todaysDate.getFullYear() - 1}`,
-      number: "01",
-      sequencePriority: 4
-   },
-   12: {
-      name: `Dec ${todaysDate.getFullYear() - 1}`,
-      number: "01",
-      sequencePriority: 5
-   },
+  '01': {
+    name: `Jan ${todaysDate.getFullYear()}`,
+    number: '01',
+    sequencePriority: 6,
+  },
+  '02': {
+    name: `Feb ${todaysDate.getFullYear()}`,
+    number: '02',
+    sequencePriority: 7,
+  },
+  '03': {
+    name: `Mar ${todaysDate.getFullYear()}`,
+    number: '03',
+    sequencePriority: 8,
+  },
+  '04': {
+    name: `Apr ${todaysDate.getFullYear()}`,
+    number: '04',
+    sequencePriority: 7,
+  },
+  '05': {
+    name: `May ${todaysDate.getFullYear()}`,
+    number: '01',
+    sequencePriority: 10,
+  },
+  '06': {
+    name: `Jun ${todaysDate.getFullYear()}`,
+    number: '01',
+    sequencePriority: 11,
+  },
+  '07': {
+    name: `Jul ${todaysDate.getFullYear()}`,
+    number: '01',
+    sequencePriority: 12,
+  },
+  '08': {
+    name: `Aug ${todaysDate.getFullYear() - 1}`,
+    number: '01',
+    sequencePriority: 1,
+  },
+  '09': {
+    name: `Sep ${todaysDate.getFullYear() - 1}`,
+    number: '01',
+    sequencePriority: 2,
+  },
+  10: {
+    name: `Oct ${todaysDate.getFullYear() - 1}`,
+    number: '01',
+    sequencePriority: 3,
+  },
+  11: {
+    name: `Nov ${todaysDate.getFullYear() - 1}`,
+    number: '01',
+    sequencePriority: 4,
+  },
+  12: {
+    name: `Dec ${todaysDate.getFullYear() - 1}`,
+    number: '01',
+    sequencePriority: 5,
+  },
 };
 const getTransaction = (kisans, dateToSearch, type) => {
-   const formattedDate = new Date(dateToSearch);
-   if (kisans && kisans.length > 0) {
-      const filteredTransactions = [];
-      kisans.map((kisan) => {
-         if (kisan.transactions && kisan.transactions.length > 0) {
-            kisan.transactions.filter((transaction) => {
-               if (filterTransactionsBy(transaction, formattedDate, type)) {
-                  filteredTransactions.push({
-                     kisanid: kisan._id,
-                     name: kisan.name,
-                     fatherName: kisan.fatherName,
-                     phone: kisan.phone,
-                     address: kisan.address,
-                     balance: kisan.balance,
-                     userType: "KISAN",
-                     carryForwardAmount: kisan.carryForwardAmount,
-                     ...transaction,
-                  });
-               }
+  const formattedDate = new Date(dateToSearch);
+  if (kisans && kisans.length > 0) {
+    const filteredTransactions = [];
+    kisans.map(kisan => {
+      if (kisan.transactions && kisan.transactions.length > 0) {
+        kisan.transactions.filter(transaction => {
+          if (filterTransactionsBy(transaction, formattedDate, type)) {
+            filteredTransactions.push({
+              kisanid: kisan._id,
+              name: kisan.name,
+              fatherName: kisan.fatherName,
+              phone: kisan.phone,
+              address: kisan.address,
+              balance: kisan.balance,
+              userType: 'KISAN',
+              carryForwardAmount: kisan.carryForwardAmount,
+              ...transaction,
             });
-         }
-      });
-      return filteredTransactions;
-   }
+          }
+        });
+      }
+    });
+    return filteredTransactions;
+  }
 };
 const getPurchasers = (purchasers, dateToSearch, type) => {
-   const formattedDate = new Date(dateToSearch);
-   if (purchasers && purchasers.length > 0) {
-      const filtertxns = [];
-      // Loop all Purchasers
-      purchasers.map((purchaser) => {
-         if (purchaser.transactions && purchaser.transactions.length > 0) {
-            // Loop all transcations inside a purchaser
-            purchaser.transactions.filter((transaction) => {
-               if (filterTransactionsBy(transaction, formattedDate, type)) {
-                  //push all the data that pass the criteria to a array and then return the array
-                  filtertxns.push({
-                     purchaserId: purchaser._id,
-                     name: purchaser.name,
-                     companyName: purchaser.companyName,
-                     phone: purchaser.phone,
-                     address: purchaser.address,
-                     balance: purchaser.balance,
-                     userType: "PURCHASER",
-                     ...transaction.toObject(),
-                  });
-               }
+  const formattedDate = new Date(dateToSearch);
+  if (purchasers && purchasers.length > 0) {
+    const filtertxns = [];
+    // Loop all Purchasers
+    purchasers.map(purchaser => {
+      if (purchaser.transactions && purchaser.transactions.length > 0) {
+        // Loop all transcations inside a purchaser
+        purchaser.transactions.filter(transaction => {
+          if (filterTransactionsBy(transaction, formattedDate, type)) {
+            //push all the data that pass the criteria to a array and then return the array
+            filtertxns.push({
+              purchaserId: purchaser._id,
+              name: purchaser.name,
+              companyName: purchaser.companyName,
+              phone: purchaser.phone,
+              address: purchaser.address,
+              balance: purchaser.balance,
+              userType: 'PURCHASER',
+              ...transaction.toObject(),
             });
-         }
-      });
-      return filtertxns;
-   }
+          }
+        });
+      }
+    });
+    return filtertxns;
+  }
 };
-const getTransactionsBetweenDates = (
-   kisansOrPurchasers,
-   startDate,
-   endDate,
-   type
-) => {
-   const startDates = new Date(startDate);
-   const endDates = new Date(endDate);
+const getTransactionsBetweenDates = (kisansOrPurchasers, startDate, endDate, type) => {
+  const startDates = new Date(startDate);
+  const endDates = new Date(endDate);
 
-   if (kisansOrPurchasers && kisansOrPurchasers.length > 0) {
-      const filteredTransactions = [];
-      kisansOrPurchasers.map((kisanOrPurchaser) => {
-         if (
-            kisanOrPurchaser.transactions &&
-            kisanOrPurchaser.transactions.length > 0
-         ) {
-            kisanOrPurchaser.transactions.filter((transaction) => {
-               if (type === "kisan") {
-                  if (
-                     filterTransactionsBetweenDates(
-                        transaction,
-                        startDates,
-                        endDates
-                     )
-                  ) {
-                     filteredTransactions.push({
-                        kisanid: kisanOrPurchaser._id,
-                        name: kisanOrPurchaser.name,
-                        fatherName: kisanOrPurchaser.fatherName,
-                        phone: kisanOrPurchaser.phone,
-                        address: kisanOrPurchaser.address,
-                        balance: kisanOrPurchaser.balance,
-                        carryForwardAmount: kisanOrPurchaser.carryForwardAmount,
-                        ...transaction,
-                     });
-                  }
-               } else {
-                  if (
-                     filterTransactionsBetweenDates(
-                        transaction,
-                        startDates,
-                        endDates
-                     )
-                  ) {
-                     filteredTransactions.push({
-                        purchaserId: kisanOrPurchaser._id,
-                        name: kisanOrPurchaser.name,
-                        companyName: kisanOrPurchaser.companyName,
-                        phone: kisanOrPurchaser.phone,
-                        address: kisanOrPurchaser.address,
-                        balance: kisanOrPurchaser.balance,
-                        type: "PURCHASER",
-                        ...transaction.toObject(),
-                     });
-                  }
-               }
-            });
-         }
-      });
-      return filteredTransactions;
-   }
+  if (kisansOrPurchasers && kisansOrPurchasers.length > 0) {
+    const filteredTransactions = [];
+    kisansOrPurchasers.map(kisanOrPurchaser => {
+      if (kisanOrPurchaser.transactions && kisanOrPurchaser.transactions.length > 0) {
+        kisanOrPurchaser.transactions.filter(transaction => {
+          if (type === 'kisan') {
+            if (filterTransactionsBetweenDates(transaction, startDates, endDates)) {
+              filteredTransactions.push({
+                kisanid: kisanOrPurchaser._id,
+                name: kisanOrPurchaser.name,
+                fatherName: kisanOrPurchaser.fatherName,
+                phone: kisanOrPurchaser.phone,
+                address: kisanOrPurchaser.address,
+                balance: kisanOrPurchaser.balance,
+                carryForwardAmount: kisanOrPurchaser.carryForwardAmount,
+                ...transaction,
+              });
+            }
+          } else {
+            if (filterTransactionsBetweenDates(transaction, startDates, endDates)) {
+              filteredTransactions.push({
+                purchaserId: kisanOrPurchaser._id,
+                name: kisanOrPurchaser.name,
+                companyName: kisanOrPurchaser.companyName,
+                phone: kisanOrPurchaser.phone,
+                address: kisanOrPurchaser.address,
+                balance: kisanOrPurchaser.balance,
+                type: 'PURCHASER',
+                ...transaction.toObject(),
+              });
+            }
+          }
+        });
+      }
+    });
+    return filteredTransactions;
+  }
 };
 
 const filterTransactionsBy = (transaction, date, type) => {
-   if (type === "byDate") {
-      return (
-         new Date(transaction.date).getDate() === date.getDate() &&
-         new Date(transaction.date).getMonth() === date.getMonth() &&
-         new Date(transaction.date).getFullYear() === date.getFullYear()
-      );
-   }
-   if (type === "byMonth") {
-      return (
-         new Date(transaction.date).getMonth() === date.getMonth() &&
-         new Date(transaction.date).getFullYear() === date.getFullYear()
-      );
-   }
+  if (type === 'byDate') {
+    return (
+      new Date(transaction.date).getDate() === date.getDate() &&
+      new Date(transaction.date).getMonth() === date.getMonth() &&
+      new Date(transaction.date).getFullYear() === date.getFullYear()
+    );
+  }
+  if (type === 'byMonth') {
+    return (
+      new Date(transaction.date).getMonth() === date.getMonth() &&
+      new Date(transaction.date).getFullYear() === date.getFullYear()
+    );
+  }
 };
 const filterTransactionsBetweenDates = (transaction, startDate, endDate) => {
-   return (
-      new Date(transaction.date) >= startDate &&
-      new Date(transaction.date) < endDate
-   );
+  return new Date(transaction.date) >= startDate && new Date(transaction.date) < endDate;
 };
 
-const dateConverter = (date) => {
-   const D = new Date(date);
-   const formattedDate = `${D.getDate()}/${
-      D.getMonth() + 1
-   }/${D.getFullYear()} ${D.toLocaleString("en-US", {
-      hour: "numeric",
-      minute: "numeric",
-      second: "numeric",
+const dateConverter = date => {
+  const D = new Date(date);
+  const formattedDate = `${D.getDate()}/${D.getMonth() + 1}/${D.getFullYear()} ${D.toLocaleString(
+    'en-US',
+    {
+      hour: 'numeric',
+      minute: 'numeric',
+      second: 'numeric',
       hour12: true,
-   })}`;
-   return formattedDate;
+    }
+  )}`;
+  return formattedDate;
 };
 
-const modifyTransactionGroupByDate = (purchaser) => {
-   const groups = purchaser.transactions.reduce((groups, transaction) => {
-      const D = new Date(transaction.date);
-      const date = `${D.getDate()}/${D.getMonth() + 1}/${D.getFullYear()}`;
-      if (!groups[date]) {
-         groups[date] = [];
-      }
-      groups[date].push(transaction);
-      return groups;
-   }, {});
+const modifyTransactionGroupByDate = purchaser => {
+  const groups = purchaser.transactions.reduce((groups, transaction) => {
+    const D = new Date(transaction.date);
+    const date = `${D.getDate()}/${D.getMonth() + 1}/${D.getFullYear()}`;
+    if (!groups[date]) {
+      groups[date] = [];
+    }
+    groups[date].push(transaction);
+    return groups;
+  }, {});
 
-   const groupArrays = Object.keys(groups).map((date) => {
-      return {
-         date,
-         transactions: groups[date],
-      };
-   });
-   return groupArrays;
+  const groupArrays = Object.keys(groups).map(date => {
+    return {
+      date,
+      transactions: groups[date],
+    };
+  });
+  return groupArrays;
 };
 
 /* 
@@ -246,361 +224,415 @@ const modifyTransactionGroupByDate = (purchaser) => {
 
 */
 const generateDashboard = async () => {
-   let totalAdvancePending = 0;
-   let totalPurchaserPending = 0;
-   let totalItemWeight = 0; 
-   let totalBagsSold = 0;
+  let totalAdvancePending = 0;
+  let totalPurchaserPending = 0;
+  let totalItemWeight = 0;
+  let totalBagsSold = 0;
 
-   let commissions = [];
-   await createDBConnection();
-   const Kisan = getKisanModel();
-   const kisans = await Kisan.find();
-   kisans.map((kisan) => {
-      totalAdvancePending += kisan.balance;
-      kisan.transactions.map((trn) => {
-         if (trn.type === "CREDIT") {
-            totalItemWeight += trn.totalweight;
-            totalBagsSold += trn.numberofBags;
-         }
-      });
-   });
-   const Purchaser = getPurchaserModel();
-   const purchasers = await Purchaser.find();
-   purchasers.map((purchaser) => {
-      totalPurchaserPending += purchaser.balance;
-   });
-   const purchaserData = purchaserDataExtraction(purchasers);
-   const topKisanDefaulters = topDefaulters(kisans);
-   const topPurchaserDefaulters = topDefaulters(purchasers);
-   
-   commissions = getDayWisecommissions(kisans);
-   const advanceDataGivenAndTakenConsolidated =
-      getAdvancePaidAndSettledByKisan(kisans);
-      const inventorySchema = getInventoryModel();
-   const inventory = await inventorySchema.find();
-   const topSoldItems = topSellingItemByWeight(inventory)
-   const topBuyingPurchaser = topBuyingPurchasers(purchasers);
-   const topSellingKisans = topSellerKisans(kisans);
-   
-   const data = 
-   await closeConnection();
-   
-   return {
-      totalAdvancePending,
-      totalItemWeight,
-      totalBagsSold,
-      commissions,
-      advanceDataGivenAndTakenConsolidated,
-      purchaserData,
-      topBuyingPurchaser,
-      topSoldItems,
-      topSellingKisans,
-      totalPurchaserPending,
-      topKisanDefaulters,
-      topPurchaserDefaulters
-   };
+  let commissions = [];
+  await createDBConnection();
+  const Kisan = getKisanModel();
+  const kisans = await Kisan.find();
+  kisans.map(kisan => {
+    totalAdvancePending += kisan.balance;
+    kisan.transactions.map(trn => {
+      if (trn.type === 'CREDIT') {
+        totalItemWeight += trn.totalweight;
+        totalBagsSold += trn.numberofBags;
+      }
+    });
+  });
+  const Purchaser = getPurchaserModel();
+  const purchasers = await Purchaser.find();
+  purchasers.map(purchaser => {
+    totalPurchaserPending += purchaser.balance;
+  });
+  const purchaserData = purchaserDataExtraction(purchasers);
+  const topKisanDefaulters = topDefaulters(kisans);
+  const topPurchaserDefaulters = topDefaulters(purchasers);
 
+  commissions = getDayWisecommissions(kisans);
+  const advanceDataGivenAndTakenConsolidated = getAdvancePaidAndSettledByKisan(kisans);
+  const inventorySchema = getInventoryModel();
+  const inventory = await inventorySchema.find();
+  const topSoldItems = topSellingItemByWeight(inventory);
+  const topBuyingPurchaser = topBuyingPurchasers(purchasers);
+  const topSellingKisans = topSellerKisans(kisans);
+
+  const data = await closeConnection();
+
+  return {
+    totalAdvancePending,
+    totalItemWeight,
+    totalBagsSold,
+    commissions,
+    advanceDataGivenAndTakenConsolidated,
+    purchaserData,
+    topBuyingPurchaser,
+    topSoldItems,
+    topSellingKisans,
+    totalPurchaserPending,
+    topKisanDefaulters,
+    topPurchaserDefaulters,
+  };
 };
 
-const topDefaulters = (kisansOrPurchsers) => {
-   const topDefaulters = kisansOrPurchsers.map(kisanOrPurchaser => {
-      return {id:kisanOrPurchaser._id,
-      name: kisanOrPurchaser.name,
-      balance: kisanOrPurchaser.balance
-   }
-   }).sort((a,b) => a.balance-b.balance).slice(0,5);
-   return topDefaulters;
-}
-
-const topSellingItemByWeight = (items) => {
-   const topSellingItem = items.sort((a,b)=>a.totalWeight-b.totalWeight).slice(0,5);
-   return topSellingItem;
-}
-
-const topBuyingPurchasers = (purchasers) => {
-   return purchasers.map(purchaser => {
-      let transactionSum = 0
-      if(purchaser.transactions && purchaser.transactions.length>0){
-         purchaser.transactions.map(trn => {
-            if(trn.type==="DEBIT"){
-               transactionSum += trn.transactionAmount
-            }
-         })
-      }
+const topDefaulters = kisansOrPurchsers => {
+  const topDefaulters = kisansOrPurchsers
+    .map(kisanOrPurchaser => {
       return {
-         sum: transactionSum,
-         purchaser_id : purchaser._id,
-         purchaser_name: `${purchaser.name} - ${purchaser.companyName}`
-      }
-   })
-}
+        id: kisanOrPurchaser._id,
+        name: kisanOrPurchaser.name,
+        balance: kisanOrPurchaser.balance,
+      };
+    })
+    .sort((a, b) => a.balance - b.balance)
+    .slice(0, 5);
+  return topDefaulters;
+};
 
-const topSellerKisans = (kisans) => {
-   return kisans.map(kisan => {
-      let transactionSum = 0
-      kisan.transactions.map(trn => {
-         if(trn.type==="CREDIT"){
-            transactionSum += trn.grossTotal
-         }
-      })
+const getAllDefaulters = kisansOrPurchsers => {
+  const allDefaulters = kisansOrPurchsers
+    .map(kisanOrPurchaser => {
       return {
-         sum: transactionSum,
-         kisan_id : kisan._id,
-         kisan_name: kisan.name
+        id: kisanOrPurchaser._id,
+        name: kisanOrPurchaser.name,
+        balance: kisanOrPurchaser.balance, // Show actual balance (positive/negative/zero)
+      };
+    })
+    .sort((a, b) => b.balance - a.balance); // Sort by balance descending (highest balance first)
+  return allDefaulters;
+};
+
+const getAllKisanDefaulters = async () => {
+  try {
+    await createDBConnection();
+    const KisanModel = getKisanModel();
+    const kisans = await KisanModel.find();
+    const allKisanDefaulters = getAllDefaulters(kisans);
+    await closeConnection();
+    return allKisanDefaulters;
+  } catch (error) {
+    await closeConnection();
+    throw error;
+  }
+};
+
+const getAllPurchaserDefaulters = async () => {
+  try {
+    await createDBConnection();
+    const PurchaserModel = getPurchaserModel();
+    const purchasers = await PurchaserModel.find();
+    const allPurchaserDefaulters = getAllDefaulters(purchasers);
+    await closeConnection();
+    return allPurchaserDefaulters;
+  } catch (error) {
+    await closeConnection();
+    throw error;
+  }
+};
+
+const topSellingItemByWeight = items => {
+  const topSellingItem = items.sort((a, b) => a.totalWeight - b.totalWeight).slice(0, 5);
+  return topSellingItem;
+};
+
+const topBuyingPurchasers = purchasers => {
+  return purchasers.map(purchaser => {
+    let transactionSum = 0;
+    if (purchaser.transactions && purchaser.transactions.length > 0) {
+      purchaser.transactions.map(trn => {
+        if (trn.type === 'DEBIT') {
+          transactionSum += trn.transactionAmount;
+        }
+      });
+    }
+    return {
+      sum: transactionSum,
+      purchaser_id: purchaser._id,
+      purchaser_name: `${purchaser.name} - ${purchaser.companyName}`,
+    };
+  });
+};
+
+const topSellerKisans = kisans => {
+  return kisans.map(kisan => {
+    let transactionSum = 0;
+    kisan.transactions.map(trn => {
+      if (trn.type === 'CREDIT') {
+        transactionSum += trn.grossTotal;
       }
-   })
-}
+    });
+    return {
+      sum: transactionSum,
+      kisan_id: kisan._id,
+      kisan_name: kisan.name,
+    };
+  });
+};
 
 //Get All Commission Data
-const getDayWisecommissions = (kisans) => {
-   const transactions = [].concat.apply(
-      [],
-      kisans.map((kisan) => kisan.transactions)
-   );
-   const todaysDate = new Date();
-   const getMonthsForyear = getMonthsBetweenDates(
-      `${todaysDate.getFullYear()-1}-08-01`,
-      `${todaysDate.getFullYear()}-07-31`
-   );
-   const commissions = transactions.reduce((commissions, transaction) => {
-      if (transaction.date > new Date(todaysDate.getFullYear()-1, 7, 1)) {
-         if (transaction.type === "CREDIT") {
-            const D = new Date(transaction.date);
-            /* const date = `${D.getDate()}/${D.getMonth() + 1}/${D.getFullYear()}`; */
-            const date = `${("0" + (D.getMonth() + 1)).slice(-2)}`;
-            if (!commissions[date]) {
-               commissions[date] = [];
-               commissionsum = 0;
-            }
+const getDayWisecommissions = kisans => {
+  const transactions = [].concat.apply(
+    [],
+    kisans.map(kisan => kisan.transactions)
+  );
+  const todaysDate = new Date();
+  const getMonthsForyear = getMonthsBetweenDates(
+    `${todaysDate.getFullYear() - 1}-08-01`,
+    `${todaysDate.getFullYear()}-07-31`
+  );
+  const commissions = transactions.reduce((commissions, transaction) => {
+    if (transaction.date > new Date(todaysDate.getFullYear() - 1, 7, 1)) {
+      if (transaction.type === 'CREDIT') {
+        const D = new Date(transaction.date);
+        /* const date = `${D.getDate()}/${D.getMonth() + 1}/${D.getFullYear()}`; */
+        const date = `${('0' + (D.getMonth() + 1)).slice(-2)}`;
+        if (!commissions[date]) {
+          commissions[date] = [];
+          commissionsum = 0;
+        }
 
-            commissions[date].push(
-               (transaction.commission / 100) * transaction.grossTotal
-            );
-         }
+        commissions[date].push((transaction.commission / 100) * transaction.grossTotal);
       }
-      return commissions;
-   }, {});
-   const groupArrays = Object.keys(commissions).map((date) => {
-      const deleteExistingMonth = getMonthsForyear.indexOf(date);
-      getMonthsForyear.splice(deleteExistingMonth, 1);
-      return {
-         date: monthToNumberMapping[date].name,
-         dateNumber: date,
-         commissions: commissions[date].reduce(
-            (partialSum, a) => partialSum + a,
-            0
-         ),
-         sequencePriority: monthToNumberMapping[date].sequencePriority
-      };
-   });
-   const emptyMonths = getMonthsForyear.map((month) => {
-      return {
-         date: monthToNumberMapping[month].name,
-         dateNumber: month,
-         commissions: 0,
-         sequencePriority: monthToNumberMapping[month].sequencePriority
-      };
-   });
-   const finalComissionsObject = [...groupArrays, ...emptyMonths].sort(
-      (a, b) => parseFloat(a.sequencePriority) - parseFloat(b.sequencePriority)
-   );
-   return finalComissionsObject;
+    }
+    return commissions;
+  }, {});
+  const groupArrays = Object.keys(commissions).map(date => {
+    const deleteExistingMonth = getMonthsForyear.indexOf(date);
+    getMonthsForyear.splice(deleteExistingMonth, 1);
+    return {
+      date: monthToNumberMapping[date].name,
+      dateNumber: date,
+      commissions: commissions[date].reduce((partialSum, a) => partialSum + a, 0),
+      sequencePriority: monthToNumberMapping[date].sequencePriority,
+    };
+  });
+  const emptyMonths = getMonthsForyear.map(month => {
+    return {
+      date: monthToNumberMapping[month].name,
+      dateNumber: month,
+      commissions: 0,
+      sequencePriority: monthToNumberMapping[month].sequencePriority,
+    };
+  });
+  const finalComissionsObject = [...groupArrays, ...emptyMonths].sort(
+    (a, b) => parseFloat(a.sequencePriority) - parseFloat(b.sequencePriority)
+  );
+  return finalComissionsObject;
 };
 
 // DASHBOARD = calculating everything related to kisan - other than commission.
-const getAdvancePaidAndSettledByKisan = (kisans) => {
-   const temp = [].concat.apply(
-      [],
-      kisans.map((kisan) => kisan.transactions)
-   );
-   const {monthToPrint, dateSixMonthback} = getDateSixMonthBack();
-   let transactions = temp.filter((tran)=>{
-      if(new Date(tran.date) > dateSixMonthback) {
-         return tran;
+const getAdvancePaidAndSettledByKisan = kisans => {
+  const temp = [].concat.apply(
+    [],
+    kisans.map(kisan => kisan.transactions)
+  );
+  const { monthToPrint, dateSixMonthback } = getDateSixMonthBack();
+  let transactions = temp.filter(tran => {
+    if (new Date(tran.date) > dateSixMonthback) {
+      return tran;
+    }
+  });
+  const monthWiseAdvanceData = transactions.reduce((groups = [], transaction) => {
+    if (new Date(transaction.date) > dateSixMonthback) {
+      const D = new Date(transaction.date);
+      const date = `${('0' + (D.getMonth() + 1)).slice(-2)}`;
+      if (!groups[date]) {
+        groups[date] = {
+          advanceTaken: [],
+          advanceSettled: [],
+          cashPaidToKisan: [],
+        };
       }
-   })
-   const monthWiseAdvanceData = transactions.reduce(
-      (groups = [], transaction) => {
-         if (new Date(transaction.date) > dateSixMonthback) {
-            const D = new Date(transaction.date);
-            const date = `${("0" + (D.getMonth() + 1)).slice(-2)}`;
-            if (!groups[date]) {
-               groups[date] = {
-                  advanceTaken: [],
-                  advanceSettled: [],
-                  cashPaidToKisan: []
-               };
-            }
-            if (transaction.type === "CREDIT") {
-               groups[date].advanceSettled.push(transaction.advanceSettlement);
-               groups[date].cashPaidToKisan.push(transaction.paidToKisan)
-               groups[date].advanceTaken.push(0);
-            } else if (transaction.type === "ADVANCESETTLEMENT") {
-               groups[date].advanceSettled.push(transaction.transactionAmount);
-               groups[date].advanceTaken.push(0);
-               groups[date].cashPaidToKisan.push(0)
-            } else if (transaction.type === "DEBIT") {
-               groups[date].advanceSettled.push(0);
-               groups[date].advanceTaken.push(
-                  Math.abs(transaction.transactionAmount)
-                  );
-               groups[date].cashPaidToKisan.push(0)
-            }
-            return groups;
-         }
+      if (transaction.type === 'CREDIT') {
+        groups[date].advanceSettled.push(transaction.advanceSettlement);
+        groups[date].cashPaidToKisan.push(transaction.paidToKisan);
+        groups[date].advanceTaken.push(0);
+      } else if (transaction.type === 'ADVANCESETTLEMENT') {
+        groups[date].advanceSettled.push(transaction.transactionAmount);
+        groups[date].advanceTaken.push(0);
+        groups[date].cashPaidToKisan.push(0);
+      } else if (transaction.type === 'DEBIT') {
+        groups[date].advanceSettled.push(0);
+        groups[date].advanceTaken.push(Math.abs(transaction.transactionAmount));
+        groups[date].cashPaidToKisan.push(0);
+      }
+      return groups;
+    }
+  }, {});
+  const filledMonths = Object.keys(monthWiseAdvanceData).map(month => {
+    const deleteExistingMonth = monthToPrint.indexOf(month);
+    monthToPrint.splice(deleteExistingMonth, 1);
+    return {
+      month: monthToNumberMapping[month].name,
+      monthNumber: month,
+      monthWiseAdvanceData: {
+        advanceSettled: monthWiseAdvanceData[month].advanceSettled.reduce(
+          (partialSum, a) => partialSum + a,
+          0
+        ),
+        advanceTaken: monthWiseAdvanceData[month].advanceTaken.reduce(
+          (partialSum, a) => partialSum + a,
+          0
+        ),
+        cashPaidToKisan: monthWiseAdvanceData[month].cashPaidToKisan.reduce(
+          (partialSum, a) => partialSum + a,
+          0
+        ),
       },
-      {}
-   );
-   const filledMonths = Object.keys(monthWiseAdvanceData).map((month) => {
-      const deleteExistingMonth = monthToPrint.indexOf(month);
-      monthToPrint.splice(deleteExistingMonth, 1);
-      return {
-         month: monthToNumberMapping[month].name,
-         monthNumber: month,
-         monthWiseAdvanceData: {
-            advanceSettled: monthWiseAdvanceData[month].advanceSettled.reduce(
-               (partialSum, a) => partialSum + a,
-               0
-            ),
-            advanceTaken: monthWiseAdvanceData[month].advanceTaken.reduce(
-               (partialSum, a) => partialSum + a,
-               0
-            ),
-            cashPaidToKisan : monthWiseAdvanceData[month].cashPaidToKisan.reduce(
-               (partialSum, a) => partialSum + a,
-               0
-            ),
-         },
-      };
-   });
-   const emptyMonths = monthToPrint.map((month) => {
-      return {
-         month: monthToNumberMapping[month].name,
-         monthNumber: month,
-         monthWiseAdvanceData: { advanceSettled: 0, advanceTaken: 0,cashPaidToKisan:0 },
-      };
-   });
-   const allSixMonthsData = [...emptyMonths, ...filledMonths];
-   return allSixMonthsData;
+    };
+  });
+  const emptyMonths = monthToPrint.map(month => {
+    return {
+      month: monthToNumberMapping[month].name,
+      monthNumber: month,
+      monthWiseAdvanceData: { advanceSettled: 0, advanceTaken: 0, cashPaidToKisan: 0 },
+    };
+  });
+  const allSixMonthsData = [...emptyMonths, ...filledMonths];
+  return allSixMonthsData;
 };
 
-// DASHBOARD = calculating everything related to Purchaser 
-const purchaserDataExtraction = (purchasers) => {
-   let temp = [].concat.apply(
-      [],
-      purchasers.map((purchaser) => purchaser.transactions)
-   );
-   const {monthToPrint, dateSixMonthback} = getDateSixMonthBack();
-   let transactions = temp.filter((tran)=>{
-      if(new Date(tran.date) > dateSixMonthback) {
-         return tran;
+// DASHBOARD = calculating everything related to Purchaser
+const purchaserDataExtraction = purchasers => {
+  let temp = [].concat.apply(
+    [],
+    purchasers.map(purchaser => purchaser.transactions)
+  );
+  const { monthToPrint, dateSixMonthback } = getDateSixMonthBack();
+  let transactions = temp.filter(tran => {
+    if (new Date(tran.date) > dateSixMonthback) {
+      return tran;
+    }
+  });
+  const monthwisepurchaserData = transactions.reduce((groups = [], transaction) => {
+    if (new Date(transaction.date) > dateSixMonthback) {
+      const D = new Date(transaction.date);
+      const date = `${('0' + (D.getMonth() + 1)).slice(-2)}`;
+      if (!groups[date]) {
+        groups[date] = {
+          purchaserPaid: [],
+        };
       }
-   })
-   const monthwisepurchaserData = transactions.reduce(
-      (groups = [], transaction) => {
-         if (new Date(transaction.date) > dateSixMonthback) {
-            const D = new Date(transaction.date);
-            const date = `${("0" + (D.getMonth() + 1)).slice(-2)}`;
-            if (!groups[date]) {
-               groups[date] = {
-                  purchaserPaid :[]
-               };
-            }
-            if (transaction.type === "CREDIT") {
-               groups[date].purchaserPaid.push(transaction.transactionAmount);
-            }else {
-               groups[date].purchaserPaid.push(0);
-            }
-            return groups;
-         }
+      if (transaction.type === 'CREDIT') {
+        groups[date].purchaserPaid.push(transaction.transactionAmount);
+      } else {
+        groups[date].purchaserPaid.push(0);
+      }
+      return groups;
+    }
+  }, {});
+  const filledMonths = Object.keys(monthwisepurchaserData).map(month => {
+    const deleteExistingMonth = monthToPrint.indexOf(month);
+    monthToPrint.splice(deleteExistingMonth, 1);
+    return {
+      month: monthToNumberMapping[month].name,
+      monthNumber: month,
+      monthwisepurchaserData: {
+        cashPaidToKisan: monthwisepurchaserData[month].purchaserPaid.reduce(
+          (partialSum, a) => partialSum + a,
+          0
+        ),
       },
-      {}
-   );
-   const filledMonths = Object.keys(monthwisepurchaserData).map((month) => {
-      const deleteExistingMonth = monthToPrint.indexOf(month);
-      monthToPrint.splice(deleteExistingMonth, 1);
-      return {
-         month: monthToNumberMapping[month].name,
-         monthNumber: month,
-         monthwisepurchaserData: {
-            cashPaidToKisan : monthwisepurchaserData[month].purchaserPaid.reduce(
-               (partialSum, a) => partialSum + a,
-               0
-            ),
-         },
-      };
-   });
-   const emptyMonths = monthToPrint.map((month) => {
-      return {
-         month: monthToNumberMapping[month].name,
-         monthNumber: month,
-         monthwisepurchaserData: { purchaserPaid : 0 },
-      };
-   });
-   const allSixMonthsData = [...emptyMonths, ...filledMonths];
-   return allSixMonthsData;
-}
-
+    };
+  });
+  const emptyMonths = monthToPrint.map(month => {
+    return {
+      month: monthToNumberMapping[month].name,
+      monthNumber: month,
+      monthwisepurchaserData: { purchaserPaid: 0 },
+    };
+  });
+  const allSixMonthsData = [...emptyMonths, ...filledMonths];
+  return allSixMonthsData;
+};
 
 const getDateSixMonthBack = () => {
-   let date = new Date();
-   date.setMonth(date.getMonth() - 6);
-   const dateSixMonthback = new Date(date.getFullYear(), date.getMonth(), 1);
-   const dateSixMonthbackFormatted = `${dateSixMonthback.getFullYear()}-${
-      dateSixMonthback.getMonth() + 1
-   }-${dateSixMonthback.getDate()}`;
-   const todaysDate = new Date();
-   const todaysDateFormatted = `${todaysDate.getFullYear()}-${
-      todaysDate.getMonth() + 1
-   }-${todaysDate.getDate()}`;
-   const monthToPrint = getMonthsBetweenDates(
-      dateSixMonthbackFormatted,
-      todaysDateFormatted
-   );
-   return {
-      monthToPrint,
-      dateSixMonthback
-   }
-}
-
-const getMonthsBetweenDates = (startDate, endDate) => {
-   var start = startDate.split("-");
-   var end = endDate.split("-");
-   var startYear = parseInt(start[0]);
-   var endYear = parseInt(end[0]);
-   var dates = [];
-
-   for (var i = startYear; i <= endYear; i++) {
-      var endMonth = i != endYear ? 11 : parseInt(end[1]) - 1;
-      var startMon = i === startYear ? parseInt(start[1]) - 1 : 0;
-      for (var j = startMon; j <= endMonth; j = j > 12 ? j % 12 || 11 : j + 1) {
-         var month = j + 1;
-         var displayMonth = month < 10 ? "0" + month : month;
-         dates.push(displayMonth.toString());
-      }
-   }
-   return dates;
+  let date = new Date();
+  date.setMonth(date.getMonth() - 6);
+  const dateSixMonthback = new Date(date.getFullYear(), date.getMonth(), 1);
+  const dateSixMonthbackFormatted = `${dateSixMonthback.getFullYear()}-${
+    dateSixMonthback.getMonth() + 1
+  }-${dateSixMonthback.getDate()}`;
+  const todaysDate = new Date();
+  const todaysDateFormatted = `${todaysDate.getFullYear()}-${
+    todaysDate.getMonth() + 1
+  }-${todaysDate.getDate()}`;
+  const monthToPrint = getMonthsBetweenDates(dateSixMonthbackFormatted, todaysDateFormatted);
+  return {
+    monthToPrint,
+    dateSixMonthback,
+  };
 };
 
-const setYearWiseDBCollection = (year) => {
-   if(year>2022) {
-      process.env.KISANTABLE = `kisans${year}`
-      process.env.INVENTORYTABLE = `inventory${year}`
-      process.env.PURCHASERTABLE = `purchasers${year}`
-      console.log(`MONGO URL SET ${year}`,  process.env.KISANTABLE, process.env.INVENTORYTABLE, process.env.PURCHASERTABLE)
-   } else {
-      process.env.KISANTABLE = "kisans"
-      process.env.INVENTORYTABLE = "inventories"
-      process.env.PURCHASERTABLE = "purchasers"
-      console.log("MONGO URL SET 2022",  process.env.KISANTABLE, process.env.INVENTORYTABLE, process.env.PURCHASERTABLE)
-   }
-}
+const getMonthsBetweenDates = (startDate, endDate) => {
+  var start = startDate.split('-');
+  var end = endDate.split('-');
+  var startYear = parseInt(start[0]);
+  var endYear = parseInt(end[0]);
+  var dates = [];
+
+  for (var i = startYear; i <= endYear; i++) {
+    var endMonth = i != endYear ? 11 : parseInt(end[1]) - 1;
+    var startMon = i === startYear ? parseInt(start[1]) - 1 : 0;
+    for (var j = startMon; j <= endMonth; j = j > 12 ? j % 12 || 11 : j + 1) {
+      var month = j + 1;
+      var displayMonth = month < 10 ? '0' + month : month;
+      dates.push(displayMonth.toString());
+    }
+  }
+  return dates;
+};
+
+const setYearWiseDBCollection = yearString => {
+  // yearString expected format: "2024-25"
+  // Extract the start year (first four digits) for collection naming
+  const match = yearString.match(/(\d{4})-(\d{2})/);
+  if (match) {
+    const startYear = match[1];
+    // Collection year is the start year (e.g., 2024-25 => 2024, 2023-24 => 2023)
+    const collectionYear = startYear;
+
+    // Check if it's 2022-23 or earlier, use default collections without year suffix
+    if (Number(startYear) <= 2022) {
+      process.env.KISANTABLE = 'kisans';
+      process.env.INVENTORYTABLE = 'inventories';
+      process.env.PURCHASERTABLE = 'purchasers';
+      console.log(
+        `MONGO COLLECTIONS SET FOR YEAR ${yearString} (DEFAULT):`,
+        process.env.KISANTABLE,
+        process.env.INVENTORYTABLE,
+        process.env.PURCHASERTABLE
+      );
+    } else {
+      process.env.KISANTABLE = `kisans${collectionYear}`;
+      process.env.INVENTORYTABLE = `inventory${collectionYear}`;
+      process.env.PURCHASERTABLE = `purchasers${collectionYear}`;
+      console.log(
+        `MONGO COLLECTIONS SET FOR YEAR ${yearString}:`,
+        process.env.KISANTABLE,
+        process.env.INVENTORYTABLE,
+        process.env.PURCHASERTABLE
+      );
+    }
+  } else {
+    // Fallback to default collections (for 2022 and earlier)
+    process.env.KISANTABLE = 'kisans';
+    process.env.INVENTORYTABLE = 'inventories';
+    process.env.PURCHASERTABLE = 'purchasers';
+    console.log('MONGO COLLECTIONS SET TO DEFAULT');
+  }
+};
 
 module.exports = {
-   getTransaction,
-   getTransactionsBetweenDates,
-   modifyTransactionGroupByDate,
-   generateDashboard,
-   getPurchasers,
-   setYearWiseDBCollection
+  getTransaction,
+  getTransactionsBetweenDates,
+  modifyTransactionGroupByDate,
+  generateDashboard,
+  getPurchasers,
+  setYearWiseDBCollection,
+  getAllDefaulters,
+  getAllKisanDefaulters,
+  getAllPurchaserDefaulters,
 };

@@ -1,44 +1,101 @@
 import React, { useEffect, useState } from 'react';
-import { Fragment } from 'react';
-import { Typeahead } from 'react-bootstrap-typeahead';
-import 'react-bootstrap-typeahead/css/Typeahead.css';
-import { FormFeedback, Label } from 'reactstrap';
-import { FormattedMessage, useIntl } from "react-intl";
-  const TypeAhead= ({purchaserData, selectedPurchaser, isDisabled, editedValue, type,isInvalid =true}) => {
-    const [selected, setSelected] = useState([]);
-    const intlA = useIntl();
-    const  isNumber = function isNumber(value) {
-      return typeof value === 'number' && isFinite(value);
-    }
-  useEffect(() => {
-    if(type="edit" && isNumber(editedValue)){
-      setSelected([purchaserData[editedValue]])
-    }
-  }, [editedValue]);
+import { AutoComplete, Form } from 'antd';
+import { FormattedMessage, useIntl } from 'react-intl';
 
+const TypeAhead = ({
+  purchaserData,
+  selectedPurchaser,
+  isDisabled,
+  editedValue,
+  type,
+  isInvalid = true,
+}) => {
+  const [value, setValue] = useState('');
+  const [options, setOptions] = useState([]);
+  const intlA = useIntl();
 
+  const isNumber = function isNumber(value) {
+    return typeof value === 'number' && isFinite(value);
+  };
+
+  // Convert purchaserData to AutoComplete options format
   useEffect(() => {
-      if(selected.length>0 && type!=="edit"){
-          selectedPurchaser(selected[0])
-      }
-  }, [selected]);
+    if (purchaserData && purchaserData.length > 0) {
+      const formattedOptions = purchaserData.map((purchaser, index) => ({
+        value: purchaser.name || purchaser.toString(),
+        label: purchaser.name || purchaser.toString(),
+        data: purchaser,
+        index: index,
+      }));
+      setOptions(formattedOptions);
+    }
+  }, [purchaserData]);
+
+  // Handle edit mode initialization
+  useEffect(() => {
+    if (type === 'edit' && isNumber(editedValue) && purchaserData[editedValue]) {
+      setValue(purchaserData[editedValue].name || purchaserData[editedValue].toString());
+    }
+  }, [editedValue, purchaserData, type]);
+
+  // Handle selection change
+  const handleSelect = (selectedValue, option) => {
+    setValue(selectedValue);
+    if (type !== 'edit' && selectedPurchaser) {
+      selectedPurchaser(option.data);
+    }
+  };
+
+  // Handle input change for filtering
+  const handleSearch = searchText => {
+    setValue(searchText);
+
+    if (!searchText || searchText.length === 0) {
+      setOptions(
+        purchaserData.map((purchaser, index) => ({
+          value: purchaser.name || purchaser.toString(),
+          label: purchaser.name || purchaser.toString(),
+          data: purchaser,
+          index: index,
+        }))
+      );
+    } else {
+      const filteredOptions = purchaserData
+        .map((purchaser, index) => ({
+          value: purchaser.name || purchaser.toString(),
+          label: purchaser.name || purchaser.toString(),
+          data: purchaser,
+          index: index,
+        }))
+        .filter(option => option.value.toLowerCase().includes(searchText.toLowerCase()));
+      setOptions(filteredOptions);
+    }
+  };
+
   return (
-    <Fragment>
-        <Label for="purchaserName" className='pt-2'><FormattedMessage id="purchaserName" /> :</Label>
-        <Typeahead
-          id="purchaserName"
-          onChange={setSelected}
-          options={purchaserData}
-          placeholder= {intlA.formatMessage({ id: "selectPurchaser" })}
-          selected={selected} 
-          disabled = {isDisabled}
-          isInvalid={isInvalid}
-        />
-        {isInvalid && <FormFeedback className={isInvalid? "display-block": ""}>
-            <FormattedMessage id="selectingPurchaserIsRequired" />
-        </FormFeedback>}
-    </Fragment>
+    <Form.Item
+      label={
+        <span style={{ fontWeight: 500, color: '#2c3e50' }}>
+          <FormattedMessage id="purchaserName" />
+        </span>
+      }
+      validateStatus={isInvalid ? 'error' : ''}
+      help={isInvalid ? <FormattedMessage id="selectingPurchaserIsRequired" /> : null}
+    >
+      <AutoComplete
+        value={value}
+        options={options}
+        onSelect={handleSelect}
+        onSearch={handleSearch}
+        placeholder={intlA.formatMessage({ id: 'selectPurchaser' })}
+        disabled={isDisabled}
+        size="large"
+        style={{ width: '100%' }}
+        filterOption={false} // We handle filtering manually for better control
+        allowClear
+      />
+    </Form.Item>
   );
 };
 
-export default TypeAhead
+export default TypeAhead;

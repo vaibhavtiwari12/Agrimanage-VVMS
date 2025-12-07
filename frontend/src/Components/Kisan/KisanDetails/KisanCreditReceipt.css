@@ -1,0 +1,15 @@
+.compact-table-row td,
+.compact-table-row th {
+    font-size: 13px !important;
+    line-height: 1.1 !important;
+    padding-top: 4px !important;
+    padding-bottom: 4px !important;
+    padding-left: 8px !important;
+    padding-right: 8px !important;
+}
+
+.compact-table-row th {
+    line-height: 1.0 !important;
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+}

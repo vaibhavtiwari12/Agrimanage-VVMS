@@ -1,11 +1,8 @@
-const { createDBConnection, closeConnection } = require("./mongoConnector");
-const InventoryController = require("../Mongo/inventoryController");
-const {
-  getTransactionsBetweenDates,
-  getTransaction,
-} = require("../Utilities/utility");
-const mongoose = require("mongoose");
-const { getKisanModel, getPurchaserModel, getInventoryModel } = require("../Model/model");
+const { ensureConnection } = require('./mongoConnector');
+const InventoryController = require('../Mongo/inventoryController');
+const { getTransactionsBetweenDates, getTransaction } = require('../Utilities/utility');
+const mongoose = require('mongoose');
+const { getKisanModel, getPurchaserModel, getInventoryModel } = require('../Model/model');
 /* IMPORTANT
 RDBMS       VS      MONGO
 Database            Database
@@ -15,23 +12,24 @@ Columns             Fields
 
 */
 const controller = async (type, data) => {
-  //Creating MONGO Connection
-  await createDBConnection();
-  
+  //Ensure MONGO Connection
+  await ensureConnection();
+
   //All Operation in Mongo
   switch (type) {
-    case "Get": {
-      // Find Request
+    case 'Get': {
+      // Find Request with optional pagination
       const Kisan = getKisanModel();
-      const posts = await Kisan.find()
+      // This controller is now only used for non-paginated fetches (legacy)
+      const posts = await Kisan.find();
       return posts;
     }
-    case "Add": {
+    case 'Add': {
       //Adding data
       const saved = await data.save();
-      return saved
+      return saved;
     }
-    case "Edit": {
+    case 'Edit': {
       //Editing data
       const Kisan = getKisanModel();
       const kisan = await Kisan.findById(data.id);
@@ -39,53 +37,49 @@ const controller = async (type, data) => {
       kisan.fatherName = data.fatherName;
       kisan.phone = data.phone;
       kisan.address = data.address;
-      kisan.date= new Date();
-      kisan.kisanCommodity = data.kisanCommodity
+      kisan.date = new Date();
+      kisan.kisanCommodity = data.kisanCommodity;
       const saved = await kisan.save();
-      return saved
+      return saved;
     }
-    case "FindByID": {
+    case 'FindByID': {
       const Kisan = getKisanModel();
       const kisan = await Kisan.findById(data);
       return kisan;
     }
-    case "AddTransaction": {
+    case 'AddTransaction': {
       // Updating the data
       const Kisan = getKisanModel();
       let updatekisan = await Kisan.findById(data.id);
-      
-      if (
-        data.transaction.type === "DEBIT" ||
-        data.transaction.type === "ADVANCESETTLEMENT"
-      ) {
+
+      if (data.transaction.type === 'DEBIT' || data.transaction.type === 'ADVANCESETTLEMENT') {
         updatekisan.balance += data.transaction.transactionAmount;
       } else {
-        if(data.transaction.purchaserId && data.transaction.itemType!==""){
-          const transactionAdded = await InventoryController.controller("AddTransaction", {
+        if (data.transaction.purchaserId && data.transaction.itemType !== '') {
+          const transactionAdded = await InventoryController.controller('AddTransaction', {
             itemName: data.transaction.itemType,
             kisanName: updatekisan.name,
             kisanId: updatekisan._id,
             numberofBags: data.transaction.numberofBags,
             totalweight: data.transaction.totalweight,
             rate: data.transaction.rate,
-            purchaserId : data.transaction.purchaserId,
+            purchaserId: data.transaction.purchaserId,
             purchaserName: data.transaction.purchaserName,
-            purchaserTxnId: data.transaction.purchaserTxnId, 
-            date: data.transaction.date
+            purchaserTxnId: data.transaction.purchaserTxnId,
+            date: data.transaction.date,
           });
-          data.transaction["inventoryTxnId"] = transactionAdded.transaction._id.toString();
-          data.transaction["inventoryItemId"] = transactionAdded.inventoryItemId.toString();
+          data.transaction['inventoryTxnId'] = transactionAdded.transaction._id.toString();
+          data.transaction['inventoryItemId'] = transactionAdded.inventoryItemId.toString();
         }
 
         updatekisan.balance += parseInt(data.transaction.advanceSettlement);
-        updatekisan.carryForwardAmount =
-          data.transaction.carryForwardFromThisEntry;
+        updatekisan.carryForwardAmount = data.transaction.carryForwardFromThisEntry;
       }
       updatekisan.transactions.push(data.transaction);
       const finalKisan = await updatekisan.save();
       return finalKisan;
     }
-    case "deleteTransaction" : {
+    case 'deleteTransaction': {
       const Kisan = getKisanModel();
       const Inventory = getInventoryModel();
       const Purchaser = getPurchaserModel();
@@ -94,36 +88,36 @@ const controller = async (type, data) => {
       let deletePurchaserTxn = await Purchaser.findById(data.purchaseId);
       //console.log("PURCHASES", deletePurchaserTxn);
       //Delete PurchaserRecord
-      const updatedTransactionsForPurchase = []; 
+      const updatedTransactionsForPurchase = [];
       let purTxnIndexToDelete = null;
       let deletedtransactionAmount = 0;
-      if(deletePurchaserTxn) {
-        deletePurchaserTxn.transactions.map((txn,index) => {
-          if(txn._id == data.purchaserTxnId){
-            purTxnIndexToDelete = index
+      if (deletePurchaserTxn) {
+        deletePurchaserTxn.transactions.map((txn, index) => {
+          if (txn._id == data.purchaserTxnId) {
+            purTxnIndexToDelete = index;
             deletedtransactionAmount = txn.transactionAmount;
             deletePurchaserTxn.balance += txn.transactionAmount;
-          }else {
-            // update the balance of all the transactions after the deleted 
+          } else {
+            // update the balance of all the transactions after the deleted
             // transaction with the transaction amount of the deleted transaction.
-            if(purTxnIndexToDelete!==null && index>purTxnIndexToDelete){
-                txn.balanceAfterThisTransaction +=  deletedtransactionAmount;
+            if (purTxnIndexToDelete !== null && index > purTxnIndexToDelete) {
+              txn.balanceAfterThisTransaction += deletedtransactionAmount;
             }
             updatedTransactionsForPurchase.push(txn);
           }
-        })
+        });
         deletePurchaserTxn.transactions = updatedTransactionsForPurchase;
         await deletePurchaserTxn.save();
       }
 
       //Delete Inventory Transaction
-      const updatedInventoryTransactions = []
-      if(deleteInventoryTxn) {
+      const updatedInventoryTransactions = [];
+      if (deleteInventoryTxn) {
         deleteInventoryTxn.transactions.map(txn => {
-          if(txn._id != data.inventoryTxnId) {
-            updatedInventoryTransactions.push(txn)
+          if (txn._id != data.inventoryTxnId) {
+            updatedInventoryTransactions.push(txn);
           }
-        })
+        });
         deleteInventoryTxn.transactions = updatedInventoryTransactions;
         await deleteInventoryTxn.save();
       }
@@ -131,48 +125,57 @@ const controller = async (type, data) => {
       //deleteKisanTransaction
       const updatedKisanTransaction = [];
       deleteKisanTxn.transactions.map(txn => {
-        if(txn._id == data.kisanTxnId){
-          deleteKisanTxn.balance -= txn.advanceSettlement; 
-          const carryOfPrevTransaction = txn.carryForwardFromThisEntry + txn.paidToKisan + txn.advanceSettlement - txn.netTotal;
+        if (txn._id == data.kisanTxnId) {
+          deleteKisanTxn.balance -= txn.advanceSettlement;
+          const carryOfPrevTransaction =
+            txn.carryForwardFromThisEntry + txn.paidToKisan + txn.advanceSettlement - txn.netTotal;
           deleteKisanTxn.carryForwardAmount = carryOfPrevTransaction;
-        }else {
+        } else {
           updatedKisanTransaction.push(txn);
         }
         deleteKisanTxn.transactions = updatedKisanTransaction;
-      })
+      });
       await deleteKisanTxn.save();
-      return "Updated Successfully";
+      return 'Updated Successfully';
     }
 
-    case "deleteDebitTransaction" : {
+    case 'deleteDebitTransaction': {
       const Kisan = getKisanModel();
       let deleteKisanTxn = await Kisan.findById(data.kisanId);
-      if(deleteKisanTxn) {
-       if(deleteKisanTxn.transactions[deleteKisanTxn.transactions.length-1]._id.toString() === data.transactionID.toString()) {
-         deleteKisanTxn.balance -= deleteKisanTxn.transactions[deleteKisanTxn.transactions.length-1].transactionAmount;
-         deleteKisanTxn.transactions.pop();
-       }
+      if (deleteKisanTxn) {
+        if (
+          deleteKisanTxn.transactions[deleteKisanTxn.transactions.length - 1]._id.toString() ===
+          data.transactionID.toString()
+        ) {
+          deleteKisanTxn.balance -=
+            deleteKisanTxn.transactions[deleteKisanTxn.transactions.length - 1].transactionAmount;
+          deleteKisanTxn.transactions.pop();
+        }
       }
       await deleteKisanTxn.save();
-      return "Kisan Debit Transaction Deleted Successfully"
+      return 'Kisan Debit Transaction Deleted Successfully';
     }
-    case "DeleteAdvanceSettlementTransaction" : {
+    case 'DeleteAdvanceSettlementTransaction': {
       const Kisan = getKisanModel();
       let deleteKisanTxn = await Kisan.findById(data.kisanId);
-      if(deleteKisanTxn) {
-       if(deleteKisanTxn.transactions[deleteKisanTxn.transactions.length-1]._id.toString() === data.transactionID.toString()) {
-         deleteKisanTxn.balance -= deleteKisanTxn.transactions[deleteKisanTxn.transactions.length-1].transactionAmount;
-         deleteKisanTxn.transactions.pop();
-       }
+      if (deleteKisanTxn) {
+        if (
+          deleteKisanTxn.transactions[deleteKisanTxn.transactions.length - 1]._id.toString() ===
+          data.transactionID.toString()
+        ) {
+          deleteKisanTxn.balance -=
+            deleteKisanTxn.transactions[deleteKisanTxn.transactions.length - 1].transactionAmount;
+          deleteKisanTxn.transactions.pop();
+        }
       }
       await deleteKisanTxn.save();
-      return "Kisan AdvanceSettlement Transaction Deleted Successfully"
+      return 'Kisan AdvanceSettlement Transaction Deleted Successfully';
     }
-    case "editTransaction": {
+    case 'editTransaction': {
       const Kisan = getKisanModel();
       // Delete
       const kisanToUpdate = await Kisan.findById(data.id);
-      const newKisanTransaction = kisanToUpdate.transactions.map((trans) => {
+      const newKisanTransaction = kisanToUpdate.transactions.map(trans => {
         if (trans._id == data.transactionNumber) {
           return { ...trans, comment: data.comment };
         } else return trans;
@@ -181,29 +184,21 @@ const controller = async (type, data) => {
       const finalKisan = await kisanToUpdate.save();
       return finalKisan;
     }
-    case "todaystransactions": {
+    case 'todaystransactions': {
       const Kisan = getKisanModel();
       // Delete
       const allKisans = await Kisan.find();
-      const transactions = getTransaction(
-        allKisans,
-        data.dateToSearch,
-        "byDate"
-      );
+      const transactions = getTransaction(allKisans, data.dateToSearch, 'byDate');
       return transactions;
     }
-    case "monthTransaction": {
+    case 'monthTransaction': {
       // Delete
       const Kisan = getKisanModel();
       const allKisans = await Kisan.find();
-      const transactions = getTransaction(
-        allKisans,
-        data.monthToSearch,
-        "byMonth"
-      );
+      const transactions = getTransaction(allKisans, data.monthToSearch, 'byMonth');
       return transactions;
     }
-    case "transactionBetweenDates": {
+    case 'transactionBetweenDates': {
       // Delete
       const Kisan = getKisanModel();
       const allKisans = await Kisan.find();
@@ -215,7 +210,11 @@ const controller = async (type, data) => {
       );
       return transactions;
     }
+    case 'DeleteKisan': {
+      const Kisan = getKisanModel();
+      const deleted = await Kisan.findByIdAndDelete(data);
+      return deleted;
+    }
   }
-  await closeConnection();
 };
 module.exports = { controller };

@@ -1,0 +1,50 @@
+<svg width="64" height="64" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <circle cx="32" cy="32" r="30" fill="#fff0f0" stroke="#ff4d4f" stroke-width="2" />
+  <ellipse cx="22" cy="28" rx="4" ry="5" fill="#ff4d4f" fill-opacity="0.15" />
+  <ellipse cx="42" cy="28" rx="4" ry="5" fill="#ff4d4f" fill-opacity="0.15" />
+  <circle cx="22" cy="28" r="2.5" fill="#ff4d4f" />
+  <circle cx="42" cy="28" r="2.5" fill="#ff4d4f" />
+  <!-- Animated mouth: oscillates from deep to shallow frown -->
+  <path>
+    <animate
+      attributeName="d"
+      values="M24 44 Q32 36 40 44;M24 44 Q32 40 40 44;M24 44 Q32 36 40 44"
+      keyTimes="0;0.5;1"
+      dur="1.2s"
+      repeatCount="indefinite"
+    />
+    <animate
+      attributeName="stroke"
+      values="#ff4d4f;#ff7875;#ff4d4f"
+      keyTimes="0;0.5;1"
+      dur="1.2s"
+      repeatCount="indefinite"
+    />
+    <animate
+      attributeName="stroke-width"
+      values="2.5;2;2.5"
+      keyTimes="0;0.5;1"
+      dur="1.2s"
+      repeatCount="indefinite"
+    />
+    <set attributeName="d" to="M24 44 Q32 36 40 44" begin="0s" />
+    <set attributeName="fill" to="none" begin="0s" />
+  </path>
+  <!-- Animated tear -->
+  <ellipse id="tear" cx="22" cy="34" rx="1.2" ry="2.2" fill="#40a9ff">
+    <animate
+      attributeName="cy"
+      values="34;40;34"
+      keyTimes="0;0.5;1"
+      dur="1.2s"
+      repeatCount="indefinite"
+    />
+    <animate
+      attributeName="opacity"
+      values="1;0;1"
+      keyTimes="0;0.5;1"
+      dur="1.2s"
+      repeatCount="indefinite"
+    />
+  </ellipse>
+</svg>

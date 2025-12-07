@@ -1,19 +1,22 @@
-import { Table } from "reactstrap";
-import { Link } from "react-router-dom";
-import { FormattedMessage } from "react-intl";
+import { Table } from 'reactstrap';
+import { Link } from 'react-router-dom';
+import { FormattedMessage } from 'react-intl';
+import { EllipsisText } from '../Common';
 
 const Purchasertable = ({ purchasers, term, type }) => {
   return (
     <div>
       {purchasers.length > 0 ? (
-        <Table striped size="sm" className="mt-3 font-10" responsive >
+        <Table striped size="sm" className="mt-3 font-10" responsive>
           <thead>
             <tr>
               <th>#</th>
               <th>
                 <FormattedMessage id="nameOfPurchase" />
               </th>
-              <th><FormattedMessage id="companyName" /></th>
+              <th>
+                <FormattedMessage id="companyName" />
+              </th>
               <th>
                 <FormattedMessage id="commodity" />
               </th>
@@ -27,15 +30,11 @@ const Purchasertable = ({ purchasers, term, type }) => {
           </thead>
           <tbody>
             {purchasers
-              .filter((purchaser) => {
-                if (type.toLowerCase() === "name") {
-                  return purchaser.name
-                    .toLowerCase()
-                    .includes(term.toLowerCase());
-                } else if (type.toLowerCase() === "companyName") {
-                  return purchaser.fatherName
-                    .toLowerCase()
-                    .includes(term.toLowerCase());
+              .filter(purchaser => {
+                if (type.toLowerCase() === 'name') {
+                  return purchaser.name.toLowerCase().includes(term.toLowerCase());
+                } else if (type.toLowerCase() === 'companyName') {
+                  return purchaser.fatherName.toLowerCase().includes(term.toLowerCase());
                 } else {
                   return purchaser.phone.toString().includes(term);
                 }
@@ -46,19 +45,19 @@ const Purchasertable = ({ purchasers, term, type }) => {
                     <th scope="row">{index + 1}</th>
                     <td className="capitalize">
                       <Link to={`purchaserDetails/${purchaser._id}`}>
-                        {purchaser.name}
+                        <EllipsisText maxWidth="150px">{purchaser.name}</EllipsisText>
                       </Link>
                     </td>
-                    <td className="capitalize">{purchaser.companyName}</td>
+                    <td className="capitalize">
+                      <EllipsisText maxWidth="120px">{purchaser.companyName}</EllipsisText>
+                    </td>
                     <td className="capitalize">{purchaser.purchaserCommodity}</td>
                     <td>{purchaser.phone}</td>
                     <td>
                       {purchaser.balance < 0 ? (
                         <span className="text-danger">{purchaser.balance}</span>
                       ) : (
-                        <span className="text-primary">
-                          {purchaser.balance}
-                        </span>
+                        <span className="text-primary">{purchaser.balance}</span>
                       )}
                     </td>
                   </tr>
@@ -66,11 +65,12 @@ const Purchasertable = ({ purchasers, term, type }) => {
               })}
           </tbody>
         </Table>
-        ) : <div className="pt-5 text-center">
-            <h3 className="text-danger">No Purchasers Found.</h3>
-            <h6>Please add a purchaser to continue.</h6>
-        </div> 
-      }
+      ) : (
+        <div className="pt-5 text-center">
+          <h3 className="text-danger">No Purchasers Found.</h3>
+          <h6>Please add a purchaser to continue.</h6>
+        </div>
+      )}
     </div>
   );
 };
