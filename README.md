@@ -1,179 +1,508 @@
-# VVMS By Avalon
+# AgriManage - VVMS (Vegetable Vendor Management System)
 
-VVMS is a comprehensive vegetable vendor management system that has all the capabilities to store manage and see the data for a vegetable vendors.
+> **Enterprise-grade vegetable vendor management platform with automated CI/CD deployment**
 
-Avalon is a MERN framework, which serves the primary purpose to be **PLUG and PLAY**. Following some simple steps will get you up and running in no time, and will save a lot of time for you to start writing a framework from the scratch.
+[![Deployment](https://img.shields.io/badge/deployment-automated-success)](https://github.com/vaibhavtiwari12/Agrimanage-VVMS)
+[![License](https://img.shields.io/badge/license-ISC-blue.svg)](LICENSE)
+[![Node](https://img.shields.io/badge/node-20.x-green.svg)](https://nodejs.org)
 
-In Avalon, react app is served through the Node application and is build using a command so you essentially do not have to worry about the optimization and cleaning of code that has to be done for the production deployment as that is already been taken care of by webpack.
+## 📋 Table of Contents
 
-## **Get Started**
-
-### LOCAL DEVELOPMENT - Running FrontEnd and BackEnd application separately.
-
-1. Run the command `npm install` on folder `root`, `backend` and `frontend`.
-2. open two separate terminal or command prompt window - one in frontend and one in backend folder.
-3. run `npm start` in both.
-4. Front-End Application will be running on port `4009` and backend will be running on `3001`.
-
-**NOTE** - Node application is set to work on port 3001 although that can be changed in `.env.prod` file (please be advised in local if you are chaning the node application port you will also have to change the `proxy` property in `frontend/package.json` as that will redirect all the API calls to backend on the port mentioned in proxy url). You can also change the front end port by changing the `PORT` property in `.env.prod` file.
-
-### LOCAL DEVELOPMENT - Running FrontEnd and Backend Application Together as one.
-
-1. Run the command `npm install` on folder `root`, `backend` and `frontend`.
-2. In the root folder of application open a terminal or command prompt.
-3. Run Command - `npm run build:prod`
-4. once it is completed, go to `/backend` folder in terminal and run `npm start`
-5. your application will be hosted on `localhost:3001`
-
-**NOTE** - `localhost:3001` is the homepage of application will serve your react application too.
-
-### **Setting Up Mongo** (Optional)
-
-1. Install the latest distribution of Mongo in your system.
-2. If you are on windows create a folder in your c: drive root named `data` and inside that create another folder named as `bin`
-3. go to your `C:\Program Files\MongoDB\Server\4.4\bin` and open terminal or command prompt and run `mongod`.
-4. you will have your mongoServer up and running on port 27017.
-
-**NOTE** - All the mongo related configurations are there in `\backend\Mongo`.
-
-## Deployment on AWS
-
-### Deploying Mongo Server
-
-1. Go to AWS Console and create a new EC2 linux instance by clicking Launch Instance.
-2. Make sure you whitelist the custom HTTP Connection to port 27017 in security groups while creating the machine.
-3. Download the private key Pair and launch the instance.
-
-**Making SSH connection with EC2 Machine**
-
-1. Install the Putty and Putty gen on your local machine
-2. open putty gen and click on `load` select the downloaded `.pem` file and click generate(your browse might be defaulted to `.ppk` files make sure you change that to All Files to see your `.pem` file).
-3. save the private key(.ppk) and close the keygen.
-4. open Putty and in the Host name write `ec2-user@<Public IP Address of your ec2 instance>`
-5. then go to `SSH` in the putty category on left open it and click on `Auth`
-6. Under Authentication Parameters browse the private key file for authentication and select the ppk file that was recently generated.
-7. go back to session from the category on left and click `Open`
-8. You will be connected to the ec2 machine.
-
-**Installing mongo on the ec2 Machine**
-
-1. Run `sudo vi /etc/yum.repos.d/mongodb-org-4.2.repo`
-2. add following code to it :
-
-```
- [mongodb-org-4.2]
- name=MongoDB Repository
- baseurl=https://repo.mongodb.org/yum/amazon/2013.03/mongodb-org/4.2/x86_64/
- gpgcheck=1
- enabled=1
- gpgkey=https://www.mongodb.org/static/pgp/server-4.2.asc
-```
-
-3. Save the file and run `sudo yum install -y mongodb-org`
-4. After installation is finished open `sudo vi /etc/mongod.conf` file.
-5. Change the bindIp to the 0.0.0.0 to accept the connection from everywhere ( this is to test the connection, later change that to IP of node appliation ec2 instance)
-6. Save file and Run `sudo chkconfig mongod on`
-7. Run `sudo service mongod start` to start the mongo server
-8. You can restart the servive with command : `sudo service mongod restart`
-9. You can check the Mongo running status by runnng command `mongo` and then `show databases`. write `exit` to exit the mongo console.
+- [About](#about)
+- [Features](#features)
+- [Tech Stack](#tech-stack)
+- [Getting Started](#getting-started)
+- [Deployment](#deployment)
+- [Development](#development)
+- [Contributing](#contributing)
+- [License](#license)
 
 ---
 
-## 🚀 Modern Deployment (Recommended)
+## 🎯 About
 
-### Automated Deployment with GitHub Actions
+**AgriManage VVMS** is a comprehensive vegetable vendor management system built on the MERN stack. It provides complete capabilities for managing vegetable vendors, tracking inventory, handling transactions, and generating reports.
 
-We now have an **enterprise-level automated CI/CD pipeline** using **100% FREE services**!
+### Key Capabilities
 
-**Deploy to production with a single command:**
+- 👥 **Vendor Management** (Kisan & Purchaser)
+- 📦 **Inventory Tracking**
+- 💰 **Transaction Management**
+- 📊 **Reporting & Analytics**
+- 🌐 **Multi-language Support** (English, Hindi)
+- 🔒 **Secure Authentication**
+- 📱 **Responsive Design**
+
+---
+
+## ✨ Features
+
+### Business Features
+
+- Complete vendor lifecycle management
+- Real-time inventory tracking
+- Automated billing and settlements
+- Comprehensive transaction history
+- PDF report generation
+- Excel export functionality
+- Advanced search and filtering
+- Multi-language UI (English/Hindi)
+
+### Technical Features
+
+- 🚀 **Automated CI/CD** with GitHub Actions
+- 🐳 **Docker containerization**
+- 🔒 **Security scanning** (Trivy, Gitleaks)
+- 🎨 **Code quality checks** (ESLint, Prettier)
+- ⚡ **Pre-commit hooks** (Husky, lint-staged)
+- 📈 **Production monitoring**
+- 🔄 **Zero-downtime deployments**
+- 🏷️ **Version tagging** (latest, timestamp, commit SHA)
+
+---
+
+## 🛠️ Tech Stack
+
+### Frontend
+
+- **React** 17.x - UI framework
+- **Redux** - State management
+- **React Router** - Navigation
+- **Ant Design** - UI components
+- **Chart.js** - Data visualization
+- **React Intl** - Internationalization
+
+### Backend
+
+- **Node.js** 20.x - Runtime
+- **Express** - Web framework
+- **MongoDB** - Database
+- **Mongoose** - ODM
+
+### DevOps & Infrastructure
+
+- **Docker** - Containerization
+- **GitHub Actions** - CI/CD
+- **Render** - Hosting (Free tier)
+- **Docker Hub** - Container registry
+- **MongoDB Atlas** - Database hosting
+
+---
+
+## 🚀 Getting Started
+
+### Prerequisites
+
+- **Node.js** 20.x or higher
+- **npm** 9.x or higher
+- **MongoDB** (local or Atlas)
+- **Git**
+
+### Installation
+
+1. **Clone the repository**
+
+   ```bash
+   git clone https://github.com/vaibhavtiwari12/Agrimanage-VVMS.git
+   cd Agrimanage-VVMS
+   ```
+
+2. **Install dependencies**
+
+   ```bash
+   # Install root dependencies
+   npm install
+
+   # Install frontend dependencies
+   cd frontend && npm install
+
+   # Install backend dependencies
+   cd ../backend && npm install
+   ```
+
+3. **Configure environment variables**
+
+   Create `.env` files in `backend/` and `frontend/`:
+
+   **backend/.env:**
+
+   ```env
+   MONGO_URL=mongodb://localhost:27017/mvmsyshk
+   PORT=3001
+   NODE_ENV=development
+   SESSION_SECRET=your-secret-key-here
+   ```
+
+   **frontend/.env:**
+
+   ```env
+   REACT_APP_API_URL=http://localhost:3001
+   ```
+
+4. **Start development servers**
+
+   ```bash
+   # From root directory
+   npm run dev
+   ```
+
+   This starts both frontend (port 4009) and backend (port 3001) concurrently.
+
+---
+
+## 🌐 Deployment
+
+### Automated Deployment (Recommended)
+
+We use **GitHub Actions** for fully automated CI/CD.
+
+**Deploy with a single command:**
 
 ```bash
 git push origin master
 ```
 
-That's it! The system automatically:
+#### What Happens Automatically:
 
-- ✅ Builds Docker image for production (linux/amd64)
-- ✅ Pushes to Docker Hub with versioned tags
-- ✅ Triggers Render deployment
-- ✅ Runs security scans
-- ✅ Notifies on completion
+1. ✅ Code quality validation (ESLint)
+2. ✅ Security scanning (Trivy, Gitleaks)
+3. ✅ Docker image build (linux/amd64)
+4. ✅ Push to Docker Hub with 3 tags:
+   - `latest`
+   - `YYYYMMDD-HHMMSS`
+   - `commit-SHA`
+5. ✅ Trigger Render deployment
+6. ✅ Application goes live in ~10 minutes
 
-### Quick Setup (10 minutes)
+### Initial Setup (One-time, 15 minutes)
+
+#### Step 1: Configure GitHub Secrets
+
+Add these secrets to your GitHub repository:
+**Settings → Secrets and variables → Actions → New repository secret**
+
+| Secret Name          | Value                               | How to Get                                               |
+| -------------------- | ----------------------------------- | -------------------------------------------------------- |
+| `DOCKER_USERNAME`    | `your-dockerhub-username`           | Your Docker Hub username                                 |
+| `DOCKER_TOKEN`       | `dckr_pat_xxxxx...`                 | [Create token](https://hub.docker.com/settings/security) |
+| `RENDER_DEPLOY_HOOK` | `https://api.render.com/deploy/...` | Render Dashboard → Service → Settings                    |
+
+#### Step 2: Configure Render Service
+
+1. **Create Web Service** on [Render](https://render.com)
+2. **Deploy from registry**: `your-dockerhub-username/vvmsprod:latest`
+3. **Set environment variables**:
+   ```
+   MONGO_URL=mongodb+srv://user:pass@cluster.mongodb.net/mvmsyshk
+   PORT=3001
+   NODE_ENV=production
+   SESSION_SECRET=<generate with: openssl rand -base64 32>
+   ```
+4. **Enable Auto-Deploy** from registry
+5. **Copy Deploy Hook URL** for GitHub Secrets
+
+#### Step 3: First Deployment
 
 ```bash
-# Run the interactive setup script
-./setup-deployment.sh
+# Make any change (or empty commit)
+git commit --allow-empty -m "trigger: initial deployment"
+git push origin master
+
+# Monitor at:
+# - GitHub Actions: https://github.com/YOUR_USERNAME/Agrimanage-VVMS/actions
+# - Docker Hub: https://hub.docker.com/r/YOUR_USERNAME/vvmsprod/tags
+# - Render: https://dashboard.render.com
 ```
 
-Follow the prompts to configure:
-
-1. GitHub Secrets (Docker credentials, Render webhook)
-2. Verify workflows
-3. Trigger first deployment
-
-### Documentation
-
-| Document                                                   | Purpose                          |
-| ---------------------------------------------------------- | -------------------------------- |
-| **[DEPLOYMENT_SUMMARY.md](./DEPLOYMENT_SUMMARY.md)**       | Overview & architecture          |
-| **[DEPLOYMENT_QUICKSTART.md](./DEPLOYMENT_QUICKSTART.md)** | Daily commands & quick reference |
-| **[ENTERPRISE_DEPLOYMENT.md](./ENTERPRISE_DEPLOYMENT.md)** | Complete setup guide             |
-| **[DEPLOYMENT_COMPARISON.md](./DEPLOYMENT_COMPARISON.md)** | Manual vs Automated comparison   |
-
-### Key Features
-
-- **Zero Cost**: 100% free services (GitHub Actions, Docker Hub, Render)
-- **Fast**: 5-10 minute deployments
-- **Secure**: Automated security scanning with Trivy & Gitleaks
-- **Reliable**: 91%+ success rate
-- **Team-Friendly**: Any team member can deploy
-- **Versioned**: Multiple tags per deployment (latest, date-time, commit SHA)
-
-### Architecture
+### Deployment Architecture
 
 ```
-Developer → Git Push → GitHub Actions → Docker Hub → Render → Production
-                          ↓
-                    Security Scans
+┌─────────────────┐
+│   Developer     │
+│  (Local Code)   │
+└────────┬────────┘
+         │ git push origin master
+         ▼
+┌─────────────────────────────────────────┐
+│         GitHub Actions (CI/CD)          │
+│  ┌───────────────────────────────────┐  │
+│  │ 1. Validate code quality          │  │
+│  │ 2. Run security scans             │  │
+│  │ 3. Build Docker image             │  │
+│  │ 4. Push to Docker Hub             │  │
+│  │ 5. Trigger Render deployment      │  │
+│  └───────────────────────────────────┘  │
+└─────────┬───────────────┬───────────────┘
+          │               │
+          ▼               ▼
+   ┌────────────┐  ┌─────────────────┐
+   │ Docker Hub │  │     Render      │
+   │  Registry  │  │   (Production)  │
+   └────────────┘  └────────┬────────┘
+                            │
+                            ▼
+                   ┌─────────────────┐
+                   │ MongoDB Atlas   │
+                   │   (Database)    │
+                   └─────────────────┘
 ```
 
-### Legacy Deployment
+### Monitoring & Rollback
 
-For manual deployment using the old method, see:
+**Monitor Deployment:**
 
-- **[deploy.sh](./deploy.sh)** - Legacy deployment script
-- **[DEPLOYMENT.md](./DEPLOYMENT.md)** - Legacy deployment guide (manual process)
+- GitHub Actions: View build logs and deployment status
+- Render Dashboard: View application logs and metrics
+- Docker Hub: Verify image tags
+
+**Rollback (if needed):**
+
+```bash
+# 1. Find working image tag on Docker Hub
+# 2. Update Render service to use that tag
+# 3. Or revert Git commit:
+git revert <bad-commit-hash>
+git push origin master  # Auto-deploys
+```
 
 ---
 
-## 📚 Additional Documentation
+## 💻 Development
 
-- **[SECURITY.md](./SECURITY.md)** - Security guidelines
-- **[AUTOMATION.md](./AUTOMATION.md)** - Automation features
-- **[TOAST_STANDARDIZATION.md](./TOAST_STANDARDIZATION.md)** - UI/UX standards
+### Project Structure
+
+```
+Agrimanage-VVMS/
+├── .github/
+│   └── workflows/           # GitHub Actions CI/CD
+│       ├── deploy.yml       # Main deployment workflow
+│       ├── pr-check.yml     # PR validation
+│       └── security-scan.yml # Security scanning
+├── frontend/                # React application
+│   ├── src/
+│   │   ├── Components/      # React components
+│   │   ├── Store/           # Redux store
+│   │   ├── i18n/            # Internationalization
+│   │   └── config/          # Configuration
+│   └── package.json
+├── backend/                 # Node.js/Express API
+│   ├── Mongo/               # Database controllers
+│   ├── Router/              # API routes
+│   ├── Schema/              # Mongoose schemas
+│   └── package.json
+├── Dockerfile               # Production container
+├── .dockerignore
+├── .gitignore
+├── .prettierrc              # Code formatting
+├── .husky/                  # Git hooks
+└── package.json             # Root package
+```
+
+### Available Scripts
+
+**Root level:**
+
+```bash
+npm run dev              # Start frontend + backend in dev mode
+npm run prod-build       # Build for production
+npm run lint             # Check code quality
+npm run lint:fix         # Fix linting issues
+```
+
+**Frontend:**
+
+```bash
+npm start                # Development server (port 4009)
+npm run build            # Production build
+npm test                 # Run tests
+npm run lint             # Lint frontend code
+```
+
+**Backend:**
+
+```bash
+npm start                # Start backend server (port 3001)
+```
+
+### Code Quality
+
+#### Pre-commit Hooks (Husky)
+
+Automatically runs before each commit:
+
+- ✅ ESLint auto-fix on staged files
+- ✅ Prettier formatting
+- ⚠️ Warnings allowed, errors block
+
+#### Manual Linting
+
+```bash
+# Check for issues
+npm run lint
+
+# Auto-fix issues
+npm run lint:fix
+
+# Format all code
+npx prettier --write "**/*.{js,jsx,json,md}"
+```
+
+### Environment Variables
+
+**Backend (.env):**
+
+```env
+MONGO_URL=mongodb://localhost:27017/mvmsyshk
+PORT=3001
+NODE_ENV=development
+SESSION_SECRET=your-secret-key
+```
+
+**Frontend (.env):**
+
+```env
+REACT_APP_API_URL=http://localhost:3001
+```
+
+**Production (Render):**
+
+```env
+MONGO_URL=mongodb+srv://user:pass@cluster.mongodb.net/mvmsyshk
+PORT=3001
+NODE_ENV=production
+SESSION_SECRET=<strong-random-value>
+```
 
 ---
 
 ## 🤝 Contributing
 
-1. Create a feature branch: `git checkout -b feature/your-feature`
-2. Make your changes
-3. Create a Pull Request to `master`
-4. Automated checks will run (build validation, security scans)
-5. Once approved and merged, automatic deployment to production!
+We welcome contributions! Here's how to get started:
+
+### Contribution Workflow
+
+1. **Fork the repository**
+2. **Create a feature branch**
+
+   ```bash
+   git checkout -b feature/your-feature-name
+   ```
+
+3. **Make your changes**
+   - Write clean, documented code
+   - Follow existing code style
+   - Add tests if applicable
+
+4. **Commit your changes**
+
+   ```bash
+   git add .
+   git commit -m "feat: add your feature"
+   ```
+
+   Pre-commit hooks will auto-fix formatting.
+
+5. **Push to your fork**
+
+   ```bash
+   git push origin feature/your-feature-name
+   ```
+
+6. **Create a Pull Request**
+   - Automated checks will run (lint, build, security)
+   - Address any review comments
+   - Once approved, it will be merged and auto-deployed!
+
+### Commit Message Convention
+
+We follow [Conventional Commits](https://www.conventionalcommits.org/):
+
+```
+feat: add new feature
+fix: bug fix
+docs: documentation changes
+style: formatting, missing semicolons, etc.
+refactor: code refactoring
+test: adding tests
+chore: maintenance tasks
+```
+
+---
+
+## 🔒 Security
+
+- ✅ All secrets stored in environment variables
+- ✅ Automated security scanning (Trivy, Gitleaks)
+- ✅ Dependency vulnerability checks
+- ✅ No hardcoded credentials
+- ✅ HTTPS in production
+- ✅ Session-based authentication
+
+**Report security issues**: Create a private security advisory on GitHub
+
+---
+
+## 📄 License
+
+This project is licensed under the ISC License.
+
+---
+
+## 👥 Team
+
+Developed and maintained by **Avalon Team**
 
 ---
 
 ## 📞 Support
 
-For deployment issues:
+### Documentation
 
-- Check **GitHub Actions** logs for build errors
-- Review **Render** dashboard for deployment status
-- See troubleshooting in **ENTERPRISE_DEPLOYMENT.md**
+- 📖 Full deployment guide (local files - not in Git)
+- 🔧 Troubleshooting guides
+- 🎯 API documentation
+
+### Getting Help
+
+- **GitHub Issues**: For bugs and feature requests
+- **GitHub Actions**: Check workflow logs
+- **Render Logs**: View application runtime logs
 
 ---
 
-**Last Updated**: December 7, 2025
-**Deployment**: Automated via GitHub Actions ✅
+## 🎯 Quick Links
+
+| Resource             | URL                                                        |
+| -------------------- | ---------------------------------------------------------- |
+| **Repository**       | https://github.com/vaibhavtiwari12/Agrimanage-VVMS         |
+| **GitHub Actions**   | https://github.com/vaibhavtiwari12/Agrimanage-VVMS/actions |
+| **Docker Hub**       | https://hub.docker.com/r/YOUR_USERNAME/vvmsprod            |
+| **Render Dashboard** | https://dashboard.render.com                               |
+
+---
+
+## 🚀 Quick Start Summary
+
+```bash
+# 1. Clone & Install
+git clone https://github.com/vaibhavtiwari12/Agrimanage-VVMS.git
+cd Agrimanage-VVMS
+npm install && cd frontend && npm install && cd ../backend && npm install
+
+# 2. Configure environment
+# Create .env files in backend/ and frontend/
+
+# 3. Start development
+npm run dev
+
+# 4. Deploy to production
+git push origin master  # That's it!
+```
+
+---
+
+**Built with ❤️ using the MERN Stack**
+
+**Last Updated**: December 7, 2025  
+**Status**: ✅ Production Ready  
+**Deployment**: Automated via GitHub Actions
