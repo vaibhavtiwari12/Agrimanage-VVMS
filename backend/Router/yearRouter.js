@@ -15,20 +15,33 @@ router.get('/', async (req, res) => {
   }
 });
 
-// Add a new year (optional, for admin use)
+// Add a new year (with automatic collection creation)
 router.post('/', async (req, res) => {
   try {
     await ensureConnection();
     const { value } = req.body;
     if (!value) return res.status(400).json({ error: 'Year value required' });
 
-    const year = new Year({ value });
-    await year.save();
-    res.status(201).json({ success: true, year: year.value });
+    // Import the year service
+    const { createNewYearWithCollections } = require('../Services/yearService');
+
+    // Create year and all associated collections
+    const result = await createNewYearWithCollections(value);
+
+    res.status(201).json({
+      success: true,
+      message: `Year ${value} created successfully`,
+      year: result.year,
+      collections: result.collections,
+      stats: result.stats,
+    });
   } catch (err) {
-    if (err.code === 11000) {
+    if (err.message && err.message.includes('already exists')) {
       res.status(400).json({ error: 'Year already exists' });
+    } else if (err.message && err.message.includes('Invalid year format')) {
+      res.status(400).json({ error: err.message });
     } else {
+      console.error('[Backend] [ERROR] Year creation failed:', err);
       res.status(500).json({ error: 'Failed to add year', details: err.message });
     }
   }

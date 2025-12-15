@@ -1,43 +1,22 @@
-
-const { MongoClient } = require("mongodb");
-const uri = ""//Connnetion String;
+const { MongoClient } = require('mongodb');
+const uri = ''; //Connnetion String;
 const options = { useUnifiedTopology: true };
-const updateKisanWithCommodity = async (req) => {
-    const client = new MongoClient(uri, options);
-    await client.connect();
-    const db = client.db("VVMS");
-    
-        await db
-      .collection("kisans2024")
-      .updateMany({},{
-        $set: {
-            kisanCommodity : "मटर"
-        }
-      });
-      await client.close()
+const updateKisanWithCommodity = async req => {
+  const client = new MongoClient(uri, options);
+  await client.connect();
+  const db = client.db('VVMS');
 
+  await db.collection('kisans2024').updateMany(
+    {},
+    {
+      $set: {
+        kisanCommodity: 'मटर',
+      },
+    }
+  );
+  await client.close();
 
-    console.log("Script Ran Successfully",)
-
+  console.log('Script Ran Successfully');
 };
-const updatePurchaserWithCommodity = async (req) => {
-    const client = new MongoClient(uri, options);
-    await client.connect();
-    const db = client.db("VVMS");
-    
-        await db.collection("purchasers").updateMany(
-          { name: { $ne: 'Sm हावड़ा' } }, // Filter to exclude the document with the specified name
-          {
-            $set: {
-              purchaserCommodity: "मटर "
-            }
-          }
-        );
-      await client.close()
 
-
-    console.log("Script Ran Successfully",)
-
-};
 updateKisanWithCommodity();
-//updatePurchaserWithCommodity();

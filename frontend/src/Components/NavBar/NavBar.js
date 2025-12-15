@@ -1,7 +1,18 @@
 import { useContext, useEffect, useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { FormattedMessage } from 'react-intl';
-import { Layout, Menu, Dropdown, Button, Switch, Drawer, Avatar, Typography, Space } from 'antd';
+import {
+  Layout,
+  Menu,
+  Dropdown,
+  Button,
+  Switch,
+  Drawer,
+  Avatar,
+  Typography,
+  Space,
+  Modal,
+} from 'antd';
 import {
   GlobalOutlined,
   MenuOutlined,
@@ -12,8 +23,10 @@ import {
   AppstoreOutlined,
   CalendarOutlined,
   LogoutOutlined,
+  SettingOutlined,
 } from '@ant-design/icons';
 import YearContext from '../../Context/YearContext';
+import CreateYearModal from './CreateYearModal';
 import './NavBar.css';
 import VeggiesLogo from './VeggiesLogo.svg';
 
@@ -28,6 +41,11 @@ const NavBar = ({ isAuthenticated, logout, changelanguage, year: yearProp }) => 
   const location = useLocation();
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 900);
   const [drawerVisible, setDrawerVisible] = useState(false);
+  const [createYearModalVisible, setCreateYearModalVisible] = useState(false);
+
+  // Check if user is admin
+  const userName = window.sessionStorage.getItem('userName');
+  const isAdmin = userName && userName.toLowerCase() === 'admin';
 
   useEffect(() => {
     const handleResize = () => setIsMobile(window.innerWidth <= 900);
@@ -49,6 +67,20 @@ const NavBar = ({ isAuthenticated, logout, changelanguage, year: yearProp }) => 
 
   const userMenu = (
     <Menu>
+      {isAdmin && (
+        <Menu.SubMenu key="adminSettings" title="Admin Settings" icon={<SettingOutlined />}>
+          <Menu.Item
+            key="createYear"
+            icon={<CalendarOutlined />}
+            onClick={() => {
+              setCreateYearModalVisible(true);
+              setDrawerVisible(false); // Close drawer if opened from mobile
+            }}
+          >
+            Create Year
+          </Menu.Item>
+        </Menu.SubMenu>
+      )}
       <Menu.Item key="logout" icon={<LogoutOutlined />} onClick={handleLogOut}>
         <FormattedMessage id="logout" />
       </Menu.Item>
@@ -291,6 +323,16 @@ const NavBar = ({ isAuthenticated, logout, changelanguage, year: yearProp }) => 
         )}
         {navMenu}
       </Drawer>
+
+      {/* Create Year Modal for Admin */}
+      <CreateYearModal
+        visible={createYearModalVisible}
+        onClose={() => setCreateYearModalVisible(false)}
+        onYearCreated={() => {
+          // Reload the page to refresh year options
+          window.location.reload();
+        }}
+      />
     </Header>
   );
 };
